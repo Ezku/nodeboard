@@ -1,0 +1,17 @@
+{
+  "name": "nodeboard",
+  "description": "A next generation imageboard platform built to scale horizontally with node.js. High on buzzwords, low on substance, this is an Aalto School of Science web service design schoolwork project.",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ezku/nodeboard",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Ezku/nodeboard.git"
+  },
+  "author": "Ezku <eevert.saukkokoski@gmail.com>",
+  "directories": {
+    "lib": "."
+  },
+  "engines": {
+    "node": "*"
+  }
+}
