@@ -4,7 +4,7 @@
     head(function() {
       title(this.title);
       return link({
-        rel: stylesheet,
+        rel: "stylesheet",
         href: '/stylesheets/style.css'
       });
     });

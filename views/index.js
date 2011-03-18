@@ -1,8 +1,4 @@
 (function() {
-  h1(function() {
-    return this.title;
-  });
-  p(function() {
-    return "Welcome to {@title}";
-  });
+  h1(this.title);
+  p("Welcome to " + this.title);
 }).call(this);

@@ -1,10 +1,11 @@
 (function() {
-  var app, express;
+  var app, coffeekup, express;
   express = require('express');
+  coffeekup = require('./vendor/coffeekup.js');
   app = module.exports = express.createServer();
-  app.register('.coffee', require('./vendor/coffeekup/lib/coffeekup.js'));
-  app.set('view engine', 'coffee');
   app.configure(function() {
+    app.register('.coffee', coffeekup);
+    app.set('view engine', 'coffee');
     app.set('views', __dirname + '/views');
     app.use(express.bodyParser());
     app.use(express.methodOverride());

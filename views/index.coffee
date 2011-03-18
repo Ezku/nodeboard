@@ -1,4 +1,2 @@
-h1 ->
-	@title
-p ->
-	"Welcome to {@title}"
+h1 @title
+p "Welcome to #{@title}"
