@@ -13,5 +13,10 @@
   },
   "engines": {
     "node": "*"
+  },
+  "dependencies": {
+    "express": ">= 2.0.0",
+    "coffee-script": ">= 1.0.0",
+    "coffeekup": ">= 0.2.2"
   }
 }
