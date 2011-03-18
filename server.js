@@ -23,7 +23,9 @@
   });
   app.get('/', function(req, res) {
     return res.render('index', {
-      title: 'Express'
+      context: {
+        title: 'Express'
+      }
     });
   });
   if (!module.parent) {
