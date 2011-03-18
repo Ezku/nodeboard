@@ -2,7 +2,7 @@
   var app, express;
   express = require('express');
   app = module.exports = express.createServer();
-  app.register('.coffee', require('coffeekup'));
+  app.register('.coffee', require('./vendor/coffeekup/lib/coffeekup.js'));
   app.set('view engine', 'coffee');
   app.configure(function() {
     app.set('views', __dirname + '/views');

@@ -6,7 +6,7 @@ app = module.exports = express.createServer()
 
 # Configuration
 
-app.register '.coffee', require 'coffeekup'
+app.register '.coffee', require './vendor/coffeekup/lib/coffeekup.js'
 app.set 'view engine', 'coffee'
 
 app.configure ->
