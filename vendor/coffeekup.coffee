@@ -167,4 +167,11 @@ coffeekup.render = (template, options = {}) ->
 unless window?
   coffeekup.adapters =
     simple: (template, data) -> coffeekup.render template, context: data
+    express:
+      # Kludge: subvert's express' own view compilation and assigns all view variables to the context
+      compile: (template) -> (data) ->
+        options = data
+        options.context = data
+        coffeekup.render template, options
+  
   coffeekup.adapters.meryl = coffeekup.adapters.simple

@@ -4,7 +4,7 @@
   coffeekup = require('./vendor/coffeekup.js');
   app = module.exports = express.createServer();
   app.configure(function() {
-    app.register('.coffee', coffeekup);
+    app.register('.coffee', coffeekup.adapters.express);
     app.set('view engine', 'coffee');
     app.set('views', __dirname + '/views');
     app.use(express.bodyParser());
@@ -23,9 +23,7 @@
   });
   app.get('/', function(req, res) {
     return res.render('index', {
-      context: {
-        title: 'Express'
-      }
+      title: 'Aaltoboard?'
     });
   });
   if (!module.parent) {

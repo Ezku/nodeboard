@@ -219,6 +219,16 @@
         return coffeekup.render(template, {
           context: data
         });
+      },
+      express: {
+        compile: function(template) {
+          return function(data) {
+            var options;
+            options = data;
+            options.context = data;
+            return coffeekup.render(template, options);
+          };
+        }
       }
     };
     coffeekup.adapters.meryl = coffeekup.adapters.simple;
