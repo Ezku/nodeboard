@@ -13,6 +13,5 @@ module.exports = (root) ->
       vendor: root + '/vendor/'
     express: require 'express'
     coffeekup: require vendor 'coffeekup.js'
-    
-  dependencies.app = dependencies.express.createServer()
+
   dependencies

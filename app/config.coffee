@@ -1,7 +1,9 @@
 # Configures the Express application instance
 
 module.exports = (dependencies) ->
-  {app, express, coffeekup, paths} = dependencies
+  {express, paths, coffeekup} = dependencies
+  
+  app = dependencies.app = express.createServer()
   
   app.configure ->
     app.register '.coffee', coffeekup.adapters.express
