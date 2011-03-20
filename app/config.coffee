@@ -9,6 +9,8 @@ module.exports = (dependencies) ->
     app.register '.coffee', coffeekup.adapters.express
     app.set 'view engine', 'coffee'
     app.set 'views', paths.views
+    
+    app.use express.compiler src: paths.public, enable: ['less']
     app.use express.bodyParser()
     app.use express.methodOverride()
     app.use app.router

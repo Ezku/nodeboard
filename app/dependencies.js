@@ -16,7 +16,6 @@
       express: require('express'),
       coffeekup: require(vendor('coffeekup.js'))
     };
-    dependencies.app = dependencies.express.createServer();
     return dependencies;
   };
 }).call(this);

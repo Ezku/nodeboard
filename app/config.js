@@ -1,11 +1,16 @@
 (function() {
   module.exports = function(dependencies) {
     var app, coffeekup, express, paths;
-    app = dependencies.app, express = dependencies.express, coffeekup = dependencies.coffeekup, paths = dependencies.paths;
+    express = dependencies.express, paths = dependencies.paths, coffeekup = dependencies.coffeekup;
+    app = dependencies.app = express.createServer();
     app.configure(function() {
       app.register('.coffee', coffeekup.adapters.express);
       app.set('view engine', 'coffee');
       app.set('views', paths.views);
+      app.use(express.compiler({
+        src: paths.public,
+        enable: ['less']
+      }));
       app.use(express.bodyParser());
       app.use(express.methodOverride());
       app.use(app.router);
