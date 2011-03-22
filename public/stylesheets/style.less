@@ -5,16 +5,17 @@
   background-image: -moz-linear-gradient(@points, @from, @to);
   background-image: linear-gradient(@points, @from, @to);
 }
+
 .box-shadow() {
-  -webkit-box-shadow
+  // This resulted in an obscure error message from connect
+  // -webkit-box-shadow
 }
+
 .border-radius(@radius: 5px) {
   border-radius: @radius;
   -moz-border-radius: @radius;
   -webkit-border-radius: @radius;
 }
-
-
 
 body {
   padding: 50px;
