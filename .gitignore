@@ -1,0 +1,6 @@
+# Ignore MongoDB lock file
+data/db/mongo.lock
+
+# Ignore Javascript files generated from Coffeescript
+app/*.js
+app/**/*.js

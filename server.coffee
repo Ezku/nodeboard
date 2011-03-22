@@ -1,8 +1,4 @@
-dependencies = require('./app/dependencies.js')(__dirname)
-require('./app/config.js')(dependencies)
-require('./app/controllers.js')(dependencies)
-
-{app} = dependencies
+app = require './app/bootstrap.js'
 
 unless module.parent
   app.listen 3000
