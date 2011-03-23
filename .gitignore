@@ -7,4 +7,5 @@ data/db/mongo.lock
 # app/**/*.js
 
 # Ignore CSS files compiled from LESS
-public/stylesheets/style.css
+# Duostack fails on this as well
+# public/stylesheets/style.css
