@@ -2,8 +2,9 @@
 data/db/mongo.lock
 
 # Ignore Javascript files generated from Coffeescript
-app/*.js
-app/**/*.js
+# Duostack fails on this :(
+# app/*.js
+# app/**/*.js
 
 # Ignore CSS files compiled from LESS
 public/stylesheets/style.css
