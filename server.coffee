@@ -1,4 +1,4 @@
-app = require('./app/bootstrap.js')(__dirname)
+app = require(__dirname + '/app/bootstrap.js')(__dirname)
 
 unless module.parent
   app.listen 3000
