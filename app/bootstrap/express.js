@@ -22,8 +22,16 @@
         showStack: true
       }));
     });
-    return app.configure('production', function() {
+    app.configure('production', function() {
       return app.use(express.errorHandler());
+    });
+    return app.dynamicHelpers({
+      config: function() {
+        return config;
+      },
+      include: function(req, res) {
+        return res.render;
+      }
     });
   };
 }).call(this);

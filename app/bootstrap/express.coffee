@@ -21,3 +21,9 @@ module.exports = (dependencies) ->
 
   app.configure 'production', ->
     app.use express.errorHandler()
+  
+  app.dynamicHelpers
+    # Make config settings available in view scope
+    config: -> config
+    # Enable views to render subviews
+    include: (req, res) -> res.render
