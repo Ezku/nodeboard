@@ -29,77 +29,77 @@
                 return a({
                   href: "ak/"
                 }, function() {
-                  return "AK";
+                  return "/ak/";
                 });
               });
               li(function() {
                 return a({
                   href: "as/"
                 }, function() {
-                  return "AS";
+                  return "/as/";
                 });
               });
               li(function() {
                 return a({
                   href: "bio/"
                 }, function() {
-                  return "BIO";
+                  return "/bio/";
                 });
               });
               li(function() {
                 return a({
                   href: "fk/"
                 }, function() {
-                  return "FK";
+                  return "/fk/";
                 });
               });
               li(function() {
                 return a({
                   href: "ik/"
                 }, function() {
-                  return "IK";
+                  return "/ik/";
                 });
               });
               li(function() {
                 return a({
                   href: "inf/"
                 }, function() {
-                  return "INF";
+                  return "/inf/";
                 });
               });
               li(function() {
                 return a({
                   href: "kik/"
                 }, function() {
-                  return "KIK";
+                  return "/kik/";
                 });
               });
               li(function() {
                 return a({
                   href: "kk/"
                 }, function() {
-                  return "KK";
+                  return "/kk/";
                 });
               });
               li(function() {
                 return a({
                   href: "pjk/"
                 }, function() {
-                  return "PJK";
+                  return "/pjk/";
                 });
               });
               li(function() {
                 return a({
                   href: "tik/"
                 }, function() {
-                  return "TIK";
+                  return "/tik/";
                 });
               });
               return li(function() {
                 return a({
                   href: "vk/"
                 }, function() {
-                  return "VK";
+                  return "/vk/";
                 });
               });
             });

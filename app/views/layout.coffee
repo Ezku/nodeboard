@@ -12,27 +12,27 @@ html ->
             li ->
               a href: ".", -> "Aaltoboard"
             li ->
-              a href: "ak/", -> "AK"
+              a href: "ak/", -> "/ak/"
             li ->
-              a href: "as/", -> "AS"
+              a href: "as/", -> "/as/"
             li ->
-              a href: "bio/", -> "BIO"
+              a href: "bio/", -> "/bio/"
             li ->
-              a href: "fk/", -> "FK"
+              a href: "fk/", -> "/fk/"
             li ->
-              a href: "ik/", -> "IK"
+              a href: "ik/", -> "/ik/"
             li ->
-              a href: "inf/", -> "INF"
+              a href: "inf/", -> "/inf/"
             li ->
-              a href: "kik/", -> "KIK"
+              a href: "kik/", -> "/kik/"
             li ->
-              a href: "kk/", -> "KK"
+              a href: "kk/", -> "/kk/"
             li ->
-              a href: "pjk/", -> "PJK"  
+              a href: "pjk/", -> "/pjk/"  
             li ->
-              a href: "tik/", -> "TIK"
+              a href: "tik/", -> "/tik/"
             li ->
-              a href: "vk/", -> "VK"
+              a href: "vk/", -> "/vk/"
       div id: "column-wrapper", ->
         section id: "high-level", ->
           div -> @body
