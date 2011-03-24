@@ -35,6 +35,10 @@ html ->
               a href: "vk/", -> "VK"
       div id: "column-wrapper", ->
         section id: "high-level", ->
-          @body
+          div -> @body
         section id: "detail", ->
-          ""
+          div -> h1 "Detail level goes here"
+          
+      footer ->
+        "Oh, and this would be the footer."
+          

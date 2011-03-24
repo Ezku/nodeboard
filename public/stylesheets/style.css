@@ -282,10 +282,29 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   overflow: hidden;
   min-height: 100%;
-  background-color: #cccccc;
-  background-image: -webkit-gradient(linear, top, from(#cccccc), to(#ffffff));
+  background-color: #ffffff;
+  background-image: -webkit-gradient(linear, top left, bottom left, from(#cccccc), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
   background-image: -moz-linear-gradient(top, #cccccc, #ffffff);
   background-image: linear-gradient(top, #cccccc, #ffffff);
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Georgia;
+  line-height: 1.4;
+}
+h1 {
+  font-size: 26px;
+}
+h2 {
+  font-size: 20.8px;
+}
+h3 {
+  font-size: 18.2px;
 }
 #page-wrapper {
   width: 980px;
@@ -297,6 +316,7 @@ a {
 }
 header {
   width: 100%;
+  margin-bottom: 30px;
 }
 header nav {
   width: 100%;
@@ -313,6 +333,9 @@ header nav ul li {
   display: block;
   float: left;
 }
+header nav ul li:first-child {
+  float: right;
+}
 header nav ul li a {
   display: block;
   position: relative;
@@ -327,8 +350,9 @@ header nav ul li a {
   -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-  background-color: #ffffff;
-  background-image: -webkit-gradient(linear, top, from(#ffffff), to(#cccccc));
+  background-color: #cccccc;
+  background-image: -webkit-gradient(linear, top left, bottom left, from(#ffffff), to(#cccccc));
+  background-image: -webkit-linear-gradient(top, #ffffff, #cccccc);
   background-image: -moz-linear-gradient(top, #ffffff, #cccccc);
   background-image: linear-gradient(top, #ffffff, #cccccc);
 }
@@ -337,10 +361,11 @@ header nav ul li a:hover {
   -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-  background-color: #eeeeee;
-  background-image: -webkit-gradient(linear, top, from(#eeeeee), to(#dddddd));
-  background-image: -moz-linear-gradient(top, #eeeeee, #dddddd);
-  background-image: linear-gradient(top, #eeeeee, #dddddd);
+  background-color: #dddddd;
+  background-image: -webkit-gradient(linear, top left, bottom left, from(#ffffff), to(#dddddd));
+  background-image: -webkit-linear-gradient(top, #ffffff, #dddddd);
+  background-image: -moz-linear-gradient(top, #ffffff, #dddddd);
+  background-image: linear-gradient(top, #ffffff, #dddddd);
 }
 header nav ul li a:visited {
   color: #000000;
@@ -351,10 +376,39 @@ header nav ul li a:active {
   -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  background-color: #cccccc;
-  background-image: -webkit-gradient(linear, top, from(#cccccc), to(#ffffff));
+  background-color: #ffffff;
+  background-image: -webkit-gradient(linear, top left, bottom left, from(#cccccc), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
   background-image: -moz-linear-gradient(top, #cccccc, #ffffff);
   background-image: linear-gradient(top, #cccccc, #ffffff);
+}
+#column-wrapper {
+  clear: both;
+  overflow: hidden;
+}
+#column-wrapper section {
+  width: 470px;
+  float: left;
+  min-height: 200px;
+  background-color: #eeeeee;
+  background-image: -webkit-gradient(linear, top left, bottom left, from(#ffffff), to(#eeeeee));
+  background-image: -webkit-linear-gradient(top, #ffffff, #eeeeee);
+  background-image: -moz-linear-gradient(top, #ffffff, #eeeeee);
+  background-image: linear-gradient(top, #ffffff, #eeeeee);
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+#column-wrapper section:first-child {
+  margin-right: 20px;
+}
+#column-wrapper section div {
+  padding: 6px;
+}
+footer {
+  clear: both;
+  overflow: hidden;
+  margin-top: 30px;
 }
 /* HTML5 ✰ Boilerplate - overrides */
 .ir {

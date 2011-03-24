@@ -3,6 +3,38 @@
 @linkcolor: #00B7FF;
 @navlinkcolor: #000;
 
+@page-width: 980px;
+@gutter: 20px;
+
+@h1-size: 26px;
+
+// LESS helpers for gradients, box-shadows etc.
+.linear-gradient(@from, @to) {
+  background-color: @to;
+  
+  // old Safari and Chrome
+  background-image: -webkit-gradient(linear, top left, bottom left, from(@from), to(@to));
+  // newer Safari/Chrome
+  background-image: -webkit-linear-gradient(top, @from, @to);
+  // Fx 3.6
+  background-image: -moz-linear-gradient(top, @from, @to);
+  // standard
+  background-image: linear-gradient(top, @from, @to);
+}
+
+.box-shadow (@x: 0, @y: 0, @blur: 4px, @alpha) {
+  @val: @x @y @blur rgba(0, 0, 0, @alpha);
+  
+  -webkit-box-shadow: @val;
+  -moz-box-shadow: @val;
+  box-shadow: @val;
+}
+
+.border-radius(@radius: 5px) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+}
 
 
 /* HTML5 ✰ Boilerplate */
@@ -88,27 +120,6 @@ a:hover { color: #036; }
  * Author: Ossi Hanhinen, Antti Vuorela
  */
 
-// Helpers for gradients, box-shadows etc.
-.linear-gradient(@points, @from, @to) {
-  background-color: @from;
-  background-image: -webkit-gradient(linear, @points, from(@from), to(@to));
-  background-image: -moz-linear-gradient(@points, @from, @to);
-  background-image: linear-gradient(@points, @from, @to);
-}
-
-.box-shadow (@x: 0, @y: 0, @blur: 4px, @alpha) {
-  @val: @x @y @blur rgba(0, 0, 0, @alpha);
-  
-  -webkit-box-shadow: @val;
-  -moz-box-shadow: @val;
-  box-shadow: @val;
-}
-
-.border-radius(@radius: 5px) {
-  border-radius: @radius;
-  -moz-border-radius: @radius;
-  -webkit-border-radius: @radius;
-}
 html {
   height: 100%;
 }
@@ -117,10 +128,18 @@ body {
   overflow: hidden;
   min-height: 100%;
   
-  .linear-gradient(top , #ccc, #fff);
+  .linear-gradient(#ccc, #fff);
 }
+h1, h2, h3, h4, h5, h6 {
+  font-family: Georgia;
+  line-height: 1.4;
+}
+h1 { font-size: @h1-size; }
+h2 { font-size: @h1-size * .8; }
+h3 { font-size: @h1-size * .7; }
+
 #page-wrapper {
-  width: 980px;
+  width: @page-width;
   margin: 20px auto;
   position: relative;
 }
@@ -131,6 +150,7 @@ a {
 
 header {
   width: 100%;
+  margin-bottom: 30px;
 
   nav {
     width: 100%;
@@ -147,6 +167,10 @@ header {
         display: block;
         float: left;
         
+        &:first-child {
+          float: right;
+        }
+        
         a {
           display: block;
           position: relative;
@@ -158,13 +182,13 @@ header {
           
           .border-radius(20px);
           .box-shadow(1px, 1px, 3px, .2);
-          .linear-gradient(top , #fff, #ccc);
+          .linear-gradient(#fff, #ccc);
         
           &:hover {
             color: @navlinkcolor + #666;
             
             .box-shadow(1px, 1px, 3px, .4);
-            .linear-gradient(top , #eee, #ddd);
+            .linear-gradient(#fff, #ddd);
           }
           &:visited {
             color: @navlinkcolor;
@@ -173,12 +197,41 @@ header {
             top: 1px;
             left: 1px;
             .box-shadow(0, 0, 2px, .2);
-            .linear-gradient(top , #ccc, #fff);
+            .linear-gradient(#ccc, #fff);
           }
         }
       }
     }
   }
+}
+
+#column-wrapper {
+  clear: both;
+  overflow: hidden;
+  
+  section {
+    width: @page-width / 2 - @gutter;
+    float: left;
+    min-height: 200px;
+    
+    .linear-gradient(#fff, #eee);   
+    .border-radius(10px);
+    
+    &:first-child {
+      margin-right: @gutter;
+    }
+    
+    div {
+      padding: 6px;
+    }
+  }
+}
+
+footer {
+  clear: both;
+  overflow: hidden;
+  margin-top: 30px;
+  
 }
 
 

@@ -105,19 +105,26 @@
             });
           });
         });
-        return div({
+        div({
           id: "column-wrapper"
         }, function() {
           section({
             id: "high-level"
           }, function() {
-            return this.body;
+            return div(function() {
+              return this.body;
+            });
           });
           return section({
             id: "detail"
           }, function() {
-            return "";
+            return div(function() {
+              return h1("Detail level goes here");
+            });
           });
+        });
+        return footer(function() {
+          return "Oh, and this would be the footer.";
         });
       });
     });
