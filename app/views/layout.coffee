@@ -10,29 +10,12 @@ html ->
         nav ->
           ul ->
             li ->
-              a href: ".", -> "Aaltoboard"
-            li ->
-              a href: "ak/", -> "/ak/"
-            li ->
-              a href: "as/", -> "/as/"
-            li ->
-              a href: "bio/", -> "/bio/"
-            li ->
-              a href: "fk/", -> "/fk/"
-            li ->
-              a href: "ik/", -> "/ik/"
-            li ->
-              a href: "inf/", -> "/inf/"
-            li ->
-              a href: "kik/", -> "/kik/"
-            li ->
-              a href: "kk/", -> "/kk/"
-            li ->
-              a href: "pjk/", -> "/pjk/"  
-            li ->
-              a href: "tik/", -> "/tik/"
-            li ->
-              a href: "vk/", -> "/vk/"
+              a href: "/", -> "Aaltoboard"
+            
+            for label, properties of @config.boards.guilds
+              li ->
+                a href: "/#{label}/", title: properties.name, -> label
+            
       div id: "column-wrapper", ->
         section id: "high-level", ->
           div -> @body
