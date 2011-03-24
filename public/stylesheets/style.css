@@ -310,7 +310,8 @@ h3 {
   font-size: 18.2px;
 }
 #page-wrapper {
-  width: 1100px;
+  width: 90%;
+  max-width: 1200px;
   margin: 20px auto;
   position: relative;
 }
@@ -338,12 +339,6 @@ header nav ul li {
   padding: 0;
   display: block;
   float: left;
-}
-header nav ul li:first-child {
-  float: right;
-}
-header nav ul li:first-child a {
-  margin-right: 0;
 }
 header nav ul li a {
   display: block;
@@ -386,11 +381,11 @@ header nav ul li a:active {
   padding: 0 5px 5px 0;
 }
 #column-wrapper section {
-  width: 537.5px;
+  width: 49%;
   float: left;
 }
 #column-wrapper section:first-child {
-  margin-right: 20px;
+  margin-right: 2%;
 }
 #column-wrapper section div {
   padding: 20px 10px;
@@ -406,6 +401,9 @@ header nav ul li a:active {
 }
 #column-wrapper section div article {
   clear: both;
+}
+#column-wrapper section div article:nth-of-type(1) {
+  margin-top: 20px;
 }
 #column-wrapper section div article.board a {
   display: block;
