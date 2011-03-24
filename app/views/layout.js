@@ -3,6 +3,9 @@
   html(function() {
     head(function() {
       title(this.title);
+      meta({
+        charset: "utf8"
+      });
       link({
         rel: "stylesheet",
         href: '/stylesheets/style.css'
@@ -49,6 +52,7 @@
           section({
             id: "high-level"
           }, function() {
+            h1(this.title);
             return div(function() {
               return this.body;
             });
@@ -56,8 +60,9 @@
           return section({
             id: "detail"
           }, function() {
+            h1("Detail level goes here");
             return div(function() {
-              return h1("Detail level goes here");
+              return "The content is vastly abundant.";
             });
           });
         });

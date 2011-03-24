@@ -2,6 +2,7 @@ doctype 5
 html ->
   head ->
     title @title
+    meta charset: "utf8"
     link rel: "stylesheet", href: '/stylesheets/style.css'
     script src: '/scripts/modernizr-1.7.min.js'
   body ->
@@ -18,9 +19,11 @@ html ->
             
       div id: "column-wrapper", ->
         section id: "high-level", ->
+          h1 @title
           div -> @body
         section id: "detail", ->
-          div -> h1 "Detail level goes here"
+          h1 "Detail level goes here"
+          div -> "The content is vastly abundant."
           
       footer ->
         "Oh, and this would be the footer."
