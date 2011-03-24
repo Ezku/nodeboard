@@ -7,7 +7,7 @@
     model = function(name) {
       return mongoose.model(name, require("./models/" + name)(mongoose));
     };
-    return models = function() {
+    models = function() {
       var name, names, _i, _len, _results;
       names = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
@@ -17,5 +17,9 @@
       }
       return _results;
     };
+    model('Sequence');
+    model('Tracker');
+    model('Post');
+    return model('Thread');
   };
 }).call(this);

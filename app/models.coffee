@@ -5,3 +5,7 @@ module.exports = (dependencies) ->
   model = (name) -> mongoose.model name, require("./models/#{name}")(mongoose)
   models = (names...) -> model name for name in names
   
+  model 'Sequence'
+  model 'Tracker'
+  model 'Post'
+  model 'Thread'
