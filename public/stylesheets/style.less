@@ -4,7 +4,8 @@
 @hovercolor: desaturate(@linkcolor, 20%);
 @navlinkcolor: #000;
 
-@page-width: 1100px;
+@page-width: 90%;
+@page-max-width: 1200px;
 @gutter: 20px;
 
 @h1-size: 26px;
@@ -151,6 +152,7 @@ h3 { font-size: @h1-size * .7; }
 
 #page-wrapper {
   width: @page-width;
+  max-width: @page-max-width;
   margin: 20px auto;
   position: relative;
 }
@@ -181,14 +183,7 @@ header {
         padding: 0;
         display: block;
         float: left;
-        
-        &:first-child {
-          float: right;
-          a {
-            margin-right: 0;
-          }
-        }
-        
+                
         a {
           display: block;
           position: relative;
@@ -232,11 +227,13 @@ header {
   padding: 0 5px 5px 0;
   
   section {
-    width: (@page-width - @gutter - 5px) / 2;
+    //width: (@page-width - @gutter - 5px) / 2;
+    width: 49%;
     float: left;   
     
     &:first-child {
-      margin-right: @gutter;
+      //margin-right: @gutter;
+      margin-right: 2%;
     }
     
     div {
@@ -251,6 +248,9 @@ header {
       article {
         clear: both;
         
+        &:nth-of-type(1) {
+          margin-top: 20px;
+        }
         &.board {
           a {
             display: block;
