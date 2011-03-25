@@ -1,7 +1,4 @@
 (function() {
-  h1(function() {
-    return "Count: " + this.counter;
-  });
   form({
     method: 'post',
     action: "/" + this.board + "/"

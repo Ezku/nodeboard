@@ -7,5 +7,4 @@ module.exports = (dependencies) ->
   
   model 'Sequence'
   model 'Tracker'
-  model 'Post'
   model 'Thread'

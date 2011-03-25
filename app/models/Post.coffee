@@ -1,4 +1,11 @@
 module.exports = (mongoose) ->
-  Post = new mongoose.Schema
+  Schema = mongoose.Schema
+  
+  PostSchema = new Schema
     id: Number
     content: String
+    password: String
+  
+  PostSchema.method hasImage: -> true
+  
+  PostSchema

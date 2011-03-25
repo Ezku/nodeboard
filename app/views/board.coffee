@@ -1,5 +1,3 @@
-h1 -> "Count: #{@counter}"
-
 form method: 'post', action: "/#{@board}/", ->
   dl ->
     dt -> label for: "topic", -> "Topic"

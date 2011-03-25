@@ -1,7 +1,8 @@
 (function() {
   module.exports = function(mongoose) {
-    var SequenceSchema;
-    SequenceSchema = new mongoose.Schema({
+    var Schema, SequenceSchema;
+    Schema = mongoose.Schema;
+    SequenceSchema = new Schema({
       board: {
         type: String,
         unique: true
@@ -12,8 +13,9 @@
       }
     });
     SequenceSchema.static({
-      next: function(board, callback) {
-        var Sequence;
+      next: function(options) {
+        var Sequence, board, error, success;
+        success = options.success, error = options.error, board = options.board;
         Sequence = mongoose.model('Sequence');
         return Sequence.collection.findAndModify({
           board: board
@@ -24,7 +26,12 @@
         }, {
           "new": true,
           upsert: true
-        }, callback);
+        }, function(err, result) {
+          if (err) {
+            return error(err);
+          }
+          return success(result);
+        });
       }
     });
     return SequenceSchema;

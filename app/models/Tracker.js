@@ -1,8 +1,10 @@
 (function() {
   module.exports = function(mongoose) {
-    var Tracker;
-    return Tracker = new mongoose.Schema({
-      thread: mongoose.Schema.ObjectId,
+    var ObjectId, Schema, TrackerSchema;
+    Schema = mongoose.Schema;
+    ObjectId = mongoose.Schema.ObjectId;
+    return TrackerSchema = new Schema({
+      thread: ObjectId,
       post: Number,
       ip: String
     });

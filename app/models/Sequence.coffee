@@ -1,5 +1,7 @@
 module.exports = (mongoose) ->
-  SequenceSchema = new mongoose.Schema
+  Schema = mongoose.Schema
+  
+  SequenceSchema = new Schema
     board: 
       type: String
       unique: true
@@ -7,12 +9,16 @@ module.exports = (mongoose) ->
       type: Number
       default: 1
   
-  SequenceSchema.static next: (board, callback) ->
-    Sequence = mongoose.model('Sequence')
-    Sequence.collection.findAndModify { board: board },
-      [],
-      {$inc: {counter: 1} },
-      {new: true, upsert: true},
-      callback
+  SequenceSchema.static 
+    next: (options) ->
+      {success, error, board} = options
+      Sequence = mongoose.model('Sequence')
+      Sequence.collection.findAndModify { board: board },
+        [],
+        {$inc: {counter: 1} },
+        {new: true, upsert: true},
+        (err, result) ->
+          return error err if err
+          success result
   
   SequenceSchema

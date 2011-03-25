@@ -19,7 +19,6 @@
     };
     model('Sequence');
     model('Tracker');
-    model('Post');
     return model('Thread');
   };
 }).call(this);
