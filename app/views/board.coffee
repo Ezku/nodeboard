@@ -2,14 +2,14 @@ h1 -> "Count: #{@counter}"
 
 form method: 'post', action: "/#{@board}/", ->
   dl ->
-    dt -> "Topic"
-    dd -> input name: 'topic', type: 'text'
+    dt -> label for: "topic", -> "Topic"
+    dd -> input name: 'topic', id: 'topic', type: 'text'
     
-    dt -> "Content"
-    dd -> textarea name: 'content'
+    dt -> label for: "content", -> "Content"
+    dd -> textarea name: 'content', id: 'content'
     
-    dt -> "Password"
-    dd -> input name: 'password', type: 'password'
+    dt -> label for: "password", -> "Password"
+    dd -> input name: 'password', id: 'password', type: 'password'
     
     dt ->
     dd -> input name: 'submit', type: 'submit', value: 'Submit'

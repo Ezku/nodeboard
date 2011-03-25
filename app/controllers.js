@@ -35,6 +35,7 @@
         }
         return res.render('board', {
           board: req.params.board,
+          title: 'aaltoboard/' + req.params.board + '/',
           counter: seq.counter
         });
       });
