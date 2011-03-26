@@ -49,7 +49,8 @@ module.exports = (mongoose, schemas) ->
           result.save (err) ->
             return error err if err
             success result
-
+    
+    # TODO: The post parameter is never validated because it is never cast to Post
     reply: (options) ->
       {success, error, board, id, post} = options
       
