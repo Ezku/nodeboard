@@ -4,7 +4,8 @@
     dependencies = {
       express: require('express'),
       mongoose: require('mongoose'),
-      coffeekup: require(root + '/vendor/coffeekup.js')
+      coffeekup: require(root + '/vendor/coffeekup.js'),
+      backbone: require('backbone')
     };
     return dependencies;
   };

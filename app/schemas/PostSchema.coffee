@@ -6,6 +6,4 @@ module.exports = (mongoose) ->
     content: String
     password: String
   
-  PostSchema.method hasImage: -> true
-  
   PostSchema

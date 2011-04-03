@@ -1,9 +1,8 @@
 (function() {
   module.exports = function(dependencies) {
-    var Sequence, Thread, app, boardExists, config, getBoardName, mongoose, validateBoard;
-    app = dependencies.app, mongoose = dependencies.mongoose, config = dependencies.config;
-    Sequence = mongoose.model('Sequence');
-    Thread = mongoose.model('Thread');
+    var Post, Thread, app, boardExists, config, getBoardName, models, validateBoard;
+    app = dependencies.app, models = dependencies.models, config = dependencies.config;
+    Post = models.Post, Thread = models.Thread;
     boardExists = function(board) {
       var boards, group, _ref;
       _ref = config.boards;
@@ -50,19 +49,32 @@
       });
     });
     return app.post('/:board/', validateBoard, function(req, res, next) {
-      return Thread.create({
-        thread: {
-          board: req.params.board,
-          topic: req.body.topic
-        },
-        post: {
-          content: req.body.content,
-          password: req.body.password
-        },
+      var thread;
+      thread = new Thread({
+        board: req.params.board,
+        topic: req.body.topic
+      });
+      thread.add(new Post({
+        content: req.body.content,
+        password: req.body.password
+      }));
+      return thread.save(null, {
         error: next,
         success: function(thread) {
-          return res.send(thread);
+          return res.send(thread.toJSON());
         }
+        /*
+        Thread.create
+          thread:
+            board: req.params.board
+            topic: req.body.topic
+          post:
+            content: req.body.content
+            password: req.body.password
+          error: next
+          success: (thread) ->
+            res.send thread
+        */
       });
     });
   };

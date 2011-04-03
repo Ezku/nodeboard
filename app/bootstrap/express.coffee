@@ -15,6 +15,11 @@ module.exports = (dependencies) ->
     app.use express.methodOverride()
     app.use app.router
     app.use express.static config.paths.public
+    app.use dependencies.browserify
+      base: config.paths.shared
+      mount: '/scripts/browserify.js',
+      filter: dependencies.jsmin.jsmin
+      require: ['backbone']
 
   app.configure 'development', ->
     app.use express.errorHandler dumpExceptions: true, showStack: true

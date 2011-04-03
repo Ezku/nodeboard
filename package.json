@@ -16,11 +16,15 @@
   },
   "dependencies": {
     "express": ">= 2.0.0",
-    "coffee-script": ">= 1.0.1",
     "coffeekup": ">= 0.2.2",
     "mongoose": ">= 1.1.5",
     "less": ">= 1.0",
+    "backbone": ">= 0.3.3",
+    "browserify": ">= 0.3.1",
+    "jsmin": ">= 1.0.0"
+  },
+  "devDependencies": {
+    "coffee-script": ">= 1.0.1"
     "supervisor": ">= 0.1.2"
-    "backbone": ">= 0.3.3"
   }
 }

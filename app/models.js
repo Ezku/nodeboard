@@ -1,24 +1,19 @@
 (function() {
-  var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var config, model, models, mongoose;
+    var config, model, models, mongoose, schema;
     mongoose = dependencies.mongoose, config = dependencies.config;
     mongoose.connect(config.mongo.connection);
+    schema = function(name) {
+      return mongoose.model(name, require("./schemas/" + name)(mongoose));
+    };
+    schema('Sequence');
+    schema('Thread');
+    models = dependencies.models = {};
     model = function(name) {
-      return mongoose.model(name, require("./models/" + name)(mongoose));
+      return dependencies.models[name] = require("./models/" + name)(dependencies);
     };
-    models = function() {
-      var name, names, _i, _len, _results;
-      names = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      _results = [];
-      for (_i = 0, _len = names.length; _i < _len; _i++) {
-        name = names[_i];
-        _results.push(model(name));
-      }
-      return _results;
-    };
-    model('Sequence');
-    model('Tracker');
-    return model('Thread');
+    model('Model');
+    model('Thread');
+    return model('Post');
   };
 }).call(this);

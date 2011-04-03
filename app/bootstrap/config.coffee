@@ -3,8 +3,11 @@ module.exports = (root) ->
     paths:
       root: root
       app: root + '/app/'
-      models: root + '/app/models'
-      views: root + '/app/views'
+      schemas: root + '/app/schemas/'
+      services: root + '/app/services/'
+      views: root + '/app/views/'
+      shared: root + '/app/shared/'
+      models: root + '/app/shared/models/'
       public: root + '/public/'
       vendor: root + '/vendor/'
     
@@ -35,5 +38,8 @@ module.exports = (root) ->
           name: "Tietokilta"
         vk:
           name: "Vuorimieskilta"
+  
+    shared:
+      'backbone'
         
   config

@@ -1,7 +1,6 @@
 module.exports = (dependencies) ->
-  {app, mongoose, config} = dependencies
+  {app, models, config, mongoose} = dependencies
   
-  Sequence = mongoose.model 'Sequence'
   Thread = mongoose.model 'Thread'
   
   # Checks for existence of board by its short name
@@ -39,13 +38,13 @@ module.exports = (dependencies) ->
   
   # Creating a new thread
   app.post '/:board/', validateBoard, (req, res, next) ->
-    Thread.create
-      thread:
-        board: req.params.board
-        topic: req.body.topic
-      post:
-        content: req.body.content
-        password: req.body.password
-      error: next
-      success: (thread) ->
-        res.send thread
+  ###
+    thread = new Thread
+      board: req.params.board
+      topic: req.body.topic
+    thread.add new Post
+      content: req.body.content
+      password: req.body.password
+    thread.save error: next, success: (thread) ->
+      res.send thread.toJSON()
+      ###
