@@ -1,8 +1,8 @@
 (function() {
   module.exports = function(dependencies) {
     var Post, Thread, app, boardExists, config, getBoardName, models, validateBoard;
-    app = dependencies.app, models = dependencies.models, config = dependencies.config;
-    Post = models.Post, Thread = models.Thread;
+    app = dependencies.app, models = dependencies.models, config = dependencies.config, models = dependencies.models;
+    Thread = models.Thread, Post = models.Post;
     boardExists = function(board) {
       var boards, group, _ref;
       _ref = config.boards;
@@ -51,30 +51,17 @@
     return app.post('/:board/', validateBoard, function(req, res, next) {
       var thread;
       thread = new Thread({
-        board: req.params.board,
-        topic: req.body.topic
+        board: req.params.board
       });
-      thread.add(new Post({
+      thread.posts.add(new Post({
         content: req.body.content,
         password: req.body.password
       }));
-      return thread.save(null, {
+      return thread.save({}, {
         error: next,
         success: function(thread) {
           return res.send(thread.toJSON());
         }
-        /*
-        Thread.create
-          thread:
-            board: req.params.board
-            topic: req.body.topic
-          post:
-            content: req.body.content
-            password: req.body.password
-          error: next
-          success: (thread) ->
-            res.send thread
-        */
       });
     });
   };

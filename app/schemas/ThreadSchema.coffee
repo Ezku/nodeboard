@@ -1,7 +1,7 @@
 module.exports = (mongoose, schemas) ->
   Schema = mongoose.Schema
   
-  PostSchema = require('./Post.js')(mongoose)
+  PostSchema = require('./PostSchema.js')(mongoose)
   
   ThreadSchema = new Schema
     # TODO: use namespaces instead of a field!

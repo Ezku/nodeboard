@@ -8,6 +8,7 @@ module.exports = (root) ->
       views: root + '/app/views/'
       shared: root + '/app/shared/'
       models: root + '/app/shared/models/'
+      collections: root + '/app/shared/collections/'
       public: root + '/public/'
       vendor: root + '/vendor/'
     

@@ -14,7 +14,13 @@
       app.use(express.bodyParser());
       app.use(express.methodOverride());
       app.use(app.router);
-      return app.use(express.static(config.paths.public));
+      app.use(express.static(config.paths.public));
+      return app.use(dependencies.browserify({
+        base: config.paths.shared,
+        mount: '/scripts/browserify.js',
+        filter: dependencies.jsmin.jsmin,
+        require: ['backbone']
+      }));
     });
     app.configure('development', function() {
       return app.use(express.errorHandler({

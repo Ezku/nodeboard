@@ -5,8 +5,12 @@
       paths: {
         root: root,
         app: root + '/app/',
-        models: root + '/app/models',
-        views: root + '/app/views',
+        schemas: root + '/app/schemas/',
+        services: root + '/app/services/',
+        views: root + '/app/views/',
+        shared: root + '/app/shared/',
+        models: root + '/app/shared/models/',
+        collections: root + '/app/shared/collections/',
         public: root + '/public/',
         vendor: root + '/vendor/'
       },
@@ -49,7 +53,8 @@
             name: "Vuorimieskilta"
           }
         }
-      }
+      },
+      shared: 'backbone'
     };
     return config;
   };

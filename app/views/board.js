@@ -6,20 +6,6 @@
     return dl(function() {
       dt(function() {
         return label({
-          "for": "topic"
-        }, function() {
-          return "Topic";
-        });
-      });
-      dd(function() {
-        return input({
-          name: 'topic',
-          id: 'topic',
-          type: 'text'
-        });
-      });
-      dt(function() {
-        return label({
           "for": "content"
         }, function() {
           return "Content";

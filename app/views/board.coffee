@@ -1,8 +1,5 @@
 form method: 'post', action: "/#{@board}/", ->
   dl ->
-    dt -> label for: "topic", -> "Topic"
-    dd -> input name: 'topic', id: 'topic', type: 'text'
-    
     dt -> label for: "content", -> "Content"
     dd -> textarea name: 'content', id: 'content'
     
