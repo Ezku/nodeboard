@@ -27,14 +27,13 @@
           board: thread.board,
           success: function(seq) {
             var result;
-            result = new Thread(thread);
-            result.id = result.latestPost = post.id = seq.counter;
-            result.posts.push(post);
+            result = new Thread(thread.toJSON());
+            result.posts.push(post.toJSON());
             return result.save(function(err) {
               if (err) {
                 return error(err);
               }
-              return success(result);
+              return success();
             });
           }
         });

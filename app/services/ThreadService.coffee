@@ -14,12 +14,15 @@ module.exports = (dependencies) ->
         error: error
         board: thread.board
         success: (seq) ->
-          result = new Thread thread
-          result.id = result.latestPost = post.id = seq.counter
-          result.posts.push post
+          #thread.set 'id', seq.counter
+          #thread.set 'latestPost', seq.counter
+          #post.set 'id', seq.counter
+          
+          result = new Thread thread.toJSON()
+          result.posts.push post.toJSON()
           result.save (err) ->
             return error err if err
-            success result
+            success()
     
     read: (thread, success, error) ->
       Thread.find { board: thread.board, id: thread.id },
