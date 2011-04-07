@@ -14,12 +14,7 @@
       app.use(express.bodyParser());
       app.use(express.methodOverride());
       app.use(app.router);
-      app.use(express.static(config.paths.public));
-      return app.use(dependencies.browserify({
-        base: config.paths.shared,
-        mount: '/scripts/browserify.js',
-        filter: dependencies.jsmin.jsmin
-      }));
+      return app.use(express.static(config.paths.public));
     });
     app.configure('development', function() {
       return app.use(express.errorHandler({
