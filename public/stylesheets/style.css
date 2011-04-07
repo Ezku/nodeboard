@@ -119,17 +119,17 @@ header nav ul li a:active {
   background-attachment: fixed;
   text-shadow: 0 0 2px white;
 }
+#column-wrapper > section {
+  float: left;
+  width: 49%;
+}
+#column-wrapper > section:first-child {
+  margin-right: 2%;
+}
 #column-wrapper {
   clear: both;
   overflow: hidden;
   padding: 0 5px 5px 0;
-}
-#column-wrapper section {
-  width: 49%;
-  float: left;
-}
-#column-wrapper section:first-child {
-  margin-right: 2%;
 }
 #column-wrapper section div {
   padding: 20px 10px;

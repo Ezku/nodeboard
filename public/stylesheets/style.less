@@ -151,6 +151,15 @@ header {
   }
 }
 
+#column-wrapper > section {
+  float: left;
+  width: 49%;
+  
+  &:first-child {
+    margin-right: 2%;
+  }
+}
+
 #column-wrapper {
   clear: both;
   overflow: hidden;
@@ -158,14 +167,6 @@ header {
   padding: 0 5px 5px 0;
   
   section {
-    //width: (@page-width - @gutter - 5px) / 2;
-    width: 49%;
-    float: left;   
-    
-    &:first-child {
-      //margin-right: @gutter;
-      margin-right: 2%;
-    }
     
     div {
       padding: 20px 10px;

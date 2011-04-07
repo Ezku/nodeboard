@@ -41,18 +41,87 @@
       });
     });
   });
-  section(function() {
-    return dl(function() {
-      var index, thread, _i, _len, _ref, _results;
-      index = 0;
-      _ref = this.threads;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        thread = _ref[_i];
-        dt(++index);
-        _results.push(dd(thread.toJSON()));
-      }
-      return _results;
+  section({
+    "class": 'thread',
+    id: 'thread-123123'
+  }, function() {
+    article({
+      "class": 'post',
+      id: 'post-1231123'
+    }, function() {
+      div({
+        "class": 'meta'
+      }, function() {
+        span({
+          "class": 'post-id'
+        }, function() {
+          return '123123';
+        });
+        span({
+          "class": 'author'
+        }, function() {
+          return 'Anonymous';
+        });
+        return time({
+          datetime: '2011-11-11 0:00:00+00:00'
+        }, function() {
+          return '13 minutes ago';
+        });
+      });
+      div({
+        "class": 'post-image'
+      }, function() {
+        return img({
+          src: '',
+          alt: ''
+        });
+      });
+      return div({
+        "class": 'post-content'
+      }, function() {
+        return p(function() {
+          return 'text';
+        });
+      });
+    });
+    return article({
+      "class": 'post',
+      id: 'post-1231123'
+    }, function() {
+      div({
+        "class": 'meta'
+      }, function() {
+        span({
+          "class": 'post-id'
+        }, function() {
+          return '123123';
+        });
+        span({
+          "class": 'author'
+        }, function() {
+          return 'Anonymous';
+        });
+        return time({
+          datetime: '2011-11-11 0:00:00+00:00'
+        }, function() {
+          return '13 minutes ago';
+        });
+      });
+      div({
+        "class": 'post-image'
+      }, function() {
+        return img({
+          src: '',
+          alt: ''
+        });
+      });
+      return div({
+        "class": 'post-content'
+      }, function() {
+        return p(function() {
+          return 'text';
+        });
+      });
     });
   });
 }).call(this);
