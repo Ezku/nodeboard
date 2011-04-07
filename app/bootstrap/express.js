@@ -18,8 +18,7 @@
       return app.use(dependencies.browserify({
         base: config.paths.shared,
         mount: '/scripts/browserify.js',
-        filter: dependencies.jsmin.jsmin,
-        require: ['backbone']
+        filter: dependencies.jsmin.jsmin
       }));
     });
     app.configure('development', function() {

@@ -1,19 +1,14 @@
 (function() {
-  var AbstractService;
+  var AbstractService, unimplemented;
+  unimplemented = function(data, success, error) {
+    return error(new Error("Unimplemented service method"));
+  };
   module.exports = AbstractService = (function() {
     function AbstractService() {}
-    AbstractService.connect = function(Model) {
-      var service;
-      service = new this;
-      Model.prototype.sync = function(method, model, success, error) {
-        if (service[method]) {
-          return service[method](model, success, error);
-        } else {
-          return error("unsupported method '" + method + "' on " + (model.url()));
-        }
-      };
-      return this;
-    };
+    AbstractService.prototype.create = unimplemented;
+    AbstractService.prototype.read = unimplemented;
+    AbstractService.prototype.update = unimplemented;
+    AbstractService.prototype["delete"] = unimplemented;
     return AbstractService;
   })();
 }).call(this);

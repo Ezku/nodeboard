@@ -8,21 +8,21 @@ module.exports = (dependencies) ->
 
   class ThreadService extends AbstractService
                 
-    create: (thread, success, error) ->
-      post = thread.posts.first()
-      Sequence.next
-        error: error
-        board: thread.board
-        success: (seq) ->
-          #thread.set 'id', seq.counter
-          #post.set 'id', seq.counter
+    create: (data, error, success) ->
+      Sequence.next data.thread.board,
+        error,
+        (seq) ->
+          thread = new Thread data.thread
+          thread.id = data.post.id = seq.counter
           
-          result = new Thread thread.toJSON()
-          result.posts.push post.toJSON()
-          result.save (err) ->
+          thread.firstPost = data.post
+          thread.posts.push data.post
+          
+          thread.save (err) ->
             return error err if err
-            success()
+            success thread
     
+    ###
     read: (thread, success, error) ->
       Thread.find { board: thread.board, id: thread.id },
         ['board', 'id', 'posts'],
@@ -52,3 +52,4 @@ module.exports = (dependencies) ->
         (err, result) ->
           return error err if err
           success()
+    ###

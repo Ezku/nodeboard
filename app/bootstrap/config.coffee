@@ -7,8 +7,6 @@ module.exports = (root) ->
       services: root + '/app/services/'
       views: root + '/app/views/'
       shared: root + '/app/shared/'
-      models: root + '/app/shared/models/'
-      collections: root + '/app/shared/collections/'
       public: root + '/public/'
       vendor: root + '/vendor/'
     
@@ -39,8 +37,5 @@ module.exports = (root) ->
           name: "Tietokilta"
         vk:
           name: "Vuorimieskilta"
-  
-    shared:
-      'backbone'
         
   config

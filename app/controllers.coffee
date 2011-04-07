@@ -1,7 +1,8 @@
 module.exports = (dependencies) ->
-  {app, models, config, models} = dependencies
-  {Thread, Post} = models
-  {Board} = dependencies.services
+  {app, config, services} = dependencies
+  
+  # Retrieves a service object instance
+  service = services.get
   
   # Checks for existence of board by its short name
   boardExists = (board) ->
@@ -28,43 +29,22 @@ module.exports = (dependencies) ->
     res.render 'index',
       title: 'Aaltoboard'
   
-  # Mockup single post data
-  post =
-    id: 12345
-    author: 'Anonymous'
-    time: '2011-11-11 0:00:00+00:00'
-    content: 'Trolol'
-    image: 
-      src: '/img/thumbnail_placeholder.png'
-
-  # Mockup single thread
-  thread = 
-    id: 54321
-    replyCount: 13
-    firstPost: post
-    lastPost: post
-
-  # Mockup thread array
-  mockupThreads = [thread, thread, thread, thread]
-  
   # Board index
   app.get '/:board/', validateBoard, (req, res, next) ->
     board = req.params.board
     name = getBoardName board
-    boardService = new Board
-    boardService.read board,
-      (threads) -> res.render 'board',
-        board: board
-        threads: mockupThreads
-        title: "/#{board}/ - #{name}"
-      (err) -> next err
+    service('Board').read req.params,
+      next,
+      (threads) ->
+        res.render 'board',
+          board: board
+          threads: threads
+          title: "/#{board}/ - #{name}"
   
   # Creating a new thread
   app.post '/:board/', validateBoard, (req, res, next) ->
-    thread = new Thread
-      board: req.params.board
-    thread.posts.add new Post
-      content: req.body.content
-      password: req.body.password
-    thread.save {}, error: next, success: (thread) ->
-      res.send thread.toJSON()
+    service('Thread').create { thread: req.params, post: req.body },
+      next,
+      (result) ->
+        res.send result.toJSON()
+  

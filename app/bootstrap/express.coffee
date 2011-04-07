@@ -19,7 +19,6 @@ module.exports = (dependencies) ->
       base: config.paths.shared
       mount: '/scripts/browserify.js',
       filter: dependencies.jsmin.jsmin
-      require: ['backbone']
 
   app.configure 'development', ->
     app.use express.errorHandler dumpExceptions: true, showStack: true
@@ -31,4 +30,5 @@ module.exports = (dependencies) ->
     # Make config settings available in view scope
     config: -> config
     # Enable views to render subviews
+    # TODO: fix :D
     include: (req, res) -> res.render

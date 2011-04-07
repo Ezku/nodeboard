@@ -7,8 +7,8 @@ module.exports = (dependencies) ->
 
   class BoardService extends AbstractService
     
-    read: (board, success, error) ->
-      Thread.find { board: board },
+    read: (query, error, success) ->
+      Thread.find { board: query.board },
         [],
         (err, result) ->
           return error err if err

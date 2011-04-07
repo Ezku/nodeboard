@@ -1,20 +1,22 @@
 (function() {
-  module.exports = function(mongoose, schemas) {
-    var PostSchema, Schema, ThreadSchema;
-    Schema = mongoose.Schema;
-    PostSchema = require('./PostSchema.js')(mongoose);
-    ThreadSchema = new Schema({
-      board: {
-        type: String,
-        index: true
-      },
-      id: {
-        type: Number,
-        index: true
-      },
-      lastPost: {},
-      posts: [PostSchema]
-    });
+  module.exports = function(mongoose) {
+    var PostSchema, ThreadSchema;
+    PostSchema = require('./PostSchema.js')(mongoose).definition;
+    ThreadSchema = {
+      definition: {
+        board: {
+          type: String,
+          index: true
+        },
+        id: {
+          type: Number,
+          index: true
+        },
+        firstPost: PostSchema,
+        lastPost: PostSchema,
+        posts: [new mongoose.Schema(PostSchema)]
+      }
+    };
     return ThreadSchema;
   };
 }).call(this);
