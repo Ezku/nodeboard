@@ -44,16 +44,18 @@
       id: 12345,
       author: 'Anonymous',
       time: '2011-11-11 0:00:00+00:00',
-      content: 'Trolol'
+      content: 'Trolol',
+      image: {
+        src: '/img/thumbnail_placeholder.png'
+      }
     };
     thread = {
       id: 54321,
-      replycount: 13,
-      firstpost: post,
-      lastpost: post,
-      posts: [post, post]
+      replyCount: 13,
+      firstPost: post,
+      lastPost: post
     };
-    mockupThreads = [thread, thread, thread];
+    mockupThreads = [thread, thread, thread, thread];
     app.get('/:board/', validateBoard, function(req, res, next) {
       var board, boardService, name;
       board = req.params.board;

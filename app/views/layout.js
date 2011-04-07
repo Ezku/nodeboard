@@ -10,11 +10,8 @@
         rel: "stylesheet",
         href: '/stylesheets/style.css'
       });
-      script({
-        src: '/scripts/modernizr-1.7.min.js'
-      });
       return script({
-        src: '/scripts/browserify.js'
+        src: '/scripts/modernizr-1.7.min.js'
       });
     });
     return body(function() {

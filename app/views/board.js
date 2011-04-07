@@ -53,48 +53,15 @@
       "class": 'thread',
       id: 'thread-' + thread.id
     }, function() {
-      var post, _i, _len, _ref, _results;
       h4('Thread ' + thread.id);
-      _ref = thread.posts;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        post = _ref[_i];
-        console.log(post);
-        _results.push(article({
-          "class": 'post',
-          id: 'post-' + post.id
-        }, function() {
-          div({
-            "class": 'meta'
-          }, function() {
-            span(post.id, {
-              "class": 'post-id'
-            });
-            span(post.author, {
-              "class": 'author'
-            });
-            return time(post.time, {
-              datetime: post.time
-            });
-          });
-          if (post.image) {
-            div({
-              "class": 'post-image'
-            }, function() {
-              return img({
-                src: '',
-                alt: ''
-              });
-            });
-          }
-          return div({
-            "class": 'post-content'
-          }, function() {
-            return p(post.content);
-          });
-        }));
-      }
-      return _results;
+      console.log(thread.firstPost);
+      text(this.partial("partials/post", {
+        object: thread.firstPost
+      }));
+      p(thread.replyCount + " messages omitted.");
+      return text(this.partial("partials/post", {
+        object: thread.lastPost
+      }));
     });
   }
 }).call(this);

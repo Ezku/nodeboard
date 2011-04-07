@@ -28,21 +28,24 @@ module.exports = (dependencies) ->
     res.render 'index',
       title: 'Aaltoboard'
   
-  # Mockup thread data
+  # Mockup single post data
   post =
     id: 12345
     author: 'Anonymous'
     time: '2011-11-11 0:00:00+00:00'
     content: 'Trolol'
+    image: 
+      src: '/img/thumbnail_placeholder.png'
 
+  # Mockup single thread
   thread = 
     id: 54321
-    replycount: 13
-    firstpost: post
-    lastpost: post
-    posts: [post, post]
+    replyCount: 13
+    firstPost: post
+    lastPost: post
 
-  mockupThreads = [thread, thread, thread]
+  # Mockup thread array
+  mockupThreads = [thread, thread, thread, thread]
   
   # Board index
   app.get '/:board/', validateBoard, (req, res, next) ->
