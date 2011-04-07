@@ -1,42 +1,46 @@
 (function() {
-  form({
-    method: 'post',
-    action: "/" + this.board + "/"
+  section({
+    "class": 'form'
   }, function() {
-    return dl(function() {
-      dt(function() {
-        return label({
-          "for": "content"
-        }, function() {
-          return "Content";
+    return form({
+      method: 'post',
+      action: "/" + this.board + "/"
+    }, function() {
+      return dl(function() {
+        dt(function() {
+          return label({
+            "for": "content"
+          }, function() {
+            return "Content";
+          });
         });
-      });
-      dd(function() {
-        return textarea({
-          name: 'content',
-          id: 'content'
+        dd(function() {
+          return textarea({
+            name: 'content',
+            id: 'content'
+          });
         });
-      });
-      dt(function() {
-        return label({
-          "for": "password"
-        }, function() {
-          return "Password";
+        dt(function() {
+          return label({
+            "for": "password"
+          }, function() {
+            return "Password";
+          });
         });
-      });
-      dd(function() {
-        return input({
-          name: 'password',
-          id: 'password',
-          type: 'password'
+        dd(function() {
+          return input({
+            name: 'password',
+            id: 'password',
+            type: 'password'
+          });
         });
-      });
-      dt(function() {});
-      return dd(function() {
-        return input({
-          name: 'submit',
-          type: 'submit',
-          value: 'Submit'
+        dt(function() {});
+        return dd(function() {
+          return input({
+            name: 'submit',
+            type: 'submit',
+            value: 'Submit'
+          });
         });
       });
     });
@@ -46,16 +50,24 @@
     id: 'thread-123123'
   }, function() {
     article({
-      "class": 'post',
-      id: 'post-1231123'
+      "class": 'post first',
+      id: 'post-123123-1'
     }, function() {
+      div({
+        "class": 'post-image'
+      }, function() {
+        return img({
+          src: '',
+          alt: ''
+        });
+      });
       div({
         "class": 'meta'
       }, function() {
         span({
           "class": 'post-id'
         }, function() {
-          return '123123';
+          return '123123-1';
         });
         span({
           "class": 'author'
@@ -68,14 +80,6 @@
           return '13 minutes ago';
         });
       });
-      div({
-        "class": 'post-image'
-      }, function() {
-        return img({
-          src: '',
-          alt: ''
-        });
-      });
       return div({
         "class": 'post-content'
       }, function() {
@@ -86,7 +90,7 @@
     });
     return article({
       "class": 'post',
-      id: 'post-1231123'
+      id: 'post-123123-2'
     }, function() {
       div({
         "class": 'meta'
@@ -94,7 +98,7 @@
         span({
           "class": 'post-id'
         }, function() {
-          return '123123';
+          return '123123-2';
         });
         span({
           "class": 'author'
