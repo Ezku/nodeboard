@@ -19,10 +19,10 @@ html ->
                 a href: "/#{label}/", title: properties.name, -> label
             
       div id: "column-wrapper", ->
-        section id: "high-level", ->
+        div id: "high-level", ->
           h1 @title
           div -> @body
-        section id: "detail", ->
+        div id: "detail", ->
           h1 "Detail level goes here"
           div -> "The content is vastly abundant."
           

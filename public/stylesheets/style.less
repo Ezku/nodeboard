@@ -151,67 +151,97 @@ header {
   }
 }
 
+// Mid-level structure
+#column-wrapper > div {
+  float: left;
+  width: 49%;
+  
+  &#high-level {
+    margin-right: 2%;
+  }
+}
+
 #column-wrapper {
   clear: both;
   overflow: hidden;
   // Make room for the box-shadow
   padding: 0 5px 5px 0;
+}  
+#column-wrapper div {
   
-  section {
-    //width: (@page-width - @gutter - 5px) / 2;
-    width: 49%;
-    float: left;   
+  &.thread {
+     background-color: rgba(255,255,255, .8);
+    .border-radius(10px);
+    .box-shadow();   
+  }
+  div {
+    padding: 20px 10px;
+    min-height: 200px;
+    overflow: hidden;
+  
+    background-color: rgba(255,255,255, .8);
+    .border-radius(10px);
+    .box-shadow();
     
-    &:first-child {
-      //margin-right: @gutter;
-      margin-right: 2%;
-    }
-    
-    div {
-      padding: 20px 10px;
-      min-height: 200px;
-      overflow: hidden;
-    
-      background-color: rgba(255,255,255, .8);
-      .border-radius(10px);
-      .box-shadow();
+    article {
+      clear: both;
       
-      article {
-        clear: both;
+      &.post {
+        overflow: hidden;
+        padding: 5px;
+        margin-bottom: 10px;
         
-        &:nth-of-type(1) {
-          margin-top: 20px;
+        /*background-color: rgba(255,255,255, .8);
+        .border-radius(5px);
+        .box-shadow();*/
+      }
+      div {
+        .border-radius(0);
+        padding: 0;
+        min-height: 0;
+        background: transparent none;
+        .box-shadow(0,0,0);
+        
+        &.post-image {
+          float: left;
         }
-        &.board {
-          a {
-            display: block;
-            overflow: hidden;
-            width: 100%;
-            margin: 0 -10px;
-            padding: 0 10px;
-            text-decoration: none;
+        &.post-content {
+          float: left;
+        }
+      }
+      
+      &:nth-of-type(1) {
+        margin-top: 20px;
+      }
+      &.board {
+        a {
+          display: block;
+          overflow: hidden;
+          width: 100%;
+          margin: 0 -10px;
+          padding: 0 10px;
+          text-decoration: none;
+          
+          &:hover {
+            background: white;
+            .box-shadow();
+          }
+          &:active {
+            background: #999;
+            .box-shadow(0,0,0,1)
+          }
+          
+          p {
+            color: #444; 
+            float: right;
             
-            &:hover {
-              background: white;
-              .box-shadow();
-            }
-            &:active {
-              background: #999;
-              .box-shadow(0,0,0,1)
-            }
-            
-            p {
-              color: #444; 
-              float: right;
-              
-            }
-            h2 { 
-              padding-right: 20px; 
-              float: left;
-            }
-            h2, p {
-             line-height: 40px;
-            }
+          }
+          h2 { 
+            padding-right: 20px; 
+            float: left;
+          }
+          h2, p {
+           line-height: 40px;
           }
         }
       }
