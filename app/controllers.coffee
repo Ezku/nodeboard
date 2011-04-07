@@ -1,6 +1,7 @@
 module.exports = (dependencies) ->
   {app, models, config, models} = dependencies
   {Thread, Post} = models
+  {Board} = dependencies.services
   
   # Checks for existence of board by its short name
   boardExists = (board) ->
@@ -31,9 +32,13 @@ module.exports = (dependencies) ->
   app.get '/:board/', validateBoard, (req, res, next) ->
     board = req.params.board
     name = getBoardName board
-    res.render 'board',
-      board: board
-      title: "/#{board}/ - #{name}"
+    boardService = new Board
+    boardService.read board,
+      (threads) -> res.render 'board',
+        board: board
+        threads: threads
+        title: "/#{board}/ - #{name}"
+      (err) -> next err
   
   # Creating a new thread
   app.post '/:board/', validateBoard, (req, res, next) ->

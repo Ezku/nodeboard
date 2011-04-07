@@ -42,7 +42,7 @@
         return Thread.find({
           board: thread.board,
           id: thread.id
-        }, [], function(err, result) {
+        }, ['board', 'id', 'posts'], function(err, result) {
           if (err) {
             return error(err);
           }
@@ -64,7 +64,7 @@
               $push: {
                 posts: post
               },
-              latestPost: seq.counter
+              lastPost: post
             }, {
               "new": false,
               upsert: false

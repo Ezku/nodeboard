@@ -1,8 +1,9 @@
 (function() {
   module.exports = function(dependencies) {
-    var Post, Thread, app, boardExists, config, getBoardName, models, validateBoard;
+    var Board, Post, Thread, app, boardExists, config, getBoardName, models, validateBoard;
     app = dependencies.app, models = dependencies.models, config = dependencies.config, models = dependencies.models;
     Thread = models.Thread, Post = models.Post;
+    Board = dependencies.services.Board;
     boardExists = function(board) {
       var boards, group, _ref;
       _ref = config.boards;
@@ -40,12 +41,18 @@
       });
     });
     app.get('/:board/', validateBoard, function(req, res, next) {
-      var board, name;
+      var board, boardService, name;
       board = req.params.board;
       name = getBoardName(board);
-      return res.render('board', {
-        board: board,
-        title: "/" + board + "/ - " + name
+      boardService = new Board;
+      return boardService.read(board, function(threads) {
+        return res.render('board', {
+          board: board,
+          threads: threads,
+          title: "/" + board + "/ - " + name
+        });
+      }, function(err) {
+        return next(err);
       });
     });
     return app.post('/:board/', validateBoard, function(req, res, next) {

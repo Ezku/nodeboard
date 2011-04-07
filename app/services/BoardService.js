@@ -20,7 +20,7 @@
       __extends(BoardService, AbstractService);
       BoardService.prototype.read = function(board, success, error) {
         return Thread.find({
-          board: board.id
+          board: board
         }, [], function(err, result) {
           if (err) {
             return error(err);

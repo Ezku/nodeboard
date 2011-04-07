@@ -15,7 +15,6 @@ module.exports = (dependencies) ->
         board: thread.board
         success: (seq) ->
           #thread.set 'id', seq.counter
-          #thread.set 'latestPost', seq.counter
           #post.set 'id', seq.counter
           
           result = new Thread thread.toJSON()
@@ -26,7 +25,7 @@ module.exports = (dependencies) ->
     
     read: (thread, success, error) ->
       Thread.find { board: thread.board, id: thread.id },
-        [],
+        ['board', 'id', 'posts'],
         (err, result) ->
           return error err if err
           success result
@@ -41,7 +40,7 @@ module.exports = (dependencies) ->
           post.id = seq.counter
           Thread.collection.findAndModify { board: thread.board, id: thread.id },
               [],
-              { $push: { posts: post }, latestPost: seq.counter },
+              { $push: { posts: post }, lastPost: post },
               { new: false, upsert: false },
               (err, thread) ->
                 return error err if err

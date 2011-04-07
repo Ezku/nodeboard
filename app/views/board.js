@@ -41,4 +41,18 @@
       });
     });
   });
+  section(function() {
+    return dl(function() {
+      var index, thread, _i, _len, _ref, _results;
+      index = 0;
+      _ref = this.threads;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        thread = _ref[_i];
+        dt(++index);
+        _results.push(dd(thread.toJSON()));
+      }
+      return _results;
+    });
+  });
 }).call(this);

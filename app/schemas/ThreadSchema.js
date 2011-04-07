@@ -12,10 +12,7 @@
         type: Number,
         index: true
       },
-      latestPost: {
-        type: Number,
-        index: true
-      },
+      lastPost: {},
       posts: [PostSchema]
     });
     return ThreadSchema;

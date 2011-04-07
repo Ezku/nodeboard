@@ -11,10 +11,7 @@ module.exports = (mongoose, schemas) ->
     id:
       type: Number
       index: true
-    # TODO: There's a race condition with latestPost - rework into a mongodb date if possible
-    latestPost:
-      type: Number
-      index: true
+    lastPost: {}
     posts: [PostSchema]
   
   ThreadSchema
