@@ -8,25 +8,19 @@ form method: 'post', action: "/#{@board}/", ->
     
     dt ->
     dd -> input name: 'submit', type: 'submit', value: 'Submit'
-    
-section class: 'thread', id: 'thread-123123', ->
-  article class: 'post', id: 'post-1231123', ->
-    div class: 'meta', ->
-      span class: 'post-id', -> '123123'
-      span class: 'author', -> 'Anonymous'
-      time datetime: '2011-11-11 0:00:00+00:00', -> '13 minutes ago'
-    div class: 'post-image', ->
-      img src: '', alt: ''
-    div class: 'post-content', ->
-      p ->
-        'text'
-  article class: 'post', id: 'post-1231123', ->
-    div class: 'meta', ->
-      span class: 'post-id', -> '123123'
-      span class: 'author', -> 'Anonymous'
-      time datetime: '2011-11-11 0:00:00+00:00', -> '13 minutes ago'
-    div class: 'post-image', ->
-      img src: '', alt: ''
-    div class: 'post-content', ->
-      p ->
-        'text'
+
+for thread in @threads
+  section class: 'thread', id: 'thread-' + thread.id, ->
+    h4 'Thread ' + thread.id
+    for post in thread.posts
+      console.log post
+      article class: 'post', id: 'post-' + post.id, ->
+        div class: 'meta', ->
+          span post.id, class: 'post-id'
+          span post.author, class: 'author'
+          time post.time, datetime: post.time
+        if post.image
+          div class: 'post-image', ->
+            img src: '', alt: ''
+        div class: 'post-content', ->
+          p post.content

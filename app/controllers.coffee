@@ -28,6 +28,22 @@ module.exports = (dependencies) ->
     res.render 'index',
       title: 'Aaltoboard'
   
+  # Mockup thread data
+  post =
+    id: 12345
+    author: 'Anonymous'
+    time: '2011-11-11 0:00:00+00:00'
+    content: 'Trolol'
+
+  thread = 
+    id: 54321
+    replycount: 13
+    firstpost: post
+    lastpost: post
+    posts: [post, post]
+
+  mockupThreads = [thread, thread, thread]
+  
   # Board index
   app.get '/:board/', validateBoard, (req, res, next) ->
     board = req.params.board
@@ -36,7 +52,7 @@ module.exports = (dependencies) ->
     boardService.read board,
       (threads) -> res.render 'board',
         board: board
-        threads: threads
+        threads: mockupThreads
         title: "/#{board}/ - #{name}"
       (err) -> next err
   
