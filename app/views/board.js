@@ -1,43 +1,47 @@
 (function() {
   var thread, _i, _len, _ref;
-  form({
-    method: 'post',
-    action: "/" + this.board + "/"
+  section({
+    "class": 'form'
   }, function() {
-    return dl(function() {
-      dt(function() {
-        return label({
-          "for": "content"
-        }, function() {
-          return "Content";
+    return form({
+      method: 'post',
+      action: "/" + this.board + "/"
+    }, function() {
+      return dl(function() {
+        dt(function() {
+          return label({
+            "for": "content"
+          }, function() {
+            return "Content";
+          });
         });
-      });
-      dd(function() {
-        return textarea({
-          name: 'content',
-          id: 'content'
+        dd(function() {
+          return textarea({
+            name: 'content',
+            id: 'content'
+          });
         });
-      });
-      dt(function() {
-        return label({
-          "for": "password"
-        }, function() {
-          return "Password";
+        dt(function() {
+          return label({
+            "for": "password"
+          }, function() {
+            return "Password";
+          });
         });
-      });
-      dd(function() {
-        return input({
-          name: 'password',
-          id: 'password',
-          type: 'password'
+        dd(function() {
+          return input({
+            name: 'password',
+            id: 'password',
+            type: 'password'
+          });
         });
-      });
-      dt(function() {});
-      return dd(function() {
-        return input({
-          name: 'submit',
-          type: 'submit',
-          value: 'Submit'
+        dt(function() {});
+        return dd(function() {
+          return input({
+            name: 'submit',
+            type: 'submit',
+            value: 'Submit'
+          });
         });
       });
     });
