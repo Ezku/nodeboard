@@ -18,9 +18,9 @@
         BoardService.__super__.constructor.apply(this, arguments);
       }
       __extends(BoardService, AbstractService);
-      BoardService.prototype.read = function(board, success, error) {
+      BoardService.prototype.read = function(query, error, success) {
         return Thread.find({
-          board: board
+          board: query.board
         }, [], function(err, result) {
           if (err) {
             return error(err);

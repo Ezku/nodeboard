@@ -8,24 +8,30 @@ module.exports = (dependencies) ->
   dependencies.models = {}
   
   # Declares a Mongoose schema
-  schema = (name) -> mongoose.model name, require(config.paths.schemas + name + "Schema")(mongoose)
+  schema = (name) ->
+    schemaData = require(config.paths.schemas + name + "Schema")(mongoose)
+    schema = new mongoose.Schema schemaData.definition
+    if schemaData.static
+      schema.static schemaData.static
+    mongoose.model name, schema
   
   # Declares a Service, ie. Model backend
   service = (name) -> dependencies.services[name] = require(config.paths.services + name + "Service")(dependencies)
   
   # Declares a Backbone Collection
+  # @deprecated
   collection = (name) -> dependencies.collections[name] = require(config.paths.collections + name)
   
   # Declares a Backbone Model
+  # @deprecated
   model = (name) -> dependencies.models[name] = require(config.paths.models + name)
   
   schema 'Sequence'
   schema 'Thread'
   
-  service('Board').connect(model 'Board')
-  service('Thread').connect(model 'Thread')
-  service('Post').connect(model 'Post')
+  service 'Board'
+  service 'Thread'
+  service 'Post'
   
-  collection 'Boards'
-  collection 'Threads'
-  collection 'Posts'
+  dependencies.services.get = (name) ->
+    new dependencies.services[name]

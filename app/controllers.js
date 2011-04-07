@@ -1,9 +1,8 @@
 (function() {
   module.exports = function(dependencies) {
-    var Board, Post, Thread, app, boardExists, config, getBoardName, models, validateBoard;
-    app = dependencies.app, models = dependencies.models, config = dependencies.config, models = dependencies.models;
-    Thread = models.Thread, Post = models.Post;
-    Board = dependencies.services.Board;
+    var app, boardExists, config, getBoardName, service, services, validateBoard;
+    app = dependencies.app, config = dependencies.config, services = dependencies.services;
+    service = services.get;
     boardExists = function(board) {
       var boards, group, _ref;
       _ref = config.boards;
@@ -41,34 +40,23 @@
       });
     });
     app.get('/:board/', validateBoard, function(req, res, next) {
-      var board, boardService, name;
+      var board, name;
       board = req.params.board;
       name = getBoardName(board);
-      boardService = new Board;
-      return boardService.read(board, function(threads) {
+      return service('Board').read(req.params, next, function(threads) {
         return res.render('board', {
           board: board,
           threads: threads,
           title: "/" + board + "/ - " + name
         });
-      }, function(err) {
-        return next(err);
       });
     });
     return app.post('/:board/', validateBoard, function(req, res, next) {
-      var thread;
-      thread = new Thread({
-        board: req.params.board
-      });
-      thread.posts.add(new Post({
-        content: req.body.content,
-        password: req.body.password
-      }));
-      return thread.save({}, {
-        error: next,
-        success: function(thread) {
-          return res.send(thread.toJSON());
-        }
+      return service('Thread').create({
+        thread: req.params,
+        post: req.body
+      }, next, function(result) {
+        return res.send(result.toJSON());
       });
     });
   };

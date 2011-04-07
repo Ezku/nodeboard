@@ -15,13 +15,13 @@
     "node": "*"
   },
   "dependencies": {
-    "express": ">= 2.0.0",
+    "express": ">= 2.2.1",
     "coffeekup": ">= 0.2.2",
-    "mongoose": ">= 1.1.5",
+    "mongoose": ">= 1.1.24",
     "less": ">= 1.0",
     "backbone": ">= 0.3.3",
     "browserify": ">= 0.3.1",
-    "jsmin": ">= 1.0.0"
+    "jsmin": ">= 1.0.0",
   },
   "devDependencies": {
     "coffee-script": ">= 1.0.1",

@@ -1,12 +1,7 @@
-module.exports =
+unimplemented = (data, success, error) -> error(new Error "Unimplemented service method")
 
-  class AbstractService
-    
-    @connect: (Model) ->
-      service = new this
-      Model::sync = (method, model, success, error) ->
-        if service[method]
-          service[method] model, success, error
-        else
-          error "unsupported method '#{method}' on #{model.url()}"
-      this
+module.exports = class AbstractService
+    create: unimplemented
+    read: unimplemented
+    update: unimplemented
+    delete: unimplemented

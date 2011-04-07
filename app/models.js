@@ -7,7 +7,13 @@
     dependencies.collections = {};
     dependencies.models = {};
     schema = function(name) {
-      return mongoose.model(name, require(config.paths.schemas + name + "Schema")(mongoose));
+      var schema, schemaData;
+      schemaData = require(config.paths.schemas + name + "Schema")(mongoose);
+      schema = new mongoose.Schema(schemaData.definition);
+      if (schemaData.static) {
+        schema.static(schemaData.static);
+      }
+      return mongoose.model(name, schema);
     };
     service = function(name) {
       return dependencies.services[name] = require(config.paths.services + name + "Service")(dependencies);
@@ -20,11 +26,11 @@
     };
     schema('Sequence');
     schema('Thread');
-    service('Board').connect(model('Board'));
-    service('Thread').connect(model('Thread'));
-    service('Post').connect(model('Post'));
-    collection('Boards');
-    collection('Threads');
-    return collection('Posts');
+    service('Board');
+    service('Thread');
+    service('Post');
+    return dependencies.services.get = function(name) {
+      return new dependencies.services[name];
+    };
   };
 }).call(this);
