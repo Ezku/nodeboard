@@ -52,7 +52,7 @@
         div({
           id: "column-wrapper"
         }, function() {
-          section({
+          div({
             id: "high-level"
           }, function() {
             h1(this.title);
@@ -60,7 +60,7 @@
               return this.body;
             });
           });
-          return section({
+          return div({
             id: "detail"
           }, function() {
             h1("Detail level goes here");
