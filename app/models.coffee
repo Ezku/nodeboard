@@ -18,16 +18,9 @@ module.exports = (dependencies) ->
   # Declares a Service, ie. Model backend
   service = (name) -> dependencies.services[name] = require(config.paths.services + name + "Service")(dependencies)
   
-  # Declares a Backbone Collection
-  # @deprecated
-  collection = (name) -> dependencies.collections[name] = require(config.paths.collections + name)
-  
-  # Declares a Backbone Model
-  # @deprecated
-  model = (name) -> dependencies.models[name] = require(config.paths.models + name)
-  
   schema 'Sequence'
   schema 'Thread'
+  schema 'Post'
   
   service 'Board'
   service 'Thread'

@@ -45,6 +45,21 @@ module.exports = (dependencies) ->
   app.post '/:board/', validateBoard, (req, res, next) ->
     service('Thread').create { thread: req.params, post: req.body },
       next,
-      (result) ->
-        res.send result.toJSON()
+      (thread) ->
+        res.send thread.toJSON()
+  
+  # Thread view
+  app.get '/:board/:thread/', validateBoard, (req, res, next) ->
+    service('Thread').read { board: req.params.board, id: req.params.thread },
+      next,
+      (thread) ->
+        res.render 'thread',
+          board: req.params.board
+          thread: thread
+          title: "/#{req.params.board}/#{req.params.thread}"
+  
+  # Replying to a thread
+  app.post '/:board/:thread/', validateBoard, (req, res, next) ->
+    # TODO
+    next()
   

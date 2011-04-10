@@ -51,12 +51,24 @@
         });
       });
     });
-    return app.post('/:board/', validateBoard, function(req, res, next) {
+    app.post('/:board/', validateBoard, function(req, res, next) {
       return service('Thread').create({
         thread: req.params,
         post: req.body
-      }, next, function(result) {
-        return res.send(result.toJSON());
+      }, next, function(thread) {
+        return res.send(thread.toJSON());
+      });
+    });
+    return app.get('/:board/:thread/', validateBoard, function(req, res, next) {
+      return service('Thread').read({
+        board: req.params.board,
+        id: req.params.thread
+      }, next, function(thread) {
+        return res.render('thread', {
+          board: req.params.board,
+          thread: thread,
+          title: "/" + req.params.board + "/" + req.params.thread
+        });
       });
     });
   };

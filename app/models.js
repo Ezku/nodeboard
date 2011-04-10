@@ -1,6 +1,6 @@
 (function() {
   module.exports = function(dependencies) {
-    var collection, config, model, mongoose, schema, service;
+    var config, mongoose, schema, service;
     mongoose = dependencies.mongoose, config = dependencies.config;
     mongoose.connect(config.mongo.connection);
     dependencies.services = {};
@@ -18,14 +18,9 @@
     service = function(name) {
       return dependencies.services[name] = require(config.paths.services + name + "Service")(dependencies);
     };
-    collection = function(name) {
-      return dependencies.collections[name] = require(config.paths.collections + name);
-    };
-    model = function(name) {
-      return dependencies.models[name] = require(config.paths.models + name);
-    };
     schema('Sequence');
     schema('Thread');
+    schema('Post');
     service('Board');
     service('Thread');
     service('Post');

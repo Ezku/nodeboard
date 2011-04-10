@@ -12,6 +12,10 @@
           type: Number,
           index: true
         },
+        replyCount: {
+          type: Number,
+          "default": 0
+        },
         firstPost: PostSchema,
         lastPost: PostSchema,
         posts: [new mongoose.Schema(PostSchema)]

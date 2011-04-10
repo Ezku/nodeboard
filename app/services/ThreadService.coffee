@@ -3,8 +3,9 @@ AbstractService = require './AbstractService.js'
 module.exports = (dependencies) ->
   {mongoose} = dependencies
   
-  Thread = mongoose.model 'Thread'
   Sequence = mongoose.model 'Sequence'
+  Thread = mongoose.model 'Thread'
+  Post = mongoose.model 'Post'
 
   class ThreadService extends AbstractService
                 
@@ -13,32 +14,34 @@ module.exports = (dependencies) ->
         error,
         (seq) ->
           thread = new Thread data.thread
-          thread.id = data.post.id = seq.counter
+          post = new Post(data.post).toJSON()
+          thread.id = post.id = seq.counter
           
-          thread.firstPost = data.post
-          thread.posts.push data.post
+          thread.posts.push post
+          thread.firstPost = post
           
           thread.save (err) ->
             return error err if err
             success thread
     
-    ###
-    read: (thread, success, error) ->
-      Thread.find { board: thread.board, id: thread.id },
-        ['board', 'id', 'posts'],
-        (err, result) ->
-          return error err if err
-          success result
+    read: (query, error, success) ->
+      Thread
+      .find(board: query.board, id: query.id)
+      .select('board', 'id', 'posts')
+      .limit(1)
+      .run (err, threads) ->
+        return error err if err
+        return error "thread not found" if not threads[0]
+        success threads[0]
     
-    update: (thread, success, error) ->
-      post = thread.posts.last()
-
+    update: (data, error, success) ->
       Sequence.next
         error: error
-        board: thread.board
+        board: data.thread.board
         success: (seq) ->
+          post = new Post(data.post).toJSON()
           post.id = seq.counter
-          Thread.collection.findAndModify { board: thread.board, id: thread.id },
+          Thread.collection.findAndModify { board: data.thread.board, id: data.thread.id },
               [],
               { $push: { posts: post }, lastPost: post },
               { new: false, upsert: false },
@@ -46,7 +49,7 @@ module.exports = (dependencies) ->
                 return error err if err
                 success thread
     
-    delete: (thread, success, error) ->
+    delete: (thread, error, success) ->
       Thread.delete { board: thread.board, id: thread.id },
         [],
         (err, result) ->

@@ -8,8 +8,10 @@ module.exports = (dependencies) ->
   class BoardService extends AbstractService
     
     read: (query, error, success) ->
-      Thread.find { board: query.board },
-        [],
-        (err, result) ->
-          return error err if err
-          success result
+      Thread
+      .find()
+      .where(board: query.board)
+      .sort('id', -1)
+      .run (err, threads) ->
+        return error err if err
+        success threads

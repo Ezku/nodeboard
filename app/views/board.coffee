@@ -12,11 +12,14 @@ section class: 'form', ->
 
 for thread in @threads
   section class: 'thread', id: 'thread-' + thread.id, ->
-    h4 'Thread ' + thread.id
-    console.log thread.firstPost
+    h4 ->
+      a href: "/#{@board}/#{thread.id}/", ->
+        "Thread #{thread.id}"
     
     text @partial "partials/post", object: thread.firstPost
     
-    p thread.replyCount + " messages omitted."
+    if thread.replyCount
+      p thread.replyCount + " messages omitted."
 
-    text @partial "partials/post", object: thread.lastPost
+    if thread.lastPost
+      text @partial "partials/post", object: thread.lastPost

@@ -1,11 +1,26 @@
 (function() {
-  var thread, _i, _len, _ref;
+  section({
+    "class": 'thread',
+    id: 'thread-' + this.thread.id
+  }, function() {
+    var post, _i, _len, _ref, _results;
+    h4('Thread ' + this.thread.id);
+    _ref = this.thread.posts;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      post = _ref[_i];
+      _results.push(text(this.partial("partials/post", {
+        object: post
+      })));
+    }
+    return _results;
+  });
   section({
     "class": 'form'
   }, function() {
     return form({
       method: 'post',
-      action: "/" + this.board + "/"
+      action: "/" + this.board + "/" + this.thread.id + "/"
     }, function() {
       return dl(function() {
         dt(function() {
@@ -46,31 +61,4 @@
       });
     });
   });
-  _ref = this.threads;
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    thread = _ref[_i];
-    section({
-      "class": 'thread',
-      id: 'thread-' + thread.id
-    }, function() {
-      h4(function() {
-        return a({
-          href: "/" + this.board + "/" + thread.id + "/"
-        }, function() {
-          return "Thread " + thread.id;
-        });
-      });
-      text(this.partial("partials/post", {
-        object: thread.firstPost
-      }));
-      if (thread.replyCount) {
-        p(thread.replyCount + " messages omitted.");
-      }
-      if (thread.lastPost) {
-        return text(this.partial("partials/post", {
-          object: thread.lastPost
-        }));
-      }
-    });
-  }
 }).call(this);

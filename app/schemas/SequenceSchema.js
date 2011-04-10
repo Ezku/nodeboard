@@ -26,7 +26,6 @@
             "new": true,
             upsert: true
           }, function(err, result) {
-            console.log('');
             if (err) {
               return error(err);
             }

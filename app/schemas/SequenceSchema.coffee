@@ -15,7 +15,6 @@ module.exports = (mongoose) ->
           {$inc: {counter: 1} },
           {new: true, upsert: true},
           (err, result) ->
-            console.log ''
             return error err if err
             success result
   

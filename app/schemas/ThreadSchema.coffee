@@ -11,7 +11,9 @@ module.exports = (mongoose) ->
       id:
         type: Number
         index: true
-        
+      replyCount:
+        type: Number
+        default: 0
       # FIXME: Mongoose doesn't adhere to this
       firstPost: PostSchema
       # FIXME: Mongoose doesn't adhere to this
