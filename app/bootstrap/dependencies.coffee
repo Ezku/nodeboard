@@ -9,5 +9,7 @@ module.exports = (root) ->
     backbone: require 'backbone'
     browserify: require 'browserify'
     jsmin: require 'jsmin'
+    formidable: require 'formidable'
+    imagemagick: require 'imagemagick'
 
   dependencies

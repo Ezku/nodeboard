@@ -1,7 +1,7 @@
 (function() {
   module.exports = function(dependencies) {
-    var app, boardExists, config, getBoardName, service, services, validateBoard;
-    app = dependencies.app, config = dependencies.config, services = dependencies.services;
+    var app, boardExists, config, formidable, getBoardName, handleImageUpload, service, services, validateBoard, validateThread;
+    app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable;
     service = services.get;
     boardExists = function(board) {
       var boards, group, _ref;
@@ -34,6 +34,31 @@
         return next(new Error("Board '" + board + "' does not exist"));
       }
     };
+    validateThread = function(req, res, next) {
+      return service('Thread').read(req.params, next, function() {
+        return next();
+      });
+    };
+    handleImageUpload = function(req, res, next) {
+      var form;
+      form = new formidable.IncomingForm();
+      form.uploadDir = config.paths.temp;
+      return form.parse(req, function(err, fields, files) {
+        var file, name, _ref;
+        if (err) {
+          return next(err);
+        }
+        req.body = fields;
+        req.files = {};
+        for (name in files) {
+          file = files[name];
+          if ((_ref = file.type) != null ? _ref.match('^image') : void 0) {
+            req.files[name] = file;
+          }
+        }
+        return next();
+      });
+    };
     app.get('/', function(req, res) {
       return res.render('index', {
         title: 'Aaltoboard'
@@ -51,36 +76,31 @@
         });
       });
     });
-    app.post('/:board/', validateBoard, function(req, res, next) {
+    app.post('/:board/', validateBoard, handleImageUpload, function(req, res, next) {
+      var _ref;
       return service('Thread').create({
         thread: req.params,
-        post: req.body
+        post: req.body,
+        image: (_ref = req.files) != null ? _ref.image : void 0
       }, next, function(thread) {
         return res.redirect("/" + req.params.board + "/" + (thread.toJSON().id) + "/");
       });
     });
-    app.get('/:board/:thread/', validateBoard, function(req, res, next) {
-      return service('Thread').read({
-        board: req.params.board,
-        id: req.params.thread
-      }, next, function(thread) {
-        return service('Board').read(req.params, next, function(threads) {
-          return res.render('board', {
-            board: req.params.board,
-            threads: threads,
-            title: "/" + req.params.board + "/ - " + (getBoardName(req.params.board)),
-            detailLevel: "thread",
-            detailTitle: "/" + req.params.board + "/" + req.params.thread,
-            detailData: thread.toJSON()
-          });
+    app.get('/:board/:id/', validateBoard, function(req, res, next) {
+      return service('Thread').read(req.params, next, function(thread) {
+        return res.render('thread', {
+          board: req.params.board,
+          thread: thread.toJSON(),
+          title: "/" + req.params.board + "/" + req.params.id
         });
       });
     });
-    return app.post('/:board/:thread/', validateBoard, function(req, res, next) {
+    return app.post('/:board/:id/', validateBoard, handleImageUpload, validateThread, function(req, res, next) {
+      var _ref;
       return service('Thread').update({
-        board: req.params.board,
-        id: req.params.thread,
-        post: req.body
+        thread: req.params,
+        post: req.body,
+        image: (_ref = req.files) != null ? _ref.image : void 0
       }, next, function(thread) {
         return res.redirect('back');
       });

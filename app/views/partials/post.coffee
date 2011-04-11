@@ -5,6 +5,7 @@ article class: 'post', id: 'post-' + @post.id, ->
     time @post.date.toString(), datetime: @post.date
   if @post.image
     div class: 'post-image', ->
-      img src: @post.image.src, alt: ''
+      a href: "/" + @board + "/" + @post.image.fullsize, ->
+        img src: "/" + @board + "/" + @post.image.thumbnail, alt: ''
   div class: 'post-content', ->
     p @post.content

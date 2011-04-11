@@ -1,5 +1,5 @@
 module.exports = (dependencies) ->
-  {app, config, services} = dependencies
+  {app, config, services, formidable} = dependencies
   
   # Retrieves a service object instance
   service = services.get
@@ -16,13 +16,35 @@ module.exports = (dependencies) ->
       return boards[board].name if boards[board]?
     return false
   
-  # Middleware filter that asserts for existence of a board by a name given in the request
+  # Asserts for existence of a board by a name given in the request
   validateBoard = (req, res, next) ->
     board = req.params.board
     if board? and boardExists board
       next()
     else
       next(new Error("Board '#{board}' does not exist"))
+  
+  # Asserts for existence of a thread by an id given in the request
+  # NOTE: handleImageUpload does not work if this precedes it
+  validateThread = (req, res, next) ->
+    service('Thread').read req.params,
+      next,
+      ->
+        next()
+  
+  # Parses images uploaded in the request and stores them in the request object
+  handleImageUpload = (req, res, next) ->
+    form = new formidable.IncomingForm()
+    form.uploadDir = config.paths.temp
+    form.parse req, (err, fields, files) ->
+      return next err if err
+      # The regular body vanishes, reassign it
+      req.body = fields
+      # Assign valid image files to request
+      req.files = {}
+      for name, file of files when file.type?.match('^image')
+        req.files[name] = file
+      next()
   
   # Front page
   app.get '/', (req, res) ->
@@ -42,15 +64,15 @@ module.exports = (dependencies) ->
           title: "/#{board}/ - #{name}"
   
   # Creating a new thread
-  app.post '/:board/', validateBoard, (req, res, next) ->
-    service('Thread').create { thread: req.params, post: req.body },
+  app.post '/:board/', validateBoard, handleImageUpload, (req, res, next) ->
+    service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
       next,
       (thread) ->
         res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
   
   # Thread view
-  app.get '/:board/:thread/', validateBoard, (req, res, next) ->
-    service('Thread').read { board: req.params.board, id: req.params.thread },
+  app.get '/:board/:id/', validateBoard, (req, res, next) ->
+    service('Thread').read req.params,
       next,
       (thread) ->
         service('Board').read req.params,
@@ -65,8 +87,8 @@ module.exports = (dependencies) ->
               detailData: thread.toJSON()
   
   # Replying to a thread
-  app.post '/:board/:thread/', validateBoard, (req, res, next) ->
-    service('Thread').update { board: req.params.board, id: req.params.thread, post: req.body },
+  app.post '/:board/:id/', validateBoard, handleImageUpload, validateThread, (req, res, next) ->
+    service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
       next,
       (thread) ->
         res.redirect 'back'

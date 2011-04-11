@@ -10,9 +10,15 @@ module.exports = (root) ->
       public: root + '/public/'
       vendor: root + '/vendor/'
       mount: root + '/mnt/'
+      temp: root + '/tmp/'
     
     mongo:
       connection: process.env.DUOSTACK_DB_MONGODB or 'mongodb://localhost/aaltoboard'
+    
+    images:
+      thumbnail:
+        width: 128
+        height: 128
     
     boards:
       guilds:
