@@ -21,6 +21,7 @@
     schema('Sequence');
     schema('Thread');
     schema('Post');
+    schema('Image');
     service('Board');
     service('Thread');
     service('Post');

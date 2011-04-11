@@ -4,14 +4,6 @@ section class: 'thread', id: 'thread-' + @thread.id, ->
     for post in @thread.posts
       text @partial "partials/post", object: post
 
-section class: 'form', ->
-  form method: 'post', action: "/#{@board}/#{@thread.id}/", ->
-    dl ->
-      dt -> label for: "content", -> "Content"
-      dd -> textarea name: 'content', id: 'content'
-    
-      dt -> label for: "password", -> "Password"
-      dd -> input name: 'password', id: 'password', type: 'password'
-    
-      dt ->
-      dd -> input name: 'submit', type: 'submit', value: 'Submit'
+text @partial "partials/post-form", as: 'form', object:
+  action: "/#{@board}/#{@thread.id}/"
+  submit: 'Reply to thread'

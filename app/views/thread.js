@@ -15,50 +15,11 @@
     }
     return _results;
   });
-  section({
-    "class": 'form'
-  }, function() {
-    return form({
-      method: 'post',
-      action: "/" + this.board + "/" + this.thread.id + "/"
-    }, function() {
-      return dl(function() {
-        dt(function() {
-          return label({
-            "for": "content"
-          }, function() {
-            return "Content";
-          });
-        });
-        dd(function() {
-          return textarea({
-            name: 'content',
-            id: 'content'
-          });
-        });
-        dt(function() {
-          return label({
-            "for": "password"
-          }, function() {
-            return "Password";
-          });
-        });
-        dd(function() {
-          return input({
-            name: 'password',
-            id: 'password',
-            type: 'password'
-          });
-        });
-        dt(function() {});
-        return dd(function() {
-          return input({
-            name: 'submit',
-            type: 'submit',
-            value: 'Submit'
-          });
-        });
-      });
-    });
-  });
+  text(this.partial("partials/post-form", {
+    as: 'form',
+    object: {
+      action: "/" + this.board + "/" + this.thread.id + "/",
+      submit: 'Reply to thread'
+    }
+  }));
 }).call(this);

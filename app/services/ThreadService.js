@@ -51,13 +51,13 @@
         });
       };
       ThreadService.prototype.update = function(data, error, success) {
-        return Sequence.next(data.board, error, function(seq) {
+        return Sequence.next(data.thread.board, error, function(seq) {
           var post;
           post = new Post(data.post).toJSON();
           post.id = seq.counter;
           return Thread.collection.findAndModify({
-            board: String(data.board),
-            id: Number(data.id)
+            board: String(data.thread.board),
+            id: Number(data.thread.id)
           }, [], {
             $push: {
               posts: post

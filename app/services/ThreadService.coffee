@@ -35,13 +35,13 @@ module.exports = (dependencies) ->
         success threads[0]
     
     update: (data, error, success) ->
-      Sequence.next data.board,
+      Sequence.next data.thread.board,
         error,
         (seq) ->
           post = new Post(data.post).toJSON()
           post.id = seq.counter
           
-          Thread.collection.findAndModify { board: String(data.board), id: Number(data.id) },
+          Thread.collection.findAndModify { board: String(data.thread.board), id: Number(data.thread.id) },
             [],
             { $push: { posts: post }, $set: { lastPost: post }, $inc: { replyCount: 1 } },
             { new: false, upsert: false },

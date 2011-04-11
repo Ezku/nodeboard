@@ -1,6 +1,7 @@
 (function() {
   module.exports = function(mongoose) {
-    var PostSchema;
+    var ImageSchema, PostSchema;
+    ImageSchema = require('./ImageSchema.js')(mongoose).definition;
     PostSchema = {
       definition: {
         id: Number,
@@ -13,7 +14,11 @@
           "default": "Anonymous"
         },
         content: String,
-        password: String
+        password: String,
+        image: {
+          type: ImageSchema,
+          required: false
+        }
       }
     };
     return PostSchema;

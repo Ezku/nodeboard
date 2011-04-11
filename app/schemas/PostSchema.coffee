@@ -1,4 +1,6 @@
 module.exports = (mongoose) ->
+  ImageSchema = require('./ImageSchema.js')(mongoose).definition
+  
   PostSchema =
     definition:
       id: Number
@@ -10,5 +12,8 @@ module.exports = (mongoose) ->
         default: "Anonymous"
       content: String
       password: String
+      image:
+        type: ImageSchema
+        required: false
   
   PostSchema

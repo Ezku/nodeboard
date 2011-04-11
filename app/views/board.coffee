@@ -1,14 +1,8 @@
-section class: 'form', ->
-  form method: 'post', action: "/#{@board}/", ->
-    dl ->
-      dt -> label for: "content", -> "Content"
-      dd -> textarea name: 'content', id: 'content'
-    
-      dt -> label for: "password", -> "Password"
-      dd -> input name: 'password', id: 'password', type: 'password'
-    
-      dt ->
-      dd -> input name: 'submit', type: 'submit', value: 'Submit'
+
+text @partial "partials/post-form", as: 'form', object:
+  action: "/#{@board}/"
+  submit: 'Create thread'
+
 
 for thread in @threads
   section class: 'thread', id: 'thread-' + thread.id, ->

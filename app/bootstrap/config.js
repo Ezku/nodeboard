@@ -11,7 +11,8 @@
         shared: root + '/app/shared/',
         public: root + '/public/',
         vendor: root + '/vendor/',
-        mount: root + '/mnt/'
+        mount: root + '/mnt/',
+        temp: root + '/tmp/'
       },
       mongo: {
         connection: process.env.DUOSTACK_DB_MONGODB || 'mongodb://localhost/aaltoboard'
