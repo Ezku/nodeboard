@@ -60,9 +60,13 @@
           return div({
             id: "detail"
           }, function() {
-            h1("Detail level goes here");
+            h1(this.detailTitle || "Detail level goes here");
             return div(function() {
-              return "The content is vastly abundant.";
+              if (this.detailLevel) {
+                return text(this.partial(this.detailLevel, {
+                  object: this.detailData
+                }));
+              }
             });
           });
         });

@@ -64,10 +64,15 @@
         board: req.params.board,
         id: req.params.thread
       }, next, function(thread) {
-        return res.render('thread', {
-          board: req.params.board,
-          thread: thread.toJSON(),
-          title: "/" + req.params.board + "/" + req.params.thread
+        return service('Board').read(req.params, next, function(threads) {
+          return res.render('board', {
+            board: req.params.board,
+            threads: threads,
+            title: "/" + req.params.board + "/ - " + (getBoardName(req.params.board)),
+            detailLevel: "thread",
+            detailTitle: "/" + req.params.board + "/" + req.params.thread,
+            detailData: thread.toJSON()
+          });
         });
       });
     });

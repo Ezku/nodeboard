@@ -21,9 +21,12 @@ html ->
         div id: "high-level", ->
           h1 @title
           div -> @body
+        
         div id: "detail", ->
-          h1 "Detail level goes here"
-          div -> "The content is vastly abundant."
+          h1 @detailTitle or "Detail level goes here"
+          div -> 
+            if @detailLevel
+              text @partial @detailLevel, object: @detailData
           
       footer ->
         "Oh, and this would be the footer."
