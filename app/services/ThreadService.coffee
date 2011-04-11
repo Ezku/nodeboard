@@ -15,17 +15,19 @@ module.exports = (dependencies) ->
     create: (data, error, success) ->
       Sequence.next data.thread.board,
         error,
-        (seq) ->
-          thread = new Thread data.thread
-          post = new Post(data.post).toJSON()
-          thread.id = post.id = seq.counter
+        (seq) =>
+          @_processImage data.image, data.thread.board, seq.counter, error, (image) ->
+            thread = new Thread data.thread
+            post = new Post(data.post).toJSON()
+            post.image = image?.toJSON()
+            thread.id = post.id = seq.counter
           
-          thread.posts.push post
-          thread.firstPost = post
+            thread.posts.push post
+            thread.firstPost = post
           
-          thread.save (err) ->
-            return error err if err
-            success thread
+            thread.save (err) ->
+              return error err if err
+              success thread
     
     read: (query, error, success) ->
       Thread
@@ -97,7 +99,7 @@ module.exports = (dependencies) ->
       try
         fs.statSync(path)
       catch e
-        fs.mkdirSync(path, 0777);
+        fs.mkdirSync(path, 0777)
       path
     _getFullsizeName: (format, id) -> "#{id}.#{format.toLowerCase()}"
     _getThumbnailName: (format, id) -> "#{id}.thumb.#{format.toLowerCase()}"

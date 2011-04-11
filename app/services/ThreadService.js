@@ -24,20 +24,23 @@
       }
       __extends(ThreadService, AbstractService);
       ThreadService.prototype.create = function(data, error, success) {
-        return Sequence.next(data.thread.board, error, function(seq) {
-          var post, thread;
-          thread = new Thread(data.thread);
-          post = new Post(data.post).toJSON();
-          thread.id = post.id = seq.counter;
-          thread.posts.push(post);
-          thread.firstPost = post;
-          return thread.save(function(err) {
-            if (err) {
-              return error(err);
-            }
-            return success(thread);
+        return Sequence.next(data.thread.board, error, __bind(function(seq) {
+          return this._processImage(data.image, data.thread.board, seq.counter, error, function(image) {
+            var post, thread;
+            thread = new Thread(data.thread);
+            post = new Post(data.post).toJSON();
+            post.image = image != null ? image.toJSON() : void 0;
+            thread.id = post.id = seq.counter;
+            thread.posts.push(post);
+            thread.firstPost = post;
+            return thread.save(function(err) {
+              if (err) {
+                return error(err);
+              }
+              return success(thread);
+            });
           });
-        });
+        }, this));
       };
       ThreadService.prototype.read = function(query, error, success) {
         return Thread.find({
