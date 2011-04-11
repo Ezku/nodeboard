@@ -16,10 +16,12 @@ for thread in @threads
       a href: "/#{@board}/#{thread.id}/", ->
         "Thread #{thread.id}"
     
-    text @partial "partials/post", object: thread.firstPost
+    text @partial "partials/post", object: thread.posts[0]
     
-    if thread.replyCount
-      p thread.replyCount + " messages omitted."
+    replyCount = thread.posts.length-1
+    
+    if replyCount > 1
+      p replyCount-1 + " messages omitted."
 
-    if thread.lastPost
-      text @partial "partials/post", object: thread.lastPost
+    if replyCount > 0
+      text @partial "partials/post", object: thread.posts[replyCount]

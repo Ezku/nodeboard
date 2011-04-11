@@ -53,6 +53,7 @@
       "class": 'thread',
       id: 'thread-' + thread.id
     }, function() {
+      var replyCount;
       h4(function() {
         return a({
           href: "/" + this.board + "/" + thread.id + "/"
@@ -61,14 +62,15 @@
         });
       });
       text(this.partial("partials/post", {
-        object: thread.firstPost
+        object: thread.posts[0]
       }));
-      if (thread.replyCount) {
-        p(thread.replyCount + " messages omitted.");
+      replyCount = thread.posts.length - 1;
+      if (replyCount > 1) {
+        p(replyCount - 1 + " messages omitted.");
       }
-      if (thread.lastPost) {
+      if (replyCount > 0) {
         return text(this.partial("partials/post", {
-          object: thread.lastPost
+          object: thread.posts[replyCount]
         }));
       }
     });
