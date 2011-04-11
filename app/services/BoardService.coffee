@@ -9,8 +9,7 @@ module.exports = (dependencies) ->
     
     read: (query, error, success) ->
       Thread
-      .find()
-      .where(board: query.board)
+      .find(board: query.board)
       .sort('id', -1)
       .run (err, threads) ->
         return error err if err

@@ -15,6 +15,7 @@ module.exports = (dependencies) ->
     app.use express.methodOverride()
     app.use app.router
     app.use express.static config.paths.public
+    app.use express.static config.paths.mount
 #    app.use dependencies.browserify
 #      base: config.paths.shared
 #      mount: '/scripts/browserify.js',

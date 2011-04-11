@@ -38,8 +38,8 @@
       };
       ThreadService.prototype.read = function(query, error, success) {
         return Thread.find({
-          board: query.board,
-          id: query.id
+          board: String(query.board),
+          id: Number(query.id)
         }).select('board', 'id', 'posts').limit(1).run(function(err, threads) {
           if (err) {
             return error(err);
@@ -51,44 +51,42 @@
         });
       };
       ThreadService.prototype.update = function(data, error, success) {
-        return Sequence.next({
-          error: error,
-          board: data.thread.board,
-          success: function(seq) {
-            var post;
-            post = new Post(data.post).toJSON();
-            post.id = seq.counter;
-            return Thread.collection.findAndModify({
-              board: data.thread.board,
-              id: data.thread.id
-            }, [], {
-              $push: {
-                posts: post
-              },
+        return Sequence.next(data.board, error, function(seq) {
+          var post;
+          post = new Post(data.post).toJSON();
+          post.id = seq.counter;
+          return Thread.collection.findAndModify({
+            board: String(data.board),
+            id: Number(data.id)
+          }, [], {
+            $push: {
+              posts: post
+            },
+            $set: {
               lastPost: post
-            }, {
-              "new": false,
-              upsert: false
-            }, function(err, thread) {
-              if (err) {
-                return error(err);
-              }
-              return success(thread);
-            });
-          }
+            },
+            $inc: {
+              replyCount: 1
+            }
+          }, {
+            "new": false,
+            upsert: false
+          }, function(err, thread) {
+            if (err) {
+              return error(err);
+            }
+            return success(thread);
+          });
         });
       };
-      ThreadService.prototype["delete"] = function(thread, error, success) {
-        return Thread["delete"]({
-          board: thread.board,
-          id: thread.id
-        }, [], function(err, result) {
-          if (err) {
-            return error(err);
-          }
-          return success();
-        });
-      };
+      /*
+      delete: (thread, error, success) ->
+        Thread.delete { board: thread.board, id: thread.id },
+          [],
+          (err, result) ->
+            return error err if err
+            success()
+      */
       return ThreadService;
     })();
   };

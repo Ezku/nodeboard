@@ -14,7 +14,8 @@
       app.use(express.bodyParser());
       app.use(express.methodOverride());
       app.use(app.router);
-      return app.use(express.static(config.paths.public));
+      app.use(express.static(config.paths.public));
+      return app.use(express.static(config.paths.mount));
     });
     app.configure('development', function() {
       return app.use(express.errorHandler({

@@ -9,6 +9,7 @@ module.exports = (root) ->
       shared: root + '/app/shared/'
       public: root + '/public/'
       vendor: root + '/vendor/'
+      mount: root + '/mnt/'
     
     mongo:
       connection: process.env.DUOSTACK_DB_MONGODB or 'mongodb://localhost/aaltoboard'

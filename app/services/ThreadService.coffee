@@ -26,7 +26,7 @@ module.exports = (dependencies) ->
     
     read: (query, error, success) ->
       Thread
-      .find(board: query.board, id: query.id)
+      .find(board: String(query.board), id: Number(query.id))
       .select('board', 'id', 'posts')
       .limit(1)
       .run (err, threads) ->
@@ -35,20 +35,20 @@ module.exports = (dependencies) ->
         success threads[0]
     
     update: (data, error, success) ->
-      Sequence.next
-        error: error
-        board: data.thread.board
-        success: (seq) ->
+      Sequence.next data.board,
+        error,
+        (seq) ->
           post = new Post(data.post).toJSON()
           post.id = seq.counter
-          Thread.collection.findAndModify { board: data.thread.board, id: data.thread.id },
-              [],
-              { $push: { posts: post }, lastPost: post },
-              { new: false, upsert: false },
-              (err, thread) ->
-                return error err if err
-                success thread
-    
+          
+          Thread.collection.findAndModify { board: String(data.board), id: Number(data.id) },
+            [],
+            { $push: { posts: post }, $set: { lastPost: post }, $inc: { replyCount: 1 } },
+            { new: false, upsert: false },
+            (err, thread) ->
+              return error err if err
+              success thread
+    ###
     delete: (thread, error, success) ->
       Thread.delete { board: thread.board, id: thread.id },
         [],

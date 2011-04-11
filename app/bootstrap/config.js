@@ -10,7 +10,8 @@
         views: root + '/app/views/',
         shared: root + '/app/shared/',
         public: root + '/public/',
-        vendor: root + '/vendor/'
+        vendor: root + '/vendor/',
+        mount: root + '/mnt/'
       },
       mongo: {
         connection: process.env.DUOSTACK_DB_MONGODB || 'mongodb://localhost/aaltoboard'

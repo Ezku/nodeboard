@@ -63,8 +63,8 @@
       text(this.partial("partials/post", {
         object: thread.firstPost
       }));
-      if (thread.replyCount) {
-        p(thread.replyCount + " messages omitted.");
+      if (thread.replyCount > 1) {
+        p((thread.replyCount - 1) + " messages omitted.");
       }
       if (thread.lastPost) {
         return text(this.partial("partials/post", {

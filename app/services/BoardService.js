@@ -19,7 +19,7 @@
       }
       __extends(BoardService, AbstractService);
       BoardService.prototype.read = function(query, error, success) {
-        return Thread.find().where({
+        return Thread.find({
           board: query.board
         }).sort('id', -1).run(function(err, threads) {
           if (err) {
