@@ -15,6 +15,11 @@ module.exports = (root) ->
     mongo:
       connection: process.env.DUOSTACK_DB_MONGODB or 'mongodb://localhost/aaltoboard'
     
+    images:
+      thumbnail:
+        width: 128
+        height: 128
+    
     boards:
       guilds:
         ak:

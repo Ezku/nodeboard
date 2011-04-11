@@ -20,9 +20,13 @@
       div({
         "class": 'post-image'
       }, function() {
-        return img({
-          src: this.post.image.src,
-          alt: ''
+        return a({
+          href: "/" + this.board + "/" + this.post.image.fullsize
+        }, function() {
+          return img({
+            src: "/" + this.board + "/" + this.post.image.thumbnail,
+            alt: ''
+          });
         });
       });
     }

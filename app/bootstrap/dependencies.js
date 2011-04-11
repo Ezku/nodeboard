@@ -8,7 +8,8 @@
       backbone: require('backbone'),
       browserify: require('browserify'),
       jsmin: require('jsmin'),
-      formidable: require('formidable')
+      formidable: require('formidable'),
+      imagemagick: require('imagemagick')
     };
     return dependencies;
   };

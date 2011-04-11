@@ -1,6 +1,10 @@
 # Ignore MongoDB lock file
 data/db/mongo.lock
 
+# Image uploads
+tmp/*
+mnt/*
+
 # Ignore Javascript files generated from Coffeescript
 # Duostack fails on this :(
 # app/*.js
