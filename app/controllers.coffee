@@ -83,7 +83,7 @@ module.exports = (dependencies) ->
               threads: threads
               title: "/#{req.params.board}/ - #{getBoardName req.params.board}"
               detailLevel: "thread"
-              detailTitle: "/#{req.params.board}/#{req.params.thread}"
+              detailTitle: "/#{req.params.board}/#{req.params.id}"
               detailData: thread.toJSON()
   
   # Replying to a thread

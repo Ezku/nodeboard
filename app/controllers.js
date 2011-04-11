@@ -88,10 +88,15 @@
     });
     app.get('/:board/:id/', validateBoard, function(req, res, next) {
       return service('Thread').read(req.params, next, function(thread) {
-        return res.render('thread', {
-          board: req.params.board,
-          thread: thread.toJSON(),
-          title: "/" + req.params.board + "/" + req.params.id
+        return service('Board').read(req.params, next, function(threads) {
+          return res.render('board', {
+            board: req.params.board,
+            threads: threads,
+            title: "/" + req.params.board + "/ - " + (getBoardName(req.params.board)),
+            detailLevel: "thread",
+            detailTitle: "/" + req.params.board + "/" + req.params.id,
+            detailData: thread.toJSON()
+          });
         });
       });
     });
