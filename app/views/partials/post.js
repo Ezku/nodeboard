@@ -12,8 +12,8 @@
       span(this.post.author, {
         "class": 'author'
       });
-      return time(this.post.time, {
-        datetime: this.post.time
+      return time(this.post.date.toString(), {
+        datetime: this.post.date
       });
     });
     if (this.post.image) {

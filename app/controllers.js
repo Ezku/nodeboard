@@ -56,19 +56,28 @@
         thread: req.params,
         post: req.body
       }, next, function(thread) {
-        return res.send(thread.toJSON());
+        return res.redirect("/" + req.params.board + "/" + (thread.toJSON().id) + "/");
       });
     });
-    return app.get('/:board/:thread/', validateBoard, function(req, res, next) {
+    app.get('/:board/:thread/', validateBoard, function(req, res, next) {
       return service('Thread').read({
         board: req.params.board,
         id: req.params.thread
       }, next, function(thread) {
         return res.render('thread', {
           board: req.params.board,
-          thread: thread,
+          thread: thread.toJSON(),
           title: "/" + req.params.board + "/" + req.params.thread
         });
+      });
+    });
+    return app.post('/:board/:thread/', validateBoard, function(req, res, next) {
+      return service('Thread').update({
+        board: req.params.board,
+        id: req.params.thread,
+        post: req.body
+      }, next, function(thread) {
+        return res.redirect('back');
       });
     });
   };

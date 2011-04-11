@@ -8,16 +8,20 @@ module.exports = (mongoose) ->
       board:
         type: String
         index: true
+        required: true
       id:
         type: Number
         index: true
+        required: true
       replyCount:
         type: Number
         default: 0
-      # FIXME: Mongoose doesn't adhere to this
-      firstPost: PostSchema
-      # FIXME: Mongoose doesn't adhere to this
-      lastPost: PostSchema
+      firstPost:
+        type: PostSchema
+        required: true
+      lastPost:
+        type: PostSchema
+        required: false
       posts: [new mongoose.Schema PostSchema]
   
   ThreadSchema

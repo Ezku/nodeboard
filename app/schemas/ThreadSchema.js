@@ -6,18 +6,26 @@
       definition: {
         board: {
           type: String,
-          index: true
+          index: true,
+          required: true
         },
         id: {
           type: Number,
-          index: true
+          index: true,
+          required: true
         },
         replyCount: {
           type: Number,
           "default": 0
         },
-        firstPost: PostSchema,
-        lastPost: PostSchema,
+        firstPost: {
+          type: PostSchema,
+          required: true
+        },
+        lastPost: {
+          type: PostSchema,
+          required: false
+        },
         posts: [new mongoose.Schema(PostSchema)]
       }
     };
