@@ -10,8 +10,14 @@
         rel: "stylesheet",
         href: '/stylesheets/style.css'
       });
-      return script({
+      script({
         src: '/scripts/modernizr-1.7.min.js'
+      });
+      script({
+        src: '/scripts/jquery-1.5.2.min.js'
+      });
+      return script({
+        src: '/scripts/aaltoboard.js'
       });
     });
     return body(function() {

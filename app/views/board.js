@@ -1,10 +1,17 @@
 (function() {
   var thread, _i, _len, _ref;
+  a({
+    id: "newThreadButton",
+    href: "#newThread"
+  }, function() {
+    return "New Thread";
+  });
   text(this.partial("partials/post-form", {
     as: 'form',
     object: {
       action: "/" + this.board + "/",
-      submit: 'Create thread'
+      submit: 'Create thread',
+      id: 'newThread'
     }
   }));
   _ref = this.threads;
@@ -15,19 +22,20 @@
       id: 'thread-' + thread.id
     }, function() {
       var replyCount;
-      h4(function() {
-        return a({
-          href: "/" + this.board + "/" + thread.id + "/"
-        }, function() {
-          return "Thread " + thread.id;
-        });
+      a({
+        href: "/" + this.board + "/" + thread.id + "/",
+        "class": "threadLink"
       });
       text(this.partial("partials/post", {
         object: thread.posts[0]
       }));
       replyCount = thread.posts.length - 1;
       if (replyCount > 1) {
-        p(replyCount - 1 + " messages omitted.");
+        p({
+          "class": "omitted"
+        }, function() {
+          return replyCount - 1 + " messages omitted.";
+        });
       }
       if (replyCount > 0) {
         return text(this.partial("partials/post", {

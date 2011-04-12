@@ -5,6 +5,8 @@ html ->
     meta charset: "utf8"
     link rel: "stylesheet", href: '/stylesheets/style.css'
     script src: '/scripts/modernizr-1.7.min.js'
+    script src: '/scripts/jquery-1.5.2.min.js'
+    script src: '/scripts/aaltoboard.js'
   body ->
     div id: "page-wrapper", ->
       header ->

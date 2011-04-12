@@ -6,7 +6,7 @@
     div({
       "class": 'meta'
     }, function() {
-      span(this.post.id, {
+      span("#" + this.post.id, {
         "class": 'post-id'
       });
       span(this.post.author, {

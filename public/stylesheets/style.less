@@ -155,6 +155,7 @@ header {
 #column-wrapper > div {
   float: left;
   width: 49%;
+  position: relative;
   
   &#high-level {
     margin-right: 2%;
@@ -166,14 +167,39 @@ header {
   overflow: hidden;
   // Make room for the box-shadow
   padding: 0 5px 5px 0;
-}  
+}
+
+#column-wrapper div#high-level{
+
+  section {
+    display: block;
+    margin: 5px -10px;
+    padding: 5px 10px;
+    .box-shadow();
+    overflow: hidden;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  section.thread {
+    &:hover {
+      background: white;
+    }
+    &:active {
+      background: #ccc;
+      .box-shadow(0,0,0,1)
+    }
+    
+  }
+  
+  p.omitted{
+    color: #ccc;
+    margin: 5px 10px;
+  }
+}
+
 #column-wrapper div {
   
-  &.thread {
-     background-color: rgba(255,255,255, .8);
-    .border-radius(10px);
-    .box-shadow();   
-  }
   div {
     padding: 20px 10px;
     min-height: 200px;
@@ -189,11 +215,24 @@ header {
       &.post {
         overflow: hidden;
         padding: 5px;
-        margin-bottom: 10px;
+        margin: 5px 0;
         
-        /*background-color: rgba(255,255,255, .8);
-        .border-radius(5px);
-        .box-shadow();*/
+        &:nth-of-type(2n) {
+          padding: 10px;
+          background-color: rgba(255,255,255, .8);
+          .border-radius(5px);
+          .box-shadow();
+        }
+        .post-id{
+          font-weight: normal;
+          font-size: 1.2em;
+          margin: 0 0.2em;
+          color: #bbb;
+        }
+        .author{
+          font-weight: bold;
+          margin: 0 0.2em;
+        }
       }
       div {
         .border-radius(0);
@@ -203,17 +242,21 @@ header {
         .box-shadow(0,0,0);
         
         &.post-image {
+          margin: 5px 5px 0 0;
           float: left;
         }
         &.post-content {
+          margin: 0.8em;
           float: left;
         }
       }
       
-      &:nth-of-type(1) {
-        margin-top: 20px;
-      }
       &.board {
+      
+        &:nth-of-type(1) {
+          margin-top: 20px;
+        }
+        
         a {
           display: block;
           overflow: hidden;
@@ -249,6 +292,25 @@ header {
   }
 }
 
+// New Thread button
+
+#newThreadButton{
+  position: absolute;
+  right: 0;
+  top: 5px;
+  padding: 5px 10px;
+  background-color: rgba(255,255,255, .8);
+  .border-radius(20px);
+  .box-shadow();
+  text-decoration: none;
+  color: @navlinkcolor;
+
+  &:hover {
+    .linear-gradient(#999, #ccc);
+  }
+}
+
+// Reply Form
 form {
   dt {
     width: 25%;
