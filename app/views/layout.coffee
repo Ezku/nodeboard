@@ -20,14 +20,17 @@ html ->
                 a href: "/#{label}/", title: properties.name, -> label
             
       div id: "column-wrapper", ->
-        div id: "high-level", ->
-          h1 @title
-          div -> @body
+        div id: "high-level", -> 
+          div -> 
+            h1 @title
+            @body
         
         div id: "detail", ->
-          h1 @detailTitle or "Detail level goes here"
+          
           div -> 
             if @detailLevel
+              if @detailTitle 
+                h1 @detailTitle
               text @partial @detailLevel, object: @detailData
           
       footer ->

@@ -27,7 +27,7 @@
   background-attachment: fixed;
 }
 
-.box-shadow (@x: 1px, @y: 1px, @blur: 3px, @alpha: .2) {
+.box-shadow (@x: 1px, @y: 1px, @blur: 4px, @alpha: .2) {
   @val: @x @y @blur rgba(0, 0, 0, @alpha);
   
   -webkit-box-shadow: @val;
@@ -173,23 +173,30 @@ header {
 
   section {
     display: block;
-    margin: 5px -10px;
-    padding: 5px 10px;
+    margin: 0px -10px;
+    padding: 10px 10px;
     .box-shadow();
     overflow: hidden;
     width: 100%;
     text-decoration: none;
+    
+    &:nth-of-type(even) {
+      //background-color: #eee;
+    }
+    
+    &:last-of-type {
+      .box-shadow(0,0,0,0);
+    }
   }
 
   section.thread {
     &:hover {
-      background: white;
+      background: #eee;
     }
     &:active {
       background: #ccc;
       .box-shadow(0,0,0,1)
     }
-    
   }
   
   p.omitted{
@@ -199,6 +206,12 @@ header {
 }
 
 #column-wrapper div {
+
+  h1 {
+    background: #ccc;
+    margin: -25px -10px 0 -10px;
+    padding: 10px 10px 5px 10px;
+  }
   
   div {
     padding: 20px 10px;
@@ -219,7 +232,7 @@ header {
         
         &:nth-of-type(2n) {
           padding: 10px;
-          background-color: rgba(255,255,255, .8);
+          background-color: rgba(255,255,255, .7);
           .border-radius(5px);
           .box-shadow();
         }
@@ -296,8 +309,8 @@ header {
 
 #newThreadButton{
   position: absolute;
-  right: 0;
-  top: 5px;
+  right: 10px;
+  top: 10px;
   padding: 5px 10px;
   background-color: rgba(255,255,255, .8);
   .border-radius(20px);

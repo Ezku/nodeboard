@@ -58,17 +58,19 @@
           div({
             id: "high-level"
           }, function() {
-            h1(this.title);
             return div(function() {
+              h1(this.title);
               return this.body;
             });
           });
           return div({
             id: "detail"
           }, function() {
-            h1(this.detailTitle || "Detail level goes here");
             return div(function() {
               if (this.detailLevel) {
+                if (this.detailTitle) {
+                  h1(this.detailTitle);
+                }
                 return text(this.partial(this.detailLevel, {
                   object: this.detailData
                 }));

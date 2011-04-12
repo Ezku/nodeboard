@@ -1,4 +1,8 @@
 section class: 'form', id: @form.id, ->
+  
+  if @form.title
+    h4 @form.title
+  
   form method: 'post', action: "#{@form.action}", enctype: 'multipart/form-data', ->
     dl ->
       dt -> label for: 'content', -> 'Content'
