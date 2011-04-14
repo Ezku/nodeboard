@@ -25,7 +25,7 @@ html {
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   overflow: hidden;
-  min-height: 100%;
+  height: 100%;
   background-color: #ffffff;
   background-image: -webkit-gradient(linear, top left, bottom left, from(#dddddd), to(#ffffff));
   background-image: -webkit-linear-gradient(top, #dddddd, #ffffff);
@@ -59,8 +59,11 @@ h3 {
 #page-wrapper {
   width: 90%;
   max-width: 1200px;
-  margin: 20px auto;
-  position: relative;
+  margin-left: -45%;
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
 }
 #page-wrapper a, #page-wrapper section {
   -moz-transition: all 0.2s ease-in-out;
@@ -122,50 +125,22 @@ header nav ul li a:active {
   background-attachment: fixed;
   text-shadow: 0 0 2px white;
 }
-#column-wrapper > div {
-  float: left;
-  width: 49%;
-  position: relative;
-}
-#column-wrapper > div.high-level {
-  margin-right: 2%;
-}
 #column-wrapper {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   clear: both;
-  overflow: hidden;
   padding: 0 5px 5px 0;
 }
-#column-wrapper div.high-level section {
-  display: block;
-  margin: 0;
-  padding: 10px 10px;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  text-decoration: none;
-}
-#column-wrapper div.high-level section:last-of-type {
-  -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-}
-#column-wrapper div.high-level section.thread:hover {
-  background: #eee;
-}
-#column-wrapper div.high-level section.thread:active {
-  background: #ccc;
-  -webkit-box-shadow: 0 0 0 #000000;
-  -moz-box-shadow: 0 0 0 #000000;
-  box-shadow: 0 0 0 #000000;
-}
-#column-wrapper div.high-level p.omitted {
-  color: #ccc;
-  margin: 5px 10px;
-}
 #column-wrapper div.high-level, #column-wrapper div.detail-level {
-  min-height: 200px;
-  overflow: hidden;
+  overflow: auto;
+  height: auto;
+  width: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   -moz-border-radius: 10px;
@@ -173,6 +148,9 @@ header nav ul li a:active {
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+#column-wrapper div.high-level section, #column-wrapper div.detail-level section {
+  padding: 10px 10px;
 }
 #column-wrapper div.high-level article, #column-wrapper div.detail-level article {
   clear: both;
@@ -187,6 +165,39 @@ header nav ul li a:active {
   -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+}
+div.high-level {
+  left: 0;
+  right: 51%;
+}
+div.detail-level {
+  left: 51%;
+  right: 0;
+}
+#column-wrapper div.high-level section {
+  display: block;
+  margin: 0;
+  padding: 10px 10px;
+  border-bottom: 2px solid #eee;
+  overflow: hidden;
+  text-decoration: none;
+}
+#column-wrapper div.high-level section:last-of-type {
+  border: none;
+}
+#column-wrapper div.high-level section.thread {
+  /*&:active {
+      background: #ccc;
+      .box-shadow(0,0,0,1)
+    }*/
+
+}
+#column-wrapper div.high-level section.thread:hover {
+  background: #eee;
+}
+#column-wrapper div.high-level p.omitted {
+  color: #ccc;
+  margin: 5px 10px;
 }
 .board:nth-of-type(1) {
   margin-top: 20px;

@@ -64,7 +64,7 @@ html {
 body {
   font: @font;
   overflow: hidden;
-  min-height: 100%;
+  height: 100%;
   
   .linear-gradient(#ddd, #fff);
 }
@@ -88,8 +88,12 @@ h3 { font-size: @h1-size * .7; }
 #page-wrapper {
   width: @page-width;
   max-width: @page-max-width;
-  margin: 20px auto;
-  position: relative;
+  margin-left: @page-width/-2;
+//  position: relative;
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
 }
 #page-wrapper a,
 #page-wrapper section {
@@ -157,69 +161,37 @@ header {
   }
 }
 
-// Mid-level structure
-#column-wrapper > div {
-  float: left;
-  width: 49%;
-  position: relative;
-  
-  &.high-level {
-    margin-right: 2%;
-  }
-}
+
+//// Mid-level structure
 
 #column-wrapper {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   clear: both;
-  overflow: hidden;
   // Make room for the box-shadow
   padding: 0 5px 5px 0;
 }
 
-// Left column
-
-#column-wrapper div.high-level{
-
-  section {
-    display: block;
-    margin: 0;
-    padding: 10px 10px;
-    .box-shadow();
-    overflow: hidden;
-    text-decoration: none;
-    
-    &:nth-of-type(even) {
-      //background-color: #eee;
-    }
-    
-    &:last-of-type {
-      .box-shadow(0,0,0,0);
-    }
-  }
-
-  section.thread {
-    &:hover {
-      background: #eee;
-    }
-    &:active {
-      background: #ccc;
-      .box-shadow(0,0,0,1)
-    }
-  }
-  
-  p.omitted{
-    color: #ccc;
-    margin: 5px 10px;
-  }
-}
-
 #column-wrapper div.high-level,
 #column-wrapper div.detail-level {
-  min-height: 200px;
-  overflow: hidden;
+
+  overflow: auto;
+  height: auto;
+  width: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
 
   background-color: rgba(255,255,255, .8);
   .border-radius(10px);
   .box-shadow();
+  
+  section {
+    padding: 10px 10px;
+  }
   
   article {
     clear: both;
@@ -234,6 +206,49 @@ header {
     }
   }
 }
+div.high-level {
+  left: 0;
+  right: 51%;
+}
+div.detail-level {
+  left: 51%;
+  right: 0;
+}
+
+
+// Left column
+
+#column-wrapper div.high-level{
+
+  section {
+    display: block;
+    margin: 0;
+    padding: 10px 10px;
+    border-bottom: 2px solid #eee;
+    overflow: hidden;
+    text-decoration: none;
+    
+    &:last-of-type {
+      border: none;
+    }
+  }
+
+  section.thread {
+    &:hover {
+      background: #eee;
+    }
+    /*&:active {
+      background: #ccc;
+      .box-shadow(0,0,0,1)
+    }*/
+  }
+  
+  p.omitted{
+    color: #ccc;
+    margin: 5px 10px;
+  }
+}
+
 
 //// Front page
 

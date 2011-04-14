@@ -20,7 +20,10 @@
         src: '/scripts/aaltoboard.js'
       });
     });
-    return body(function() {
+    return body({
+      "class": this["class"],
+      id: this.id
+    }, function() {
       return div({
         id: "page-wrapper"
       }, function() {
@@ -56,8 +59,7 @@
           id: "column-wrapper"
         }, function() {
           div({
-            "class": "high-level " + this["class"],
-            id: this.id
+            "class": "high-level"
           }, function() {
             return this.body;
           });

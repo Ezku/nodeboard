@@ -7,7 +7,7 @@ html ->
     script src: '/scripts/modernizr-1.7.min.js'
     script src: '/scripts/jquery-1.5.2.min.js'
     script src: '/scripts/aaltoboard.js'
-  body ->
+  body class: @class, id: @id, ->
     div id: "page-wrapper", ->
       header ->
         nav ->
@@ -21,7 +21,7 @@ html ->
             
       div id: "column-wrapper", ->
 
-        div class: "high-level "+@class, id: @id, -> 
+        div class: "high-level", -> 
           @body
         
         div class: "detail-level", ->

@@ -1,8 +1,6 @@
 (function() {
   var thread, _i, _len, _ref;
-  h1(function() {
-    return this.title;
-  });
+  h1(this.title);
   a({
     id: "newThreadButton",
     href: "#newThread"
