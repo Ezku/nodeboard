@@ -52,32 +52,24 @@
             });
           });
         });
-        div({
+        return div({
           id: "column-wrapper"
         }, function() {
           div({
-            id: "high-level"
+            "class": "high-level " + this["class"],
+            id: this.id
           }, function() {
-            h1(this.title);
-            return div(function() {
-              return this.body;
-            });
+            return this.body;
           });
           return div({
-            id: "detail"
+            "class": "detail-level"
           }, function() {
-            h1(this.detailTitle || "Detail level goes here");
-            return div(function() {
-              if (this.detailLevel) {
-                return text(this.partial(this.detailLevel, {
-                  object: this.detailData
-                }));
-              }
-            });
+            if (this.detailLevel) {
+              return text(this.partial(this.detailLevel, {
+                object: this.detailData
+              }));
+            }
           });
-        });
-        return footer(function() {
-          return "Oh, and this would be the footer.";
         });
       });
     });

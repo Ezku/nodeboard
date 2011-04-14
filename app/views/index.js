@@ -1,6 +1,6 @@
 (function() {
   var label, properties, _ref;
-  p("Welcome to " + this.title);
+  h1(this.title);
   _ref = this.config.boards.guilds;
   for (label in _ref) {
     properties = _ref[label];

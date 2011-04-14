@@ -72,7 +72,9 @@
         return res.render('board', {
           board: board,
           threads: threads,
-          title: "/" + board + "/ - " + name
+          title: "/" + board + "/ - " + name,
+          "class": "board-page",
+          id: "board-" + board
         });
       });
     });

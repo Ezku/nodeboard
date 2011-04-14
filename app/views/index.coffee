@@ -1,4 +1,4 @@
-p "Welcome to #{@title}"
+h1 @title
 
 for label, properties of @config.boards.guilds
 

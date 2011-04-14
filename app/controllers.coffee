@@ -62,6 +62,8 @@ module.exports = (dependencies) ->
           board: board
           threads: threads
           title: "/#{board}/ - #{name}"
+          class: "board-page"
+          id: "board-#{board}"
   
   # Creating a new thread
   app.post '/:board/', validateBoard, handleImageUpload, (req, res, next) ->

@@ -1,3 +1,4 @@
+h1 -> @title
 a id: "newThreadButton", href: "#newThread", -> "New Thread"
 
 text @partial "partials/post-form", as: 'form', object:
