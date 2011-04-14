@@ -16,6 +16,9 @@
       script({
         src: '/scripts/jquery-1.5.2.min.js'
       });
+      script({
+        src: '/scripts/jquery.timeago.js'
+      });
       return script({
         src: '/scripts/aaltoboard.js'
       });
