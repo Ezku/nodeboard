@@ -11,5 +11,6 @@ module.exports = (root) ->
     jsmin: require 'jsmin'
     formidable: require 'formidable'
     imagemagick: require 'imagemagick'
+    io: require 'socket.io'
 
   dependencies

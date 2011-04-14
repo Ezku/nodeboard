@@ -9,7 +9,8 @@
       browserify: require('browserify'),
       jsmin: require('jsmin'),
       formidable: require('formidable'),
-      imagemagick: require('imagemagick')
+      imagemagick: require('imagemagick'),
+      io: require('socket.io')
     };
     return dependencies;
   };

@@ -173,6 +173,7 @@ header {
 
   section {
     display: block;
+    position: relative;
     margin: 0px -10px;
     padding: 10px 10px;
     .box-shadow();
@@ -358,6 +359,38 @@ footer {
   
 }
 
+a#newThreadsNotification {
+  display: block;
+  text-align: center;
+  min-height: 0px;
+  margin: 10px 0;
+  padding: 5px 10px;
+  background-color: rgba(255,250,205, .8);
+  .border-radius(20px);
+  .box-shadow();
+  color: @navlinkcolor;
+  text-decoration: none;
+  
+  &:hover {
+    background-color: rgba(255,250,100, .8);
+  }
+}
+
+span.newReplyNotification {
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  background-color: rgba(255,250,205, .8);
+  .border-radius(20px);
+  .box-shadow();
+}
+
+.hilight{
+  background-color: rgba(255,250,205, .8) !important;
+}
 
 // HTML5 Boilerplate
 @import url("boilerplate-bottom.css");

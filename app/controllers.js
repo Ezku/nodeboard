@@ -1,7 +1,7 @@
 (function() {
   module.exports = function(dependencies) {
-    var app, boardExists, config, formidable, getBoardName, handleImageUpload, service, services, validateBoard, validateThread;
-    app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable;
+    var app, boardExists, config, formidable, getBoardName, handleImageUpload, io, service, services, socket, validateBoard, validateThread;
+    app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io;
     service = services.get;
     boardExists = function(board) {
       var boards, group, _ref;
@@ -83,6 +83,12 @@
         post: req.body,
         image: (_ref = req.files) != null ? _ref.image : void 0
       }, next, function(thread) {
+        socket.broadcast({
+          thread: {
+            board: thread.board,
+            id: thread.id
+          }
+        });
         return res.redirect("/" + req.params.board + "/" + (thread.toJSON().id) + "/");
       });
     });
@@ -100,14 +106,30 @@
         });
       });
     });
-    return app.post('/:board/:id/', validateBoard, handleImageUpload, validateThread, function(req, res, next) {
+    app.post('/:board/:id/', validateBoard, handleImageUpload, validateThread, function(req, res, next) {
       var _ref;
       return service('Thread').update({
         thread: req.params,
         post: req.body,
         image: (_ref = req.files) != null ? _ref.image : void 0
       }, next, function(thread) {
+        socket.broadcast({
+          reply: {
+            board: thread.board,
+            thread: thread.id
+          }
+        });
         return res.redirect('back');
+      });
+    });
+    socket = io.listen(app);
+    return socket.on('connection', function(client) {
+      console.log('new client connection: ' + client.sessionId);
+      client.on('message', function() {
+        return console.log('message');
+      });
+      return client.on('disconnect', function() {
+        return console.log('disconnect');
       });
     });
   };

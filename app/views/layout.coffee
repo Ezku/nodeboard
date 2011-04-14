@@ -8,6 +8,7 @@ html ->
     script src: '/scripts/jquery-1.5.2.min.js'
     script src: '/scripts/jquery.timeago.js'
     script src: '/scripts/aaltoboard.js'
+    script src: '/socket.io/socket.io.js'
   body ->
     div id: "page-wrapper", ->
       header ->

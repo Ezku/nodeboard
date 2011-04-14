@@ -1,5 +1,5 @@
 module.exports = (dependencies) ->
-  {app, config, services, formidable} = dependencies
+  {app, config, services, formidable, io} = dependencies
   
   # Retrieves a service object instance
   service = services.get
@@ -68,6 +68,7 @@ module.exports = (dependencies) ->
     service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
       next,
       (thread) ->
+        socket.broadcast {thread: {board: thread.board, id: thread.id}}
         res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
   
   # Thread view
@@ -91,5 +92,18 @@ module.exports = (dependencies) ->
     service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
       next,
       (thread) ->
+        socket.broadcast {reply: {board: thread.board, thread: thread.id}}
         res.redirect 'back'
   
+  # Socket io
+  socket = io.listen app
+  
+  # Socket connection listeners
+  socket.on 'connection', (client) ->
+    console.log 'new client connection: ' + client.sessionId
+    
+    client.on 'message', -> 
+      console.log 'message'
+      
+    client.on 'disconnect', ->
+      console.log 'disconnect'
