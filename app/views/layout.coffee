@@ -18,17 +18,8 @@ html ->
             for label, properties of @config.boards.guilds
               li ->
                 a href: "/#{label}/", title: properties.name, -> label
-            
-      div id: "column-wrapper", ->
-        div id: "high-level", ->
-          h1 @title
-          div -> @body
-        
-        div id: "detail", ->
-          h1 @detailTitle or "Detail level goes here"
-          div -> 
-            if @detailLevel
-              text @partial @detailLevel, object: @detailData
+      
+      div id: "column-wrapper", -> @body
           
       footer ->
         "Oh, and this would be the footer."

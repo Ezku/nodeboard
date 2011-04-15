@@ -1,6 +1,7 @@
 (function() {
   section({
-    "class": 'form'
+    "class": 'form',
+    id: this.form.id
   }, function() {
     return form({
       method: 'post',

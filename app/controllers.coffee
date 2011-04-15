@@ -32,6 +32,14 @@ module.exports = (dependencies) ->
       ->
         next()
   
+  # Declare a set of parameters that can be accepted in the request body 
+  accept = (params...) -> (req, res, next) ->
+    input = req.body
+    accepted = {}
+    accepted[name] = input[name] for name in params
+    req.body = accepted
+    do next
+  
   # Parses images uploaded in the request and stores them in the request object
   handleImageUpload = (req, res, next) ->
     form = new formidable.IncomingForm()
@@ -46,50 +54,110 @@ module.exports = (dependencies) ->
         req.files[name] = file
       next()
   
+  collectBoard = (collector) -> [
+    validateBoard,
+    (req, res, next) ->
+      service('Board').read req.params,
+        next,
+        (threads) ->
+          collector 'view', 'board'
+          collector 'threads', threads
+          next()
+  ]
+  
+  collectThread = (collector) -> [
+    validateThread,
+    (req, res, next) ->
+      service('Thread').read req.params,
+        next,
+        (thread) ->
+          collector 'view', 'thread'
+          collector 'thread', thread
+          next()
+  ]
+  
+  # Builds a data accumulator function with three behaviours
+  # f(): returns accumulated data as an object
+  # f(key): returns the value associated with the key if any
+  # f(key, value): associates key with value
+  collector = ->
+    data = {}
+    (key, value) ->
+      return data if not key?
+      return data[key] if not value?
+      data[key] = value
+  
+  # Collects data for the overview panel
+  overview = collector()
+  
+  # Collects data for the detail panel
+  detail = collector()
+  
+  # Renders the panels view with data from the overview and detail data accumulators
+  renderPanels = (req, res, next) ->
+    res.render 'panels',
+      overview: overview()
+      detail: detail()
+  
   # Front page
-  app.get '/', (req, res) ->
-    res.render 'index',
-      title: 'Aaltoboard'
+  app.get '/',
+    (req, res, next) ->
+      overview 'view', 'index'
+      overview 'title', 'Aaltoboard'
+      res.local 'title', 'Aaltoboard'
+      next()
+    renderPanels
   
   # Board index
-  app.get '/:board/', validateBoard, (req, res, next) ->
-    board = req.params.board
-    name = getBoardName board
-    service('Board').read req.params,
-      next,
-      (threads) ->
-        res.render 'board',
-          board: board
-          threads: threads
-          title: "/#{board}/ - #{name}"
+  app.get '/:board/',
+    collectBoard overview,
+    (req, res, next) ->
+      board = req.params.board
+      name = getBoardName board
+      boardTitle = "/#{board}/ - #{name}"
+      
+      overview 'board', board
+      overview 'title', boardTitle
+      res.local 'title', boardTitle
+      next()
+    renderPanels
   
   # Creating a new thread
-  app.post '/:board/', validateBoard, handleImageUpload, (req, res, next) ->
-    service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
-      next,
-      (thread) ->
-        res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
+  app.post '/:board/',
+    validateBoard,
+    handleImageUpload,
+    accept('content', 'password'),
+    (req, res, next) ->
+      service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
+        next,
+        (thread) ->
+          res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
   
   # Thread view
-  app.get '/:board/:id/', validateBoard, (req, res, next) ->
-    service('Thread').read req.params,
-      next,
-      (thread) ->
-        service('Board').read req.params,
-          next,
-          (threads) ->
-            res.render 'board',
-              board: req.params.board
-              threads: threads
-              title: "/#{req.params.board}/ - #{getBoardName req.params.board}"
-              detailLevel: "thread"
-              detailTitle: "/#{req.params.board}/#{req.params.id}"
-              detailData: thread.toJSON()
+  app.get '/:board/:id/',
+    collectBoard overview,
+    collectThread detail,
+    (req, res, next) ->
+      board = req.params.board
+      name = getBoardName req.params.board
+      boardTitle = "/#{board}/ - #{name}"
+      threadTitle = "/#{board}/#{req.params.id}"
+      
+      overview 'board', board
+      overview 'title', boardTitle
+      detail 'title', threadTitle
+      res.local 'title', threadTitle
+    renderPanels
   
   # Replying to a thread
-  app.post '/:board/:id/', validateBoard, handleImageUpload, validateThread, (req, res, next) ->
-    service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
-      next,
-      (thread) ->
-        res.redirect 'back'
+  app.post '/:board/:id/',
+    validateBoard,
+    handleImageUpload,
+    validateThread,
+    accept('content', 'password'),
+    (req, res, next) ->
+      service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
+        next,
+        (thread) ->
+          res.redirect 'back'
   

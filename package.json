@@ -17,7 +17,7 @@
   "dependencies": {
     "express": ">= 2.2.1",
     "coffeekup": ">= 0.2.2",
-    "mongoose": ">= 1.1.24",
+    "mongoose": ">= 1.2",
     "less": ">= 1.0",
     "backbone": ">= 0.3.3",
     "browserify": ">= 0.3.1",

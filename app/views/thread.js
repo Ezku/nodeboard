@@ -4,7 +4,6 @@
     id: 'thread-' + this.thread.id
   }, function() {
     var post, _i, _len, _ref, _results;
-    h4('Thread ' + this.thread.id);
     _ref = this.thread.posts;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -15,6 +14,7 @@
     }
     return _results;
   });
+  h3("Reply to thread");
   text(this.partial("partials/post-form", {
     as: 'form',
     object: {

@@ -55,26 +55,7 @@
         div({
           id: "column-wrapper"
         }, function() {
-          div({
-            id: "high-level"
-          }, function() {
-            h1(this.title);
-            return div(function() {
-              return this.body;
-            });
-          });
-          return div({
-            id: "detail"
-          }, function() {
-            h1(this.detailTitle || "Detail level goes here");
-            return div(function() {
-              if (this.detailLevel) {
-                return text(this.partial(this.detailLevel, {
-                  object: this.detailData
-                }));
-              }
-            });
-          });
+          return this.body;
         });
         return footer(function() {
           return "Oh, and this would be the footer.";
