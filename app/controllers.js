@@ -61,7 +61,9 @@
     };
     app.get('/', function(req, res) {
       return res.render('index', {
-        title: 'Aaltoboard'
+        title: 'Aaltoboard',
+        id: "front-page",
+        "class": ""
       });
     });
     app.get('/:board/', validateBoard, function(req, res, next) {
@@ -72,7 +74,9 @@
         return res.render('board', {
           board: board,
           threads: threads,
-          title: "/" + board + "/ - " + name
+          title: "/" + board + "/ - " + name,
+          "class": "board-page",
+          id: "board-page-" + board
         });
       });
     });
@@ -99,6 +103,8 @@
             board: req.params.board,
             threads: threads,
             title: "/" + req.params.board + "/ - " + (getBoardName(req.params.board)),
+            "class": "thread-page",
+            id: "thread-page-" + req.params.id,
             detailLevel: "thread",
             detailTitle: "/" + req.params.board + "/" + req.params.id,
             detailData: thread.toJSON()

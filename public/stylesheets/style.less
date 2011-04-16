@@ -64,7 +64,7 @@ html {
 body {
   font: @font;
   overflow: hidden;
-  min-height: 100%;
+  height: 100%;
   
   .linear-gradient(#ddd, #fff);
 }
@@ -77,6 +77,10 @@ h1 {
   margin-bottom: 10px;
   
   .text-shadow();
+
+  background: #ccc;
+  margin: 0;
+  padding: 10px 10px 5px 10px;
 }
 h2 { font-size: @h1-size * .8; }
 h3 { font-size: @h1-size * .7; }
@@ -84,8 +88,18 @@ h3 { font-size: @h1-size * .7; }
 #page-wrapper {
   width: @page-width;
   max-width: @page-max-width;
-  margin: 20px auto;
-  position: relative;
+  margin-left: @page-width/-2;
+//  position: relative;
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
+}
+#page-wrapper a,
+#page-wrapper section {
+  -moz-transition: all .2s ease-in-out;
+  -webkit-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
 }
 
 a {
@@ -125,15 +139,11 @@ header {
           text-decoration: none;
           
           .border-radius(20px);
-          //.box-shadow();
           .text-shadow();
-          //.linear-gradient(#fff, #ccc);
         
           &:hover {
             color: @navlinkcolor + #666;
-            
-            //.box-shadow(1px, 1px, 3px, .4);
-            .linear-gradient(#999, #ccc);
+            background-color: #999;
           }
           &:visited, &:link {
             color: @navlinkcolor;
@@ -151,42 +161,75 @@ header {
   }
 }
 
-// Mid-level structure
-#column-wrapper > div {
-  float: left;
-  width: 49%;
-  position: relative;
-  
-  &#high-level {
-    margin-right: 2%;
-  }
-}
+
+//// Mid-level structure
 
 #column-wrapper {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   clear: both;
-  overflow: hidden;
   // Make room for the box-shadow
   padding: 0 5px 5px 0;
 }
 
-#column-wrapper div#high-level{
+#column-wrapper div.high-level,
+#column-wrapper div.detail-level {
+
+  overflow: auto;
+  height: auto;
+  width: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+
+  background-color: rgba(255,255,255, .8);
+  .border-radius(10px);
+  .box-shadow();
+  
+  section {
+    padding: 10px 10px;
+  }
+  
+  article {
+    clear: both;
+    
+    // any div inside an article
+    div {
+      .border-radius(0);
+      padding: 0;
+      min-height: 0;
+      background: transparent none;
+      .box-shadow(0,0,0);
+    }
+  }
+}
+div.high-level {
+  left: 0;
+  right: 51%;
+}
+div.detail-level {
+  left: 51%;
+  right: 0;
+}
+
+
+// Left column
+
+#column-wrapper div.high-level{
 
   section {
     display: block;
-    position: relative;
-    margin: 0px -10px;
+    margin: 0;
     padding: 10px 10px;
-    .box-shadow();
+    border-bottom: 2px solid #eee;
     overflow: hidden;
-    width: 100%;
     text-decoration: none;
     
-    &:nth-of-type(even) {
-      //background-color: #eee;
-    }
-    
     &:last-of-type {
-      .box-shadow(0,0,0,0);
+      border: none;
     }
   }
 
@@ -194,10 +237,10 @@ header {
     &:hover {
       background: #eee;
     }
-    &:active {
+    /*&:active {
       background: #ccc;
       .box-shadow(0,0,0,1)
-    }
+    }*/
   }
   
   p.omitted{
@@ -206,112 +249,89 @@ header {
   }
 }
 
-#column-wrapper div {
 
-  h1 {
-    background: #ccc;
-    margin: -25px -10px 0 -10px;
-    padding: 10px 10px 5px 10px;
+//// Front page
+
+.board {
+  &:nth-of-type(1) {
+    margin-top: 20px;
   }
   
-  div {
-    padding: 20px 10px;
-    min-height: 200px;
+  a {
+    display: block;
     overflow: hidden;
-  
-    background-color: rgba(255,255,255, .8);
-    .border-radius(10px);
-    .box-shadow();
+    margin: 0;
+    padding: 0 10px;
+    text-decoration: none;
     
-    article {
-      clear: both;
+    &:hover {
+      background: white;
+      .box-shadow();
+    }
+    &:active {
+      background: #999;
+      .box-shadow(0,0,0,1)
+    }
+    
+    p {
+      color: #444; 
+      float: right;
       
-      &.post {
-        overflow: hidden;
-        padding: 5px;
-        margin: 5px 0;
-        
-        &:nth-of-type(2n) {
-          padding: 10px;
-          background-color: rgba(255,255,255, .7);
-          .border-radius(5px);
-          .box-shadow();
-        }
-        .post-id{
-          font-weight: normal;
-          font-size: 1.2em;
-          margin: 0 0.2em;
-          color: #bbb;
-        }
-        .author{
-          font-weight: bold;
-          margin: 0 0.2em;
-        }
-      }
-      div {
-        .border-radius(0);
-        padding: 0;
-        min-height: 0;
-        background: transparent none;
-        .box-shadow(0,0,0);
-        
-        &.post-image {
-          margin: 5px 5px 0 0;
-          float: left;
-        }
-        &.post-content {
-          margin: 0.8em;
-          float: left;
-        }
-      }
-      
-      &.board {
-      
-        &:nth-of-type(1) {
-          margin-top: 20px;
-        }
-        
-        a {
-          display: block;
-          overflow: hidden;
-          width: 100%;
-          margin: 0 -10px;
-          padding: 0 10px;
-          text-decoration: none;
-          
-          &:hover {
-            background: white;
-            .box-shadow();
-          }
-          &:active {
-            background: #999;
-            .box-shadow(0,0,0,1)
-          }
-          
-          p {
-            color: #444; 
-            float: right;
-            
-          }
-          h2 { 
-            padding-right: 20px; 
-            float: left;
-          }
-          h2, p {
-           line-height: 40px;
-          }
-        }
-      }
+    }
+    h2 { 
+      padding-right: 20px; 
+      float: left;
+    }
+    h2, p {
+     line-height: 40px;
     }
   }
 }
 
-// New Thread button
+//// Board page
+.post {
+  overflow: hidden;
+  padding: 5px;
+  margin: 5px 0;
+  
+  &:nth-of-type(2n) {
+    padding: 10px;
+    background-color: rgba(255,255,255, .7);
+    .border-radius(5px);
+    .box-shadow();
+  }
+  .post-id{
+    font-weight: normal;
+    font-size: 1.2em;
+    margin: 0 0.2em;
+    color: #bbb;
+  }
+  .author{
+    font-weight: bold;
+    margin: 0 0.2em;
+  }
+  
+  .post-image {
+    margin: 5px 5px 0 0;
+    float: left;
+  }
+  .post-content {
+    margin: 0.8em;
+    float: left;
+  }
+}
 
+
+// Make room for the button
+.board-page h1 {
+  padding-right: 120px;
+}
+// New Thread button
 #newThreadButton{
   position: absolute;
-  right: 10px;
   top: 10px;
+  right: 10px;
+  display: block;
   padding: 5px 10px;
   background-color: rgba(255,255,255, .8);
   .border-radius(20px);
@@ -320,7 +340,7 @@ header {
   color: @navlinkcolor;
 
   &:hover {
-    .linear-gradient(#999, #ccc);
+    background-color: #999;
   }
 }
 

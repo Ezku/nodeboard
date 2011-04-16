@@ -3,9 +3,9 @@ $(document).ready(function(){
   // New thread -button logic
   $("#newThread").hide();
   $("#newThreadButton").click(function(){
-    $("#newThread").show("slow");
+    $("#newThread").slideDown("slow");
     return false;
-  })
+  });
   
   // Thread selector
   $("#high-level section.thread").click(function(){

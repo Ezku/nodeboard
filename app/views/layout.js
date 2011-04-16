@@ -26,7 +26,10 @@
         src: '/socket.io/socket.io.js'
       });
     });
-    return body(function() {
+    return body({
+      "class": this["class"],
+      id: this.id
+    }, function() {
       return div({
         id: "page-wrapper"
       }, function() {
@@ -58,34 +61,23 @@
             });
           });
         });
-        div({
+        return div({
           id: "column-wrapper"
         }, function() {
           div({
-            id: "high-level"
+            "class": "high-level"
           }, function() {
-            return div(function() {
-              h1(this.title);
-              return this.body;
-            });
+            return this.body;
           });
           return div({
-            id: "detail"
+            "class": "detail-level"
           }, function() {
-            return div(function() {
-              if (this.detailLevel) {
-                if (this.detailTitle) {
-                  h1(this.detailTitle);
-                }
-                return text(this.partial(this.detailLevel, {
-                  object: this.detailData
-                }));
-              }
-            });
+            if (this.detailLevel) {
+              return text(this.partial(this.detailLevel, {
+                object: this.detailData
+              }));
+            }
           });
-        });
-        return footer(function() {
-          return "Oh, and this would be the footer.";
         });
       });
     });

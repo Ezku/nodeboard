@@ -8,8 +8,7 @@ html ->
     script src: '/scripts/jquery-1.5.2.min.js'
     script src: '/scripts/jquery.timeago.js'
     script src: '/scripts/aaltoboard.js'
-    script src: '/socket.io/socket.io.js'
-  body ->
+  body class: @class, id: @id, ->
     div id: "page-wrapper", ->
       header ->
         nav ->
@@ -22,19 +21,15 @@ html ->
                 a href: "/#{label}/", title: properties.name, -> label
             
       div id: "column-wrapper", ->
-        div id: "high-level", -> 
-          div -> 
-            h1 @title
-            @body
+
+        div class: "high-level", -> 
+          @body
         
-        div id: "detail", ->
+        div class: "detail-level", ->
+          if @detailLevel
+            text @partial @detailLevel, object: @detailData
+
           
-          div -> 
-            if @detailLevel
-              if @detailTitle 
-                h1 @detailTitle
-              text @partial @detailLevel, object: @detailData
-          
-      footer ->
-        "Oh, and this would be the footer."
+#      footer ->
+#        "Oh, and this would be the footer."
           

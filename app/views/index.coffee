@@ -1,3 +1,5 @@
+h1 @title
+
 for label, properties of @config.boards.guilds
 
   article class: "board", ->

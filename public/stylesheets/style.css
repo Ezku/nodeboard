@@ -25,7 +25,7 @@ html {
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   overflow: hidden;
-  min-height: 100%;
+  height: 100%;
   background-color: #ffffff;
   background-image: -webkit-gradient(linear, top left, bottom left, from(#dddddd), to(#ffffff));
   background-image: -webkit-linear-gradient(top, #dddddd, #ffffff);
@@ -46,6 +46,9 @@ h1 {
   font-size: 26px;
   margin-bottom: 10px;
   text-shadow: 1px 1px 3px white;
+  background: #ccc;
+  margin: 0;
+  padding: 10px 10px 5px 10px;
 }
 h2 {
   font-size: 20.8px;
@@ -56,8 +59,16 @@ h3 {
 #page-wrapper {
   width: 90%;
   max-width: 1200px;
-  margin: 20px auto;
-  position: relative;
+  margin-left: -45%;
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
+}
+#page-wrapper a, #page-wrapper section {
+  -moz-transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 a {
   color: #00b7ff;
@@ -98,12 +109,7 @@ header nav ul li a {
 }
 header nav ul li a:hover {
   color: #666666;
-  background-color: #cccccc;
-  background-image: -webkit-gradient(linear, top left, bottom left, from(#999999), to(#cccccc));
-  background-image: -webkit-linear-gradient(top, #999999, #cccccc);
-  background-image: -moz-linear-gradient(top, #999999, #cccccc);
-  background-image: linear-gradient(top, #999999, #cccccc);
-  background-attachment: fixed;
+  background-color: #999;
 }
 header nav ul li a:visited, header nav ul li a:link {
   color: #000000;
@@ -119,58 +125,22 @@ header nav ul li a:active {
   background-attachment: fixed;
   text-shadow: 0 0 2px white;
 }
-#column-wrapper > div {
-  float: left;
-  width: 49%;
-  position: relative;
-}
-#column-wrapper > div#high-level {
-  margin-right: 2%;
-}
 #column-wrapper {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   clear: both;
-  overflow: hidden;
   padding: 0 5px 5px 0;
 }
-#column-wrapper div#high-level section {
-  display: block;
-  position: relative;
-  margin: 0px -10px;
-  padding: 10px 10px;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  width: 100%;
-  text-decoration: none;
-}
-#column-wrapper div#high-level section:last-of-type {
-  -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-}
-#column-wrapper div#high-level section.thread:hover {
-  background: #eee;
-}
-#column-wrapper div#high-level section.thread:active {
-  background: #ccc;
-  -webkit-box-shadow: 0 0 0 #000000;
-  -moz-box-shadow: 0 0 0 #000000;
-  box-shadow: 0 0 0 #000000;
-}
-#column-wrapper div#high-level p.omitted {
-  color: #ccc;
-  margin: 5px 10px;
-}
-#column-wrapper div h1 {
-  background: #ccc;
-  margin: -25px -10px 0 -10px;
-  padding: 10px 10px 5px 10px;
-}
-#column-wrapper div div {
-  padding: 20px 10px;
-  min-height: 200px;
-  overflow: hidden;
+#column-wrapper div.high-level, #column-wrapper div.detail-level {
+  overflow: auto;
+  height: auto;
+  width: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   -moz-border-radius: 10px;
@@ -179,35 +149,13 @@ header nav ul li a:active {
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
-#column-wrapper div div article {
+#column-wrapper div.high-level section, #column-wrapper div.detail-level section {
+  padding: 10px 10px;
+}
+#column-wrapper div.high-level article, #column-wrapper div.detail-level article {
   clear: both;
 }
-#column-wrapper div div article.post {
-  overflow: hidden;
-  padding: 5px;
-  margin: 5px 0;
-}
-#column-wrapper div div article.post:nth-of-type(2n) {
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-}
-#column-wrapper div div article.post .post-id {
-  font-weight: normal;
-  font-size: 1.2em;
-  margin: 0 0.2em;
-  color: #bbb;
-}
-#column-wrapper div div article.post .author {
-  font-weight: bold;
-  margin: 0 0.2em;
-}
-#column-wrapper div div article div {
+#column-wrapper div.high-level article div, #column-wrapper div.detail-level article div {
   border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -218,52 +166,113 @@ header nav ul li a:active {
   -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
 }
-#column-wrapper div div article div.post-image {
-  margin: 5px 5px 0 0;
-  float: left;
+div.high-level {
+  left: 0;
+  right: 51%;
 }
-#column-wrapper div div article div.post-content {
-  margin: 0.8em;
-  float: left;
+div.detail-level {
+  left: 51%;
+  right: 0;
 }
-#column-wrapper div div article.board:nth-of-type(1) {
+#column-wrapper div.high-level section {
+  display: block;
+  margin: 0;
+  padding: 10px 10px;
+  border-bottom: 2px solid #eee;
+  overflow: hidden;
+  text-decoration: none;
+}
+#column-wrapper div.high-level section:last-of-type {
+  border: none;
+}
+#column-wrapper div.high-level section.thread {
+  /*&:active {
+      background: #ccc;
+      .box-shadow(0,0,0,1)
+    }*/
+
+}
+#column-wrapper div.high-level section.thread:hover {
+  background: #eee;
+}
+#column-wrapper div.high-level p.omitted {
+  color: #ccc;
+  margin: 5px 10px;
+}
+.board:nth-of-type(1) {
   margin-top: 20px;
 }
-#column-wrapper div div article.board a {
+.board a {
   display: block;
   overflow: hidden;
-  width: 100%;
-  margin: 0 -10px;
+  margin: 0;
   padding: 0 10px;
   text-decoration: none;
 }
-#column-wrapper div div article.board a:hover {
+.board a:hover {
   background: white;
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
-#column-wrapper div div article.board a:active {
+.board a:active {
   background: #999;
   -webkit-box-shadow: 0 0 0 #000000;
   -moz-box-shadow: 0 0 0 #000000;
   box-shadow: 0 0 0 #000000;
 }
-#column-wrapper div div article.board a p {
+.board a p {
   color: #444;
   float: right;
 }
-#column-wrapper div div article.board a h2 {
+.board a h2 {
   padding-right: 20px;
   float: left;
 }
-#column-wrapper div div article.board a h2, #column-wrapper div div article.board a p {
+.board a h2, .board a p {
   line-height: 40px;
+}
+.post {
+  overflow: hidden;
+  padding: 5px;
+  margin: 5px 0;
+}
+.post:nth-of-type(2n) {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.post .post-id {
+  font-weight: normal;
+  font-size: 1.2em;
+  margin: 0 0.2em;
+  color: #bbb;
+}
+.post .author {
+  font-weight: bold;
+  margin: 0 0.2em;
+}
+.post .post-image {
+  margin: 5px 5px 0 0;
+  float: left;
+}
+.post .post-content {
+  margin: 0.8em;
+  float: left;
+}
+.board-page h1 {
+  padding-right: 120px;
 }
 #newThreadButton {
   position: absolute;
-  right: 10px;
   top: 10px;
+  right: 10px;
+  display: block;
   padding: 5px 10px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 20px;
@@ -276,12 +285,7 @@ header nav ul li a:active {
   color: #000000;
 }
 #newThreadButton:hover {
-  background-color: #cccccc;
-  background-image: -webkit-gradient(linear, top left, bottom left, from(#999999), to(#cccccc));
-  background-image: -webkit-linear-gradient(top, #999999, #cccccc);
-  background-image: -moz-linear-gradient(top, #999999, #cccccc);
-  background-image: linear-gradient(top, #999999, #cccccc);
-  background-attachment: fixed;
+  background-color: #999;
 }
 form dt {
   width: 25%;
