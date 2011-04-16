@@ -19,11 +19,8 @@
       script({
         src: '/scripts/jquery.timeago.js'
       });
-      script({
-        src: '/scripts/aaltoboard.js'
-      });
       return script({
-        src: '/socket.io/socket.io.js'
+        src: '/scripts/aaltoboard.js'
       });
     });
     return body({
