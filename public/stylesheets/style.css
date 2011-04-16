@@ -186,6 +186,7 @@ div.detail-level {
   border: none;
 }
 #column-wrapper div.high-level section.thread {
+  position: relative;
   /*&:active {
       background: #ccc;
       .box-shadow(0,0,0,1)
