@@ -54,28 +54,6 @@ module.exports = (dependencies) ->
         req.files[name] = file
       next()
   
-  collectBoard = (collector) -> [
-    validateBoard,
-    (req, res, next) ->
-      service('Board').read req.params,
-        next,
-        (threads) ->
-          collector 'view', 'board'
-          collector 'threads', threads
-          next()
-  ]
-  
-  collectThread = (collector) -> [
-    validateThread,
-    (req, res, next) ->
-      service('Thread').read req.params,
-        next,
-        (thread) ->
-          collector 'view', 'thread'
-          collector 'thread', thread
-          next()
-  ]
-  
   # Builds a data accumulator function with three behaviours
   # f(): returns accumulated data as an object
   # f(key): returns the value associated with the key if any
@@ -93,6 +71,30 @@ module.exports = (dependencies) ->
   # Collects data for the detail panel
   detail = collector()
   
+  # Accepts a data collector, creating a filter that assigns board data to it on request
+  collectBoard = (collector) -> [
+    validateBoard,
+    (req, res, next) ->
+      service('Board').read req.params,
+        next,
+        (threads) ->
+          collector 'view', 'board'
+          collector 'threads', threads
+          next()
+  ]
+  
+  # Accepts a data collector, creating a filter that assigns thread data to it on request
+  collectThread = (collector) -> [
+    validateThread,
+    (req, res, next) ->
+      service('Thread').read req.params,
+        next,
+        (thread) ->
+          collector 'view', 'thread'
+          collector 'thread', thread
+          next()
+  ]
+  
   # Renders the panels view with data from the overview and detail data accumulators
   renderPanels = (req, res, next) ->
     res.render 'panels',
@@ -104,13 +106,17 @@ module.exports = (dependencies) ->
     (req, res, next) ->
       overview 'view', 'index'
       overview 'title', 'Aaltoboard'
+      ### TODO
+      detail 'view', 'intro'
+      detail 'title', 'Introduction'
+      ###
       res.local 'title', 'Aaltoboard'
       next()
     renderPanels
   
   # Board index
   app.get '/:board/',
-    collectBoard overview,
+    collectBoard(overview),
     (req, res, next) ->
       board = req.params.board
       name = getBoardName board
@@ -118,7 +124,10 @@ module.exports = (dependencies) ->
       
       overview 'board', board
       overview 'title', boardTitle
+      
+      res.local 'board', board
       res.local 'title', boardTitle
+      
       next()
     renderPanels
   
@@ -135,8 +144,8 @@ module.exports = (dependencies) ->
   
   # Thread view
   app.get '/:board/:id/',
-    collectBoard overview,
-    collectThread detail,
+    collectBoard(overview),
+    collectThread(detail),
     (req, res, next) ->
       board = req.params.board
       name = getBoardName req.params.board
@@ -147,6 +156,9 @@ module.exports = (dependencies) ->
       overview 'title', boardTitle
       detail 'title', threadTitle
       res.local 'title', threadTitle
+      res.local 'board', board
+      
+      next()
     renderPanels
   
   # Replying to a thread

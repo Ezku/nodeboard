@@ -75,6 +75,21 @@
         return next();
       });
     };
+    collector = function() {
+      var data;
+      data = {};
+      return function(key, value) {
+        if (!(key != null)) {
+          return data;
+        }
+        if (!(value != null)) {
+          return data[key];
+        }
+        return data[key] = value;
+      };
+    };
+    overview = collector();
+    detail = collector();
     collectBoard = function(collector) {
       return [
         validateBoard, function(req, res, next) {
@@ -97,21 +112,6 @@
         }
       ];
     };
-    collector = function() {
-      var data;
-      data = {};
-      return function(key, value) {
-        if (!(key != null)) {
-          return data;
-        }
-        if (!(value != null)) {
-          return data[key];
-        }
-        return data[key] = value;
-      };
-    };
-    overview = collector();
-    detail = collector();
     renderPanels = function(req, res, next) {
       return res.render('panels', {
         overview: overview(),
@@ -121,19 +121,24 @@
     app.get('/', function(req, res, next) {
       overview('view', 'index');
       overview('title', 'Aaltoboard');
+      /* TODO
+      detail 'view', 'intro'
+      detail 'title', 'Introduction'
+      */
       res.local('title', 'Aaltoboard');
       return next();
     }, renderPanels);
-    app.get('/:board/', collectBoard(overview, function(req, res, next) {
+    app.get('/:board/', collectBoard(overview), function(req, res, next) {
       var board, boardTitle, name;
       board = req.params.board;
       name = getBoardName(board);
       boardTitle = "/" + board + "/ - " + name;
       overview('board', board);
       overview('title', boardTitle);
+      res.local('board', board);
       res.local('title', boardTitle);
       return next();
-    }), renderPanels);
+    }, renderPanels);
     app.post('/:board/', validateBoard, handleImageUpload, accept('content', 'password'), function(req, res, next) {
       var _ref;
       return service('Thread').create({
@@ -144,7 +149,7 @@
         return res.redirect("/" + req.params.board + "/" + (thread.toJSON().id) + "/");
       });
     });
-    app.get('/:board/:id/', collectBoard(overview, collectThread(detail, function(req, res, next) {
+    app.get('/:board/:id/', collectBoard(overview), collectThread(detail), function(req, res, next) {
       var board, boardTitle, name, threadTitle;
       board = req.params.board;
       name = getBoardName(req.params.board);
@@ -153,8 +158,10 @@
       overview('board', board);
       overview('title', boardTitle);
       detail('title', threadTitle);
-      return res.local('title', threadTitle);
-    })), renderPanels);
+      res.local('title', threadTitle);
+      res.local('board', board);
+      return next();
+    }, renderPanels);
     return app.post('/:board/:id/', validateBoard, handleImageUpload, validateThread, accept('content', 'password'), function(req, res, next) {
       var _ref;
       return service('Thread').update({

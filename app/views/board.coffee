@@ -10,7 +10,7 @@ for thread in @threads
     
     a href: "/#{@board}/#{thread.id}/", class: "threadLink"
 
-    text @partial "partials/post", object: thread.posts[0]
+    text @partial "partials/post", object: thread.firstPost
   
     replyCount = thread.posts.length-1
   
@@ -18,4 +18,4 @@ for thread in @threads
       p class: "omitted", -> replyCount-1 + " messages omitted."
 
     if replyCount > 0
-      text @partial "partials/post", object: thread.posts[replyCount]
+      text @partial "partials/post", object: thread.lastPost
