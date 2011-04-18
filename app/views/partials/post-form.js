@@ -3,6 +3,9 @@
     "class": 'form',
     id: this.form.id
   }, function() {
+    if (this.form.title) {
+      h4(this.form.title);
+    }
     return form({
       method: 'post',
       action: "" + this.form.action,

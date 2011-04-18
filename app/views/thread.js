@@ -14,12 +14,13 @@
     }
     return _results;
   });
-  h3("Reply to thread");
   text(this.partial("partials/post-form", {
     as: 'form',
     object: {
       action: "/" + this.board + "/" + this.thread.id + "/",
-      submit: 'Reply to thread'
+      submit: 'Reply to thread',
+      id: "reply",
+      title: "Reply to thread"
     }
   }));
 }).call(this);

@@ -16,11 +16,20 @@
       script({
         src: '/scripts/jquery-1.5.2.min.js'
       });
-      return script({
+      script({
+        src: '/scripts/jquery.timeago.js'
+      });
+      script({
         src: '/scripts/aaltoboard.js'
       });
+      return script({
+        src: '/socket.io/socket.io.js'
+      });
     });
-    return body(function() {
+    return body({
+      "class": this["class"],
+      id: this.id
+    }, function() {
       return div({
         id: "page-wrapper"
       }, function() {
@@ -52,13 +61,10 @@
             });
           });
         });
-        div({
+        return div({
           id: "column-wrapper"
         }, function() {
           return this.body;
-        });
-        return footer(function() {
-          return "Oh, and this would be the footer.";
         });
       });
     });

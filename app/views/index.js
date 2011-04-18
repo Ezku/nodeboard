@@ -1,6 +1,6 @@
 (function() {
   var boards, category, label, properties, _ref;
-  p("Welcome to " + this.title);
+  h1(this.title);
   _ref = this.config.boards;
   for (category in _ref) {
     boards = _ref[category];

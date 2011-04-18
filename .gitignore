@@ -13,3 +13,5 @@ mnt/*
 # Ignore CSS files compiled from LESS
 # Duostack fails on this as well
 # public/stylesheets/style.css
+
+.DS_Store

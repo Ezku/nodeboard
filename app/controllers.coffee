@@ -1,5 +1,5 @@
 module.exports = (dependencies) ->
-  {app, config, services, formidable} = dependencies
+  {app, config, services, formidable, io} = dependencies
   
   # Retrieves a service object instance
   service = services.get
@@ -58,18 +58,17 @@ module.exports = (dependencies) ->
   # f(): returns accumulated data as an object
   # f(key): returns the value associated with the key if any
   # f(key, value): associates key with value
-  collector = ->
+  # The constructed accumulator is assigned to the request using the given name.
+  collector = (name) -> (req, res, next) ->
     data = {}
-    (key, value) ->
+    res[name] = (key, value) ->
       return data if not key?
       return data[key] if not value?
       data[key] = value
+    next()
   
-  # Collects data for the overview panel
-  overview = collector()
-  
-  # Collects data for the detail panel
-  detail = collector()
+  # Declares the overview and detail data collectors
+  panels = [collector('overview'), collector('detail')]
   
   # Accepts a data collector, creating a filter that assigns board data to it on request
   collectBoard = (collector) -> [
@@ -78,8 +77,8 @@ module.exports = (dependencies) ->
       service('Board').read req.params,
         next,
         (threads) ->
-          collector 'view', 'board'
-          collector 'threads', threads
+          res[collector] 'view', 'board'
+          res[collector] 'threads', threads
           next()
   ]
   
@@ -90,44 +89,57 @@ module.exports = (dependencies) ->
       service('Thread').read req.params,
         next,
         (thread) ->
-          collector 'view', 'thread'
-          collector 'thread', thread
+          res[collector] 'view', 'thread'
+          res[collector] 'thread', thread
           next()
   ]
   
   # Renders the panels view with data from the overview and detail data accumulators
   renderPanels = (req, res, next) ->
     res.render 'panels',
-      overview: overview()
-      detail: detail()
+      overview: res.overview()
+      detail: res.detail()
+  
+  # Accepts a set of parameters, creating a filter that will assign those to either the provided collector or the request
+  static = (collector, params) -> (req, res, next) ->
+    if typeof params is 'object'
+      res[collector] name, value for name, value of params
+    else
+      res.locals collector
+    next()
   
   # Front page
   app.get '/',
-    (req, res, next) ->
-      overview 'view', 'index'
-      overview 'title', 'Aaltoboard'
-      ### TODO
-      detail 'view', 'intro'
-      detail 'title', 'Introduction'
-      ###
-      res.local 'title', 'Aaltoboard'
-      next()
+    panels,
+    static(
+      title: 'Aaltoboard'
+      id: "front-page"
+      class: ""
+    ),
+    static('overview',
+      view: 'index'
+      title: 'Aaltoboard'
+    ),
     renderPanels
   
   # Board index
   app.get '/:board/',
-    collectBoard(overview),
+    panels,
+    collectBoard('overview'),
     (req, res, next) ->
       board = req.params.board
       name = getBoardName board
       boardTitle = "/#{board}/ - #{name}"
       
-      overview 'board', board
-      overview 'title', boardTitle
+      res.overview 'board', board
+      res.overview 'title', boardTitle
       
-      res.local 'board', board
-      res.local 'title', boardTitle
-      
+      res.locals
+        board: board
+        title: boardTitle
+        class: "board-page"
+        id: "board-page-#{board}"
+    
       next()
     renderPanels
   
@@ -140,23 +152,29 @@ module.exports = (dependencies) ->
       service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
         next,
         (thread) ->
+          socket.broadcast {thread: {board: thread.board, id: thread.id}}
           res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
   
   # Thread view
   app.get '/:board/:id/',
-    collectBoard(overview),
-    collectThread(detail),
+    panels,
+    collectBoard('overview'),
+    collectThread('detail'),
     (req, res, next) ->
       board = req.params.board
       name = getBoardName req.params.board
       boardTitle = "/#{board}/ - #{name}"
       threadTitle = "/#{board}/#{req.params.id}"
       
-      overview 'board', board
-      overview 'title', boardTitle
-      detail 'title', threadTitle
-      res.local 'title', threadTitle
-      res.local 'board', board
+      res.overview 'board', board
+      res.overview 'title', boardTitle
+      res.detail 'title', threadTitle
+      
+      res.locals
+        title: threadTitle
+        board: board
+        class: "thread-page"
+        id: "thread-page-#{req.params.id}"
       
       next()
     renderPanels
@@ -171,5 +189,18 @@ module.exports = (dependencies) ->
       service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
         next,
         (thread) ->
+          socket.broadcast {reply: {board: thread.board, thread: thread.id}}
           res.redirect 'back'
   
+  # Socket io
+  socket = io.listen app
+  
+  # Socket connection listeners
+  socket.on 'connection', (client) ->
+    console.log 'new client connection: ' + client.sessionId
+    
+    client.on 'message', -> 
+      console.log 'message'
+      
+    client.on 'disconnect', ->
+      console.log 'disconnect'

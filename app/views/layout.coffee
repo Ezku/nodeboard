@@ -6,8 +6,10 @@ html ->
     link rel: "stylesheet", href: '/stylesheets/style.css'
     script src: '/scripts/modernizr-1.7.min.js'
     script src: '/scripts/jquery-1.5.2.min.js'
+    script src: '/scripts/jquery.timeago.js'
     script src: '/scripts/aaltoboard.js'
-  body ->
+    script src: '/socket.io/socket.io.js'
+  body class: @class, id: @id, ->
     div id: "page-wrapper", ->
       header ->
         nav ->
@@ -21,6 +23,6 @@ html ->
       
       div id: "column-wrapper", -> @body
           
-      footer ->
-        "Oh, and this would be the footer."
+#      footer ->
+#        "Oh, and this would be the footer."
           

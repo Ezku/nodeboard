@@ -1,4 +1,4 @@
-p "Welcome to #{@title}"
+h1 @title
 
 for category, boards of @config.boards
   for label, properties of boards
