@@ -1,4 +1,5 @@
 (function() {
+  h1(this.title);
   section({
     "class": 'thread',
     id: 'thread-' + this.thread.id
