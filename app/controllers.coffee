@@ -32,6 +32,14 @@ module.exports = (dependencies) ->
       ->
         next()
   
+  # Declare a set of parameters that can be accepted in the request body 
+  accept = (params...) -> (req, res, next) ->
+    input = req.body
+    accepted = {}
+    accepted[name] = input[name] for name in params
+    req.body = accepted
+    do next
+  
   # Parses images uploaded in the request and stores them in the request object
   handleImageUpload = (req, res, next) ->
     form = new formidable.IncomingForm()
@@ -46,60 +54,143 @@ module.exports = (dependencies) ->
         req.files[name] = file
       next()
   
+  # Builds a data accumulator function with three behaviours
+  # f(): returns accumulated data as an object
+  # f(key): returns the value associated with the key if any
+  # f(key, value): associates key with value
+  # The constructed accumulator is assigned to the request using the given name.
+  collector = (name) -> (req, res, next) ->
+    data = {}
+    res[name] = (key, value) ->
+      return data if not key?
+      return data[key] if not value?
+      data[key] = value
+    next()
+  
+  # Declares the overview and detail data collectors
+  panels = [collector('overview'), collector('detail')]
+  
+  # Accepts a data collector, creating a filter that assigns board data to it on request
+  collectBoard = (collector) -> [
+    validateBoard,
+    (req, res, next) ->
+      service('Board').read req.params,
+        next,
+        (threads) ->
+          res[collector] 'view', 'board'
+          res[collector] 'threads', threads
+          next()
+  ]
+  
+  # Accepts a data collector, creating a filter that assigns thread data to it on request
+  collectThread = (collector) -> [
+    validateThread,
+    (req, res, next) ->
+      service('Thread').read req.params,
+        next,
+        (thread) ->
+          res[collector] 'view', 'thread'
+          res[collector] 'thread', thread
+          next()
+  ]
+  
+  # Renders the panels view with data from the overview and detail data accumulators
+  renderPanels = (req, res, next) ->
+    res.render 'panels',
+      overview: res.overview()
+      detail: res.detail()
+  
+  # Accepts a set of parameters, creating a filter that will assign those to either the provided collector or the request
+  static = (collector, params) -> (req, res, next) ->
+    if typeof params is 'object'
+      res[collector] name, value for name, value of params
+    else
+      res.locals collector
+    next()
+  
   # Front page
-  app.get '/', (req, res) ->
-    res.render 'index',
+  app.get '/',
+    panels,
+    static(
       title: 'Aaltoboard'
       id: "front-page"
       class: ""
+    ),
+    static('overview',
+      view: 'index'
+      title: 'Aaltoboard'
+    ),
+    renderPanels
   
   # Board index
-  app.get '/:board/', validateBoard, (req, res, next) ->
-    board = req.params.board
-    name = getBoardName board
-    service('Board').read req.params,
-      next,
-      (threads) ->
-        res.render 'board',
-          board: board
-          threads: threads
-          title: "/#{board}/ - #{name}"
-          class: "board-page"
-          id: "board-page-#{board}"
+  app.get '/:board/',
+    panels,
+    collectBoard('overview'),
+    (req, res, next) ->
+      board = req.params.board
+      name = getBoardName board
+      boardTitle = "/#{board}/ - #{name}"
+      
+      res.overview 'board', board
+      res.overview 'title', boardTitle
+      
+      res.locals
+        board: board
+        title: boardTitle
+        class: "board-page"
+        id: "board-page-#{board}"
+    
+      next()
+    renderPanels
   
   # Creating a new thread
-  app.post '/:board/', validateBoard, handleImageUpload, (req, res, next) ->
-    service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
-      next,
-      (thread) ->
-        socket.broadcast {thread: {board: thread.board, id: thread.id}}
-        res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
+  app.post '/:board/',
+    validateBoard,
+    handleImageUpload,
+    accept('content', 'password'),
+    (req, res, next) ->
+      service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
+        next,
+        (thread) ->
+          socket.broadcast {thread: {board: thread.board, id: thread.id}}
+          res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
   
   # Thread view
-  app.get '/:board/:id/', validateBoard, (req, res, next) ->
-    service('Thread').read req.params,
-      next,
-      (thread) ->
-        service('Board').read req.params,
-          next,
-          (threads) ->
-            res.render 'board',
-              board: req.params.board
-              threads: threads
-              title: "/#{req.params.board}/ - #{getBoardName req.params.board}"
-              class: "thread-page"
-              id: "thread-page-#{req.params.id}"
-              detailLevel: "thread"
-              detailTitle: "/#{req.params.board}/#{req.params.id}"
-              detailData: thread.toJSON()
+  app.get '/:board/:id/',
+    panels,
+    collectBoard('overview'),
+    collectThread('detail'),
+    (req, res, next) ->
+      board = req.params.board
+      name = getBoardName req.params.board
+      boardTitle = "/#{board}/ - #{name}"
+      threadTitle = "/#{board}/#{req.params.id}"
+      
+      res.overview 'board', board
+      res.overview 'title', boardTitle
+      res.detail 'title', threadTitle
+      
+      res.locals
+        title: threadTitle
+        board: board
+        class: "thread-page"
+        id: "thread-page-#{req.params.id}"
+      
+      next()
+    renderPanels
   
   # Replying to a thread
-  app.post '/:board/:id/', validateBoard, handleImageUpload, validateThread, (req, res, next) ->
-    service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
-      next,
-      (thread) ->
-        socket.broadcast {reply: {board: thread.board, thread: thread.id}}
-        res.redirect 'back'
+  app.post '/:board/:id/',
+    validateBoard,
+    handleImageUpload,
+    validateThread,
+    accept('content', 'password'),
+    (req, res, next) ->
+      service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
+        next,
+        (thread) ->
+          socket.broadcast {reply: {board: thread.board, thread: thread.id}}
+          res.redirect 'back'
   
   # Socket io
   socket = io.listen app

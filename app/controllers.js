@@ -1,6 +1,7 @@
 (function() {
+  var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var app, boardExists, config, formidable, getBoardName, handleImageUpload, io, service, services, socket, validateBoard, validateThread;
+    var accept, app, boardExists, collectBoard, collectThread, collector, config, formidable, getBoardName, handleImageUpload, io, panels, renderPanels, service, services, socket, static, validateBoard, validateThread;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io;
     service = services.get;
     boardExists = function(board) {
@@ -39,6 +40,21 @@
         return next();
       });
     };
+    accept = function() {
+      var params;
+      params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return function(req, res, next) {
+        var accepted, input, name, _i, _len;
+        input = req.body;
+        accepted = {};
+        for (_i = 0, _len = params.length; _i < _len; _i++) {
+          name = params[_i];
+          accepted[name] = input[name];
+        }
+        req.body = accepted;
+        return next();
+      };
+    };
     handleImageUpload = function(req, res, next) {
       var form;
       form = new formidable.IncomingForm();
@@ -59,28 +75,89 @@
         return next();
       });
     };
-    app.get('/', function(req, res) {
-      return res.render('index', {
-        title: 'Aaltoboard',
-        id: "front-page",
-        "class": ""
+    collector = function(name) {
+      return function(req, res, next) {
+        var data;
+        data = {};
+        res[name] = function(key, value) {
+          if (!(key != null)) {
+            return data;
+          }
+          if (!(value != null)) {
+            return data[key];
+          }
+          return data[key] = value;
+        };
+        return next();
+      };
+    };
+    panels = [collector('overview'), collector('detail')];
+    collectBoard = function(collector) {
+      return [
+        validateBoard, function(req, res, next) {
+          return service('Board').read(req.params, next, function(threads) {
+            res[collector]('view', 'board');
+            res[collector]('threads', threads);
+            return next();
+          });
+        }
+      ];
+    };
+    collectThread = function(collector) {
+      return [
+        validateThread, function(req, res, next) {
+          return service('Thread').read(req.params, next, function(thread) {
+            res[collector]('view', 'thread');
+            res[collector]('thread', thread);
+            return next();
+          });
+        }
+      ];
+    };
+    renderPanels = function(req, res, next) {
+      return res.render('panels', {
+        overview: res.overview(),
+        detail: res.detail()
       });
-    });
-    app.get('/:board/', validateBoard, function(req, res, next) {
-      var board, name;
+    };
+    static = function(collector, params) {
+      return function(req, res, next) {
+        var name, value;
+        if (typeof params === 'object') {
+          for (name in params) {
+            value = params[name];
+            res[collector](name, value);
+          }
+        } else {
+          res.locals(collector);
+        }
+        return next();
+      };
+    };
+    app.get('/', panels, static({
+      title: 'Aaltoboard',
+      id: "front-page",
+      "class": ""
+    }), static('overview', {
+      view: 'index',
+      title: 'Aaltoboard'
+    }), renderPanels);
+    app.get('/:board/', panels, collectBoard('overview'), function(req, res, next) {
+      var board, boardTitle, name;
       board = req.params.board;
       name = getBoardName(board);
-      return service('Board').read(req.params, next, function(threads) {
-        return res.render('board', {
-          board: board,
-          threads: threads,
-          title: "/" + board + "/ - " + name,
-          "class": "board-page",
-          id: "board-page-" + board
-        });
+      boardTitle = "/" + board + "/ - " + name;
+      res.overview('board', board);
+      res.overview('title', boardTitle);
+      res.locals({
+        board: board,
+        title: boardTitle,
+        "class": "board-page",
+        id: "board-page-" + board
       });
-    });
-    app.post('/:board/', validateBoard, handleImageUpload, function(req, res, next) {
+      return next();
+    }, renderPanels);
+    app.post('/:board/', validateBoard, handleImageUpload, accept('content', 'password'), function(req, res, next) {
       var _ref;
       return service('Thread').create({
         thread: req.params,
@@ -96,23 +173,24 @@
         return res.redirect("/" + req.params.board + "/" + (thread.toJSON().id) + "/");
       });
     });
-    app.get('/:board/:id/', validateBoard, function(req, res, next) {
-      return service('Thread').read(req.params, next, function(thread) {
-        return service('Board').read(req.params, next, function(threads) {
-          return res.render('board', {
-            board: req.params.board,
-            threads: threads,
-            title: "/" + req.params.board + "/ - " + (getBoardName(req.params.board)),
-            "class": "thread-page",
-            id: "thread-page-" + req.params.id,
-            detailLevel: "thread",
-            detailTitle: "/" + req.params.board + "/" + req.params.id,
-            detailData: thread.toJSON()
-          });
-        });
+    app.get('/:board/:id/', panels, collectBoard('overview'), collectThread('detail'), function(req, res, next) {
+      var board, boardTitle, name, threadTitle;
+      board = req.params.board;
+      name = getBoardName(req.params.board);
+      boardTitle = "/" + board + "/ - " + name;
+      threadTitle = "/" + board + "/" + req.params.id;
+      res.overview('board', board);
+      res.overview('title', boardTitle);
+      res.detail('title', threadTitle);
+      res.locals({
+        title: threadTitle,
+        board: board,
+        "class": "thread-page",
+        id: "thread-page-" + req.params.id
       });
-    });
-    app.post('/:board/:id/', validateBoard, handleImageUpload, validateThread, function(req, res, next) {
+      return next();
+    }, renderPanels);
+    app.post('/:board/:id/', validateBoard, handleImageUpload, validateThread, accept('content', 'password'), function(req, res, next) {
       var _ref;
       return service('Thread').update({
         thread: req.params,

@@ -29,9 +29,6 @@
     return app.dynamicHelpers({
       config: function() {
         return config;
-      },
-      include: function(req, res) {
-        return res.render;
       }
     });
   };

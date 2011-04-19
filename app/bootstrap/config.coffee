@@ -25,7 +25,7 @@ module.exports = (root) ->
         ak:
           name: "Arkkitehtikilta"
         as:
-          name: "Automaatio- ja Systeemitekniikka"
+          name: "Aivan Sama"
         bio:
           name: "Bioinformaatiotekniikka"
         fk:

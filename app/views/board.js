@@ -28,7 +28,7 @@
         "class": "threadLink"
       });
       text(this.partial("partials/post", {
-        object: thread.posts[0]
+        object: thread.firstPost
       }));
       replyCount = thread.posts.length - 1;
       if (replyCount > 1) {
@@ -40,7 +40,7 @@
       }
       if (replyCount > 0) {
         return text(this.partial("partials/post", {
-          object: thread.posts[replyCount]
+          object: thread.lastPost
         }));
       }
     });

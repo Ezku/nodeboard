@@ -30,6 +30,4 @@ module.exports = (dependencies) ->
   app.dynamicHelpers
     # Make config settings available in view scope
     config: -> config
-    # Enable views to render subviews
-    # TODO: fix :D
-    include: (req, res) -> res.render
+  

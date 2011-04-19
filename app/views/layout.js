@@ -64,20 +64,7 @@
         return div({
           id: "column-wrapper"
         }, function() {
-          div({
-            "class": "high-level"
-          }, function() {
-            return this.body;
-          });
-          return div({
-            "class": "detail-level"
-          }, function() {
-            if (this.detailLevel) {
-              return text(this.partial(this.detailLevel, {
-                object: this.detailData
-              }));
-            }
-          });
+          return this.body;
         });
       });
     });

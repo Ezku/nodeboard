@@ -134,7 +134,7 @@ header nav ul li a:active {
   clear: both;
   padding: 0 5px 5px 0;
 }
-#column-wrapper div.high-level, #column-wrapper div.detail-level {
+#high-level, #detail-level {
   overflow: auto;
   height: auto;
   width: auto;
@@ -149,13 +149,13 @@ header nav ul li a:active {
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
-#column-wrapper div.high-level section, #column-wrapper div.detail-level section {
+#high-level section, #detail-level section {
   padding: 10px 10px;
 }
-#column-wrapper div.high-level article, #column-wrapper div.detail-level article {
+#high-level article, #detail-level article {
   clear: both;
 }
-#column-wrapper div.high-level article div, #column-wrapper div.detail-level article div {
+#high-level article div, #detail-level article div {
   border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -166,15 +166,15 @@ header nav ul li a:active {
   -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
 }
-div.high-level {
+#high-level {
   left: 0;
   right: 51%;
 }
-div.detail-level {
+#detail-level {
   left: 51%;
   right: 0;
 }
-#column-wrapper div.high-level section {
+#high-level section {
   display: block;
   margin: 0;
   padding: 10px 10px;
@@ -182,10 +182,10 @@ div.detail-level {
   overflow: hidden;
   text-decoration: none;
 }
-#column-wrapper div.high-level section:last-of-type {
+#high-level section:last-of-type {
   border: none;
 }
-#column-wrapper div.high-level section.thread {
+#high-level section.thread {
   position: relative;
   /*&:active {
       background: #ccc;
@@ -193,10 +193,10 @@ div.detail-level {
     }*/
 
 }
-#column-wrapper div.high-level section.thread:hover {
+#high-level section.thread:hover {
   background: #eee;
 }
-#column-wrapper div.high-level p.omitted {
+#high-level p.omitted {
   color: #ccc;
   margin: 5px 10px;
 }
