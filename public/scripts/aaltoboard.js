@@ -18,7 +18,7 @@ $(document).ready(function(){
   $("time").timeago();
   
   // Socket io
-  var socket = new io.Socket('localhost'); 
+  var socket = new io.Socket(document.domain); 
   socket.connect();
   socket.on('connect', function(){
     console.log('connect');
