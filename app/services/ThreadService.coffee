@@ -1,4 +1,5 @@
 fs = require 'fs'
+util = require 'util'
 _ = require 'underscore'
 AbstractService = require './AbstractService.js'
 
@@ -67,10 +68,9 @@ module.exports = (dependencies) ->
         imagePath = @_getImagePath board
         image = @_getImageModel(data, features, id)
         imagemagick.resize @_getResizeOptions(imagePath, data, image),
-          (err, stdout, stderr) ->
-            return error err if err            
-            fs.rename data.path, imagePath + image.fullsize, (err) ->
-              return error err if err
+          (err, stdout, stderr) =>
+            return error err if err  
+            @_move data.path, imagePath + image.fullsize, error, ->
               success image
     
     _getResizeOptions: (imagePath, data, image) ->
@@ -105,6 +105,15 @@ module.exports = (dependencies) ->
     _getThumbnailName: (format, id) -> "#{id}.thumb.#{format.toLowerCase()}"
     _getThumbnailHeight: -> config.images.thumbnail.height
     _getThumbnailWidth: -> config.images.thumbnail.width
+    
+    # Move file from source path to destination. Supports moves from accross disk partitions.
+    _move: (source, destination, error, success) ->
+      input = fs.createReadStream source
+      output = fs.createWriteStream destination
+      util.pump input, output, (err) ->
+        fs.unlinkSync source
+        return error err if err
+        success()
     
     allowedImageTypes: ['JPEG', 'GIF', 'PNG']
     
