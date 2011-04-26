@@ -123,6 +123,14 @@ module.exports = (dependencies) ->
     renderPanels
   
   # Board index
+  app.get '/api/:board/',
+    collectBoard('local'),
+    (req, res) ->
+      res.send {
+        board: req.params.board
+        threads: res.local 'threads'
+      }
+  
   app.get '/:board/',
     panels,
     collectBoard('overview'),
@@ -144,7 +152,7 @@ module.exports = (dependencies) ->
     renderPanels
   
   # Creating a new thread
-  app.post '/:board/',
+  receiveThread = [
     validateBoard,
     handleImageUpload,
     accept('content', 'password'),
@@ -152,10 +160,40 @@ module.exports = (dependencies) ->
       service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
         next,
         (thread) ->
-          socket.broadcast {thread: {board: thread.board, id: thread.id}}
-          res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
+          res.thread = thread
+          next()
+    (req, res, next) ->
+      thread = res.thread
+      socket.broadcast {thread: {board: thread.board, id: thread.id}}
+      next()
+  ]
+  
+  app.post '/api/:board/',
+    receiveThread,
+    (req, res) ->
+      thread = res.thread
+      res.send {
+        board: req.params.board
+        id: thread.id
+        thread: thread
+      }
+  
+  app.post '/:board/',
+    receiveThread,
+    (req, res) ->
+      thread = res.thread
+      res.redirect "/#{req.params.board}/#{thread.toJSON().id}/"
   
   # Thread view
+  app.get '/api/:board/:id',
+    collectThread('local'),
+    (req, res) ->
+      res.send {
+        board: req.params.board
+        id: req.params.id
+        thread: res.local 'thread'
+      }
+  
   app.get '/:board/:id/',
     panels,
     collectBoard('overview'),
@@ -180,7 +218,7 @@ module.exports = (dependencies) ->
     renderPanels
   
   # Replying to a thread
-  app.post '/:board/:id/',
+  receiveReply = [
     validateBoard,
     handleImageUpload,
     validateThread,
@@ -189,9 +227,28 @@ module.exports = (dependencies) ->
       service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
         next,
         (thread) ->
-          socket.broadcast {reply: {board: thread.board, thread: thread.id}}
-          res.redirect 'back'
+          res.thread = thread
+          next()
+    (req, res, next) ->
+      thread = res.thread
+      socket.broadcast {reply: {board: thread.board, thread: thread.id}}
+      next()
+  ]
   
+  app.post '/api/:board/:id/',
+    receiveReply,
+    (req, res) ->
+      res.send {
+        board: req.params.board
+        id: req.params.id
+        thread: res.thread
+      }
+  
+  app.post '/:board/:id/',
+    receiveReply,
+    (req, res) ->
+      res.redirect "/#{req.params.board}/#{req.params.id}/"
+
   # Socket io
   socket = io.listen app
   

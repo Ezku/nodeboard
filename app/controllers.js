@@ -1,7 +1,7 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boardExists, collectBoard, collectThread, collector, config, formidable, getBoardName, handleImageUpload, io, panels, renderPanels, service, services, socket, static, validateBoard, validateThread;
+    var accept, app, boardExists, collectBoard, collectThread, collector, config, formidable, getBoardName, handleImageUpload, io, panels, receiveReply, receiveThread, renderPanels, service, services, socket, static, validateBoard, validateThread;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io;
     service = services.get;
     boardExists = function(board) {
@@ -142,6 +142,12 @@
       view: 'index',
       title: 'Aaltoboard'
     }), renderPanels);
+    app.get('/api/:board/', collectBoard('local'), function(req, res) {
+      return res.send({
+        board: req.params.board,
+        threads: res.local('threads')
+      });
+    });
     app.get('/:board/', panels, collectBoard('overview'), function(req, res, next) {
       var board, boardTitle, name;
       board = req.params.board;
@@ -157,20 +163,48 @@
       });
       return next();
     }, renderPanels);
-    app.post('/:board/', validateBoard, handleImageUpload, accept('content', 'password'), function(req, res, next) {
-      var _ref;
-      return service('Thread').create({
-        thread: req.params,
-        post: req.body,
-        image: (_ref = req.files) != null ? _ref.image : void 0
-      }, next, function(thread) {
+    receiveThread = [
+      validateBoard, handleImageUpload, accept('content', 'password'), function(req, res, next) {
+        var _ref;
+        return service('Thread').create({
+          thread: req.params,
+          post: req.body,
+          image: (_ref = req.files) != null ? _ref.image : void 0
+        }, next, function(thread) {
+          res.thread = thread;
+          return next();
+        });
+      }, function(req, res, next) {
+        var thread;
+        thread = res.thread;
         socket.broadcast({
           thread: {
             board: thread.board,
             id: thread.id
           }
         });
-        return res.redirect("/" + req.params.board + "/" + (thread.toJSON().id) + "/");
+        return next();
+      }
+    ];
+    app.post('/api/:board/', receiveThread, function(req, res) {
+      var thread;
+      thread = res.thread;
+      return res.send({
+        board: req.params.board,
+        id: thread.id,
+        thread: thread
+      });
+    });
+    app.post('/:board/', receiveThread, function(req, res) {
+      var thread;
+      thread = res.thread;
+      return res.redirect("/" + req.params.board + "/" + (thread.toJSON().id) + "/");
+    });
+    app.get('/api/:board/:id', collectThread('local'), function(req, res) {
+      return res.send({
+        board: req.params.board,
+        id: req.params.id,
+        thread: res.local('thread')
       });
     });
     app.get('/:board/:id/', panels, collectBoard('overview'), collectThread('detail'), function(req, res, next) {
@@ -190,21 +224,38 @@
       });
       return next();
     }, renderPanels);
-    app.post('/:board/:id/', validateBoard, handleImageUpload, validateThread, accept('content', 'password'), function(req, res, next) {
-      var _ref;
-      return service('Thread').update({
-        thread: req.params,
-        post: req.body,
-        image: (_ref = req.files) != null ? _ref.image : void 0
-      }, next, function(thread) {
+    receiveReply = [
+      validateBoard, handleImageUpload, validateThread, accept('content', 'password'), function(req, res, next) {
+        var _ref;
+        return service('Thread').update({
+          thread: req.params,
+          post: req.body,
+          image: (_ref = req.files) != null ? _ref.image : void 0
+        }, next, function(thread) {
+          res.thread = thread;
+          return next();
+        });
+      }, function(req, res, next) {
+        var thread;
+        thread = res.thread;
         socket.broadcast({
           reply: {
             board: thread.board,
             thread: thread.id
           }
         });
-        return res.redirect('back');
+        return next();
+      }
+    ];
+    app.post('/api/:board/:id/', receiveReply, function(req, res) {
+      return res.send({
+        board: req.params.board,
+        id: req.params.id,
+        thread: res.thread
       });
+    });
+    app.post('/:board/:id/', receiveReply, function(req, res) {
+      return res.redirect("/" + req.params.board + "/" + req.params.id + "/");
     });
     socket = io.listen(app);
     return socket.on('connection', function(client) {
