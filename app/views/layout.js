@@ -4,7 +4,7 @@
     head(function() {
       title(this.title);
       meta({
-        charset: "utf8"
+        charset: "utf-8"
       });
       link({
         rel: "stylesheet",
