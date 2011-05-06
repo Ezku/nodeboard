@@ -5,7 +5,7 @@ module.exports = (dependencies) ->
 
   {mongoose} = dependencies
   
-  ImageProcessor = require('./thread/ImageProcessor.js')(dependencies)
+  ImageProcessor = dependencies.lib 'ImageProcessor'
   Sequence = mongoose.model 'Sequence'
   Thread = mongoose.model 'Thread'
   Post = mongoose.model 'Post'

@@ -12,6 +12,9 @@
       imagemagick: require('imagemagick'),
       io: require('socket.io')
     };
+    dependencies.lib = function(name) {
+      return require(root + '/app/lib/' + name + '.js')(dependencies);
+    };
     return dependencies;
   };
 }).call(this);
