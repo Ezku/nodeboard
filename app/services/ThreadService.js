@@ -1,5 +1,5 @@
 (function() {
-  var AbstractService, fs, util, _;
+  var AbstractService;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -8,17 +8,14 @@
     child.__super__ = parent.prototype;
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  fs = require('fs');
-  util = require('util');
-  _ = require('underscore');
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var Image, Post, Sequence, Thread, ThreadService, config, imagemagick, mongoose;
-    mongoose = dependencies.mongoose, imagemagick = dependencies.imagemagick, config = dependencies.config;
+    var ImageProcessor, Post, Sequence, Thread, ThreadService, mongoose;
+    mongoose = dependencies.mongoose;
+    ImageProcessor = require('./thread/ImageProcessor.js')(dependencies);
     Sequence = mongoose.model('Sequence');
     Thread = mongoose.model('Thread');
     Post = mongoose.model('Post');
-    Image = mongoose.model('Image');
     return ThreadService = (function() {
       function ThreadService() {
         ThreadService.__super__.constructor.apply(this, arguments);
@@ -89,90 +86,11 @@
           });
         }, this));
       };
-      ThreadService.prototype._processImage = function(data, board, id, error, success) {
-        if (!data) {
-          return success();
-        }
-        return imagemagick.identify(data.path, __bind(function(err, features) {
-          var image, imagePath;
-          if (err) {
-            return error(err);
-          }
-          if (_.indexOf(this.allowedImageTypes, features.format) === -1) {
-            return error(new Error("image type " + features.format + " not allowed"));
-          }
-          imagePath = this._getImagePath(board);
-          image = this._getImageModel(data, features, id);
-          return imagemagick.resize(this._getResizeOptions(imagePath, data, image), __bind(function(err, stdout, stderr) {
-            if (err) {
-              return error(err);
-            }
-            return this._move(data.path, imagePath + image.fullsize, error, function() {
-              return success(image);
-            });
-          }, this));
-        }, this));
+      ThreadService.prototype._processImage = function(image, board, id, error, success) {
+        var processor;
+        processor = new ImageProcessor(image, board, id);
+        return processor.process(error, success);
       };
-      ThreadService.prototype._getResizeOptions = function(imagePath, data, image) {
-        var maxHeight, maxWidth, resizeOptions;
-        resizeOptions = {
-          srcPath: data.path,
-          dstPath: imagePath + image.thumbnail
-        };
-        maxWidth = this._getThumbnailWidth();
-        maxHeight = this._getThumbnailHeight();
-        if (image.width > maxWidth) {
-          resizeOptions.width = maxWidth;
-        }
-        if (image.height > maxHeight) {
-          resizeOptions.height = maxHeight;
-        }
-        return resizeOptions;
-      };
-      ThreadService.prototype._getImageModel = function(data, features, id) {
-        return new Image({
-          name: data.name,
-          width: features.width,
-          height: features.height,
-          fullsize: this._getFullsizeName(features.format, id),
-          thumbnail: this._getThumbnailName(features.format, id)
-        });
-      };
-      ThreadService.prototype._getImagePath = function(board) {
-        var path;
-        path = config.paths.mount + board + "/";
-        try {
-          fs.statSync(path);
-        } catch (e) {
-          fs.mkdirSync(path, 0777);
-        }
-        return path;
-      };
-      ThreadService.prototype._getFullsizeName = function(format, id) {
-        return "" + id + "." + (format.toLowerCase());
-      };
-      ThreadService.prototype._getThumbnailName = function(format, id) {
-        return "" + id + ".thumb." + (format.toLowerCase());
-      };
-      ThreadService.prototype._getThumbnailHeight = function() {
-        return config.images.thumbnail.height;
-      };
-      ThreadService.prototype._getThumbnailWidth = function() {
-        return config.images.thumbnail.width;
-      };
-      ThreadService.prototype._move = function(source, destination, error, success) {
-        var input, output;
-        input = fs.createReadStream(source);
-        output = fs.createWriteStream(destination);
-        return util.pump(input, output, function(err) {
-          fs.unlinkSync(source);
-          if (err) {
-            return error(err);
-          }
-          return success();
-        });
-      };
-      ThreadService.prototype.allowedImageTypes = ['JPEG', 'GIF', 'PNG'];
       /*
       delete: (thread, error, success) ->
         Thread.delete { board: thread.board, id: thread.id },

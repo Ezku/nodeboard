@@ -1,18 +1,17 @@
-fs = require 'fs'
-util = require 'util'
-_ = require 'underscore'
+
 AbstractService = require './AbstractService.js'
 
 module.exports = (dependencies) ->
-  {mongoose, imagemagick, config} = dependencies
+
+  {mongoose} = dependencies
   
+  ImageProcessor = require('./thread/ImageProcessor.js')(dependencies)
   Sequence = mongoose.model 'Sequence'
   Thread = mongoose.model 'Thread'
   Post = mongoose.model 'Post'
-  Image = mongoose.model 'Image'
 
   class ThreadService extends AbstractService
-                
+    
     create: (data, error, success) ->
       Sequence.next data.thread.board,
         error,
@@ -57,65 +56,9 @@ module.exports = (dependencies) ->
                 return error err if err
                 success thread
     
-    _processImage: (data, board, id, error, success) ->
-      return success() if not data
-      
-      imagemagick.identify data.path, (err, features) =>
-        return error err if err
-        if _.indexOf(@allowedImageTypes, features.format) is -1
-          return error new Error("image type #{features.format} not allowed")
-        
-        imagePath = @_getImagePath board
-        image = @_getImageModel(data, features, id)
-        imagemagick.resize @_getResizeOptions(imagePath, data, image),
-          (err, stdout, stderr) =>
-            return error err if err  
-            @_move data.path, imagePath + image.fullsize, error, ->
-              success image
-    
-    _getResizeOptions: (imagePath, data, image) ->
-      resizeOptions =
-        srcPath: data.path
-        dstPath: imagePath  + image.thumbnail
-      maxWidth = @_getThumbnailWidth()
-      maxHeight = @_getThumbnailHeight()
-      
-      if image.width > maxWidth
-        resizeOptions.width = maxWidth
-      if image.height > maxHeight
-        resizeOptions.height = maxHeight
-      resizeOptions
-    
-    _getImageModel: (data, features, id) ->
-        new Image
-          name: data.name
-          width: features.width
-          height: features.height
-          fullsize: @_getFullsizeName(features.format, id)
-          thumbnail: @_getThumbnailName(features.format, id)
-    
-    _getImagePath: (board) ->
-      path = config.paths.mount + board + "/"
-      try
-        fs.statSync(path)
-      catch e
-        fs.mkdirSync(path, 0777)
-      path
-    _getFullsizeName: (format, id) -> "#{id}.#{format.toLowerCase()}"
-    _getThumbnailName: (format, id) -> "#{id}.thumb.#{format.toLowerCase()}"
-    _getThumbnailHeight: -> config.images.thumbnail.height
-    _getThumbnailWidth: -> config.images.thumbnail.width
-    
-    # Move file from source path to destination. Supports moves from accross disk partitions.
-    _move: (source, destination, error, success) ->
-      input = fs.createReadStream source
-      output = fs.createWriteStream destination
-      util.pump input, output, (err) ->
-        fs.unlinkSync source
-        return error err if err
-        success()
-    
-    allowedImageTypes: ['JPEG', 'GIF', 'PNG']
+    _processImage: (image, board, id, error, success) ->
+      processor = new ImageProcessor image, board, id
+      processor.process error, success
     
     ###
     delete: (thread, error, success) ->
