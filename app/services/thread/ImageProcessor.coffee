@@ -21,9 +21,13 @@ module.exports = (dependencies) ->
         
         image = @getImageModel(features)
         options = @getResizeOptions(image)
+        destinationPath = @imagePath + image.fullsize
+        
+        # Create thumbnail
         imagemagick.resize options, (err, stdout, stderr) =>          
-          return error err if err  
-          @move data.path, imagePath + image.fullsize, error, ->
+          return error err if err
+          # Move original file from temp
+          @move @data.path, destinationPath, error, ->
             success image
     
     getImageModel: (features) ->

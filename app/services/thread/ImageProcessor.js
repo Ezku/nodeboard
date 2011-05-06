@@ -20,7 +20,7 @@
           return success();
         }
         return imagemagick.identify(this.data.path, __bind(function(err, features) {
-          var image, options;
+          var destinationPath, image, options;
           if (err) {
             return error(err);
           }
@@ -29,11 +29,12 @@
           }
           image = this.getImageModel(features);
           options = this.getResizeOptions(image);
+          destinationPath = this.imagePath + image.fullsize;
           return imagemagick.resize(options, __bind(function(err, stdout, stderr) {
             if (err) {
               return error(err);
             }
-            return this.move(data.path, imagePath + image.fullsize, error, function() {
+            return this.move(this.data.path, destinationPath, error, function() {
               return success(image);
             });
           }, this));
