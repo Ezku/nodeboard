@@ -1,4 +1,6 @@
-module.exports = (mongoose) ->
+module.exports = (mongoose, dependencies) ->
+  {promise} = dependencies.lib 'promises'
+
   SequenceSchema =
     definition:
       board: 
@@ -8,7 +10,7 @@ module.exports = (mongoose) ->
         type: Number
         default: 1
     static:
-      next: (board, error, success) ->
+      next: (board) -> promise (success, error) ->
         Sequence = mongoose.model('Sequence')
         Sequence.collection.findAndModify { board: board },
           [],

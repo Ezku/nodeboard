@@ -10,7 +10,10 @@
       jsmin: require('jsmin'),
       formidable: require('formidable'),
       imagemagick: require('imagemagick'),
-      io: require('socket.io')
+      io: require('socket.io'),
+      hash: require('hashlib'),
+      q: require('q'),
+      '_': require('underscore')
     };
     dependencies.lib = function(name) {
       return require(root + '/app/lib/' + name + '.js')(dependencies);

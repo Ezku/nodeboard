@@ -10,8 +10,9 @@
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var ImageProcessor, Post, Sequence, Thread, ThreadService, mongoose;
+    var ImageProcessor, Post, Sequence, Thread, ThreadService, mongoose, promise;
     mongoose = dependencies.mongoose;
+    promise = dependencies.lib('promises').promise;
     ImageProcessor = dependencies.lib('ImageProcessor');
     Sequence = mongoose.model('Sequence');
     Thread = mongoose.model('Thread');
@@ -21,9 +22,25 @@
         ThreadService.__super__.constructor.apply(this, arguments);
       }
       __extends(ThreadService, AbstractService);
-      ThreadService.prototype.create = function(data, error, success) {
-        return Sequence.next(data.thread.board, error, __bind(function(seq) {
-          return this._processImage(data.image, data.thread.board, seq.counter, error, function(image) {
+      ThreadService.prototype.read = function(query) {
+        return promise(function(success, error) {
+          return Thread.find({
+            board: String(query.board),
+            id: Number(query.id)
+          }).select('board', 'id', 'posts').limit(1).run(function(err, threads) {
+            if (err) {
+              return error(err);
+            }
+            if (!threads[0]) {
+              return error(new Error("thread not found"));
+            }
+            return success(threads[0]);
+          });
+        });
+      };
+      ThreadService.prototype.create = function(data) {
+        return Sequence.next(data.thread.board).then(__bind(function(seq) {
+          return this._processImage(data.image, data.thread.board, seq.counter).then(function(image) {
             var post, thread;
             thread = new Thread(data.thread);
             post = new Post(data.post).toJSON();
@@ -31,65 +48,32 @@
             thread.id = post.id = seq.counter;
             thread.posts.push(post);
             thread.firstPost = post;
-            return thread.save(function(err) {
-              if (err) {
-                return error(err);
-              }
-              return success(thread);
+            return promise(function(success, error) {
+              return thread.save(function(err) {
+                if (err) {
+                  return error(err);
+                }
+                return success(thread);
+              });
             });
           });
         }, this));
       };
-      ThreadService.prototype.read = function(query, error, success) {
-        return Thread.find({
-          board: String(query.board),
-          id: Number(query.id)
-        }).select('board', 'id', 'posts').limit(1).run(function(err, threads) {
-          if (err) {
-            return error(err);
-          }
-          if (!threads[0]) {
-            return error(new Error("thread not found"));
-          }
-          return success(threads[0]);
-        });
-      };
-      ThreadService.prototype.update = function(data, error, success) {
-        return Sequence.next(data.thread.board, error, __bind(function(seq) {
-          return this._processImage(data.image, data.thread.board, seq.counter, error, function(image) {
+      ThreadService.prototype.update = function(data) {
+        return Sequence.next(data.thread.board).then(__bind(function(seq) {
+          return this._processImage(data.image, data.thread.board, seq.counter).then(function(image) {
             var post;
             post = new Post(data.post).toJSON();
             post.id = seq.counter;
             post.image = image != null ? image.toJSON() : void 0;
-            return Thread.collection.findAndModify({
-              board: String(data.thread.board),
-              id: Number(data.thread.id)
-            }, [], {
-              $push: {
-                posts: post
-              },
-              $set: {
-                lastPost: post
-              },
-              $inc: {
-                replyCount: 1
-              }
-            }, {
-              "new": false,
-              upsert: false
-            }, function(err, thread) {
-              if (err) {
-                return error(err);
-              }
-              return success(thread);
-            });
+            return Thread.addReply(data.thread.board, data.thread.id, post);
           });
         }, this));
       };
-      ThreadService.prototype._processImage = function(image, board, id, error, success) {
+      ThreadService.prototype._processImage = function(image, board, id) {
         var processor;
         processor = new ImageProcessor(image, board, id);
-        return processor.process(error, success);
+        return processor.process();
       };
       /*
       delete: (thread, error, success) ->

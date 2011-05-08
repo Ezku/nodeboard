@@ -8,7 +8,7 @@
     dependencies.models = {};
     schema = function(name) {
       var schema, schemaData;
-      schemaData = require(config.paths.schemas + name + "Schema")(mongoose);
+      schemaData = require(config.paths.schemas + name + "Schema")(mongoose, dependencies);
       schema = new mongoose.Schema(schemaData.definition);
       if (schemaData.static) {
         schema.static(schemaData.static);

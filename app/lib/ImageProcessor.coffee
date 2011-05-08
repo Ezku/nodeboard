@@ -1,9 +1,10 @@
-_ = require 'underscore'
+
 fs = require 'fs'
 util = require 'util'
 
 module.exports = (dependencies) ->
-  {mongoose, imagemagick, config} = dependencies
+  {_, mongoose, imagemagick, config} = dependencies
+  {promise} = dependencies.lib 'promises'
   Image = mongoose.model 'Image'
   
   class ImageProcessor
@@ -11,7 +12,7 @@ module.exports = (dependencies) ->
     constructor: (@data, @board, @id) ->
       @imagePath = @getImagePath @board
     
-    process: (error, success) ->
+    process: -> promise (success, error) =>
       return success() if not @data
       
       imagemagick.identify @data.path, (err, features) =>
@@ -27,8 +28,7 @@ module.exports = (dependencies) ->
         imagemagick.resize options, (err, stdout, stderr) =>          
           return error err if err
           # Move original file from temp
-          @move @data.path, destinationPath, error, ->
-            success image
+          @move(@data.path, destinationPath).then (-> success image), error
     
     getImageModel: (features) ->
       new Image
@@ -65,7 +65,7 @@ module.exports = (dependencies) ->
     getThumbnailWidth: -> config.images.thumbnail.width
     
     # Move file from source path to destination. Supports moves from accross disk partitions.
-    move: (source, destination, error, success) ->
+    move: (source, destination) -> promise (success, error) ->
       input = fs.createReadStream source
       output = fs.createWriteStream destination
       util.pump input, output, (err) ->

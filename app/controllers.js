@@ -1,8 +1,15 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boardExists, collectBoard, collectThread, collector, config, formidable, getBoardName, handleImageUpload, io, panels, receiveReply, receiveThread, renderPanels, service, services, socket, static, validateBoard, validateThread;
+    var accept, app, boardExists, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, validateBoard, validateThread;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io;
+    tap = function(f) {
+      return function(req, res, next) {
+        f(req, res);
+        return next();
+      };
+    };
+    filter = dependencies.lib('promises').filter;
     service = services.get;
     boardExists = function(board) {
       var boards, group, _ref;
@@ -35,11 +42,9 @@
         return next(new Error("Board '" + board + "' does not exist"));
       }
     };
-    validateThread = function(req, res, next) {
-      return service('Thread').read(req.params, next, function() {
-        return next();
-      });
-    };
+    validateThread = filter(function(req) {
+      return service('Thread').read(req.params);
+    });
     accept = function() {
       var params;
       params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -105,13 +110,12 @@
     };
     collectThread = function(collector) {
       return [
-        validateThread, function(req, res, next) {
-          return service('Thread').read(req.params, next, function(thread) {
+        validateThread, filter(function(req, res) {
+          return service('Thread').read(req.params).then(function(thread) {
             res[collector]('view', 'thread');
-            res[collector]('thread', thread);
-            return next();
+            return res[collector]('thread', thread);
           });
-        }
+        })
       ];
     };
     renderPanels = function(req, res, next) {
@@ -164,17 +168,16 @@
       return next();
     }, renderPanels);
     receiveThread = [
-      validateBoard, handleImageUpload, accept('content', 'password'), function(req, res, next) {
+      validateBoard, handleImageUpload, accept('content', 'password'), filter(function(req, res) {
         var _ref;
         return service('Thread').create({
           thread: req.params,
           post: req.body,
           image: (_ref = req.files) != null ? _ref.image : void 0
-        }, next, function(thread) {
-          res.thread = thread;
-          return next();
+        }).then(function(thread) {
+          return res.thread = thread;
         });
-      }, function(req, res, next) {
+      }), function(req, res, next) {
         var thread;
         thread = res.thread;
         socket.broadcast({
@@ -225,17 +228,16 @@
       return next();
     }, renderPanels);
     receiveReply = [
-      validateBoard, handleImageUpload, validateThread, accept('content', 'password'), function(req, res, next) {
+      validateBoard, handleImageUpload, validateThread, accept('content', 'password'), filter(function(req, res) {
         var _ref;
         return service('Thread').update({
           thread: req.params,
           post: req.body,
           image: (_ref = req.files) != null ? _ref.image : void 0
-        }, next, function(thread) {
-          res.thread = thread;
-          return next();
+        }).then(function(thread) {
+          return res.thread = thread;
         });
-      }, function(req, res, next) {
+      }), function(req, res, next) {
         var thread;
         thread = res.thread;
         socket.broadcast({

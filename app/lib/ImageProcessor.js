@@ -1,12 +1,12 @@
 (function() {
-  var fs, util, _;
+  var fs, util;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  _ = require('underscore');
   fs = require('fs');
   util = require('util');
   module.exports = function(dependencies) {
-    var Image, ImageProcessor, config, imagemagick, mongoose;
-    mongoose = dependencies.mongoose, imagemagick = dependencies.imagemagick, config = dependencies.config;
+    var Image, ImageProcessor, config, imagemagick, mongoose, promise, _;
+    _ = dependencies._, mongoose = dependencies.mongoose, imagemagick = dependencies.imagemagick, config = dependencies.config;
+    promise = dependencies.lib('promises').promise;
     Image = mongoose.model('Image');
     return ImageProcessor = (function() {
       function ImageProcessor(data, board, id) {
@@ -15,28 +15,30 @@
         this.id = id;
         this.imagePath = this.getImagePath(this.board);
       }
-      ImageProcessor.prototype.process = function(error, success) {
-        if (!this.data) {
-          return success();
-        }
-        return imagemagick.identify(this.data.path, __bind(function(err, features) {
-          var destinationPath, image, options;
-          if (err) {
-            return error(err);
+      ImageProcessor.prototype.process = function() {
+        return promise(__bind(function(success, error) {
+          if (!this.data) {
+            return success();
           }
-          if (_.indexOf(this.allowedImageTypes, features.format) === -1) {
-            return error(new Error("image type " + features.format + " not allowed"));
-          }
-          image = this.getImageModel(features);
-          options = this.getResizeOptions(image);
-          destinationPath = this.imagePath + image.fullsize;
-          return imagemagick.resize(options, __bind(function(err, stdout, stderr) {
+          return imagemagick.identify(this.data.path, __bind(function(err, features) {
+            var destinationPath, image, options;
             if (err) {
               return error(err);
             }
-            return this.move(this.data.path, destinationPath, error, function() {
-              return success(image);
-            });
+            if (_.indexOf(this.allowedImageTypes, features.format) === -1) {
+              return error(new Error("image type " + features.format + " not allowed"));
+            }
+            image = this.getImageModel(features);
+            options = this.getResizeOptions(image);
+            destinationPath = this.imagePath + image.fullsize;
+            return imagemagick.resize(options, __bind(function(err, stdout, stderr) {
+              if (err) {
+                return error(err);
+              }
+              return this.move(this.data.path, destinationPath).then((function() {
+                return success(image);
+              }), error);
+            }, this));
           }, this));
         }, this));
       };
@@ -87,16 +89,18 @@
       ImageProcessor.prototype.getThumbnailWidth = function() {
         return config.images.thumbnail.width;
       };
-      ImageProcessor.prototype.move = function(source, destination, error, success) {
-        var input, output;
-        input = fs.createReadStream(source);
-        output = fs.createWriteStream(destination);
-        return util.pump(input, output, function(err) {
-          fs.unlinkSync(source);
-          if (err) {
-            return error(err);
-          }
-          return success();
+      ImageProcessor.prototype.move = function(source, destination) {
+        return promise(function(success, error) {
+          var input, output;
+          input = fs.createReadStream(source);
+          output = fs.createWriteStream(destination);
+          return util.pump(input, output, function(err) {
+            fs.unlinkSync(source);
+            if (err) {
+              return error(err);
+            }
+            return success();
+          });
         });
       };
       ImageProcessor.prototype.allowedImageTypes = ['JPEG', 'GIF', 'PNG'];

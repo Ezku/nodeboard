@@ -1,12 +1,23 @@
 (function() {
   module.exports = function(dependencies) {
-    var all, promise, q;
+    var all, filter, promise, q;
     q = dependencies.q;
     promise = function(f) {
       var deferred, result;
       deferred = q.defer();
       result = f(deferred.resolve, deferred.reject);
       return deferred.promise;
+    };
+    filter = function(f) {
+      return function(req, res, next) {
+        var result;
+        result = f(req, res);
+        return result.then((function() {
+          return next();
+        }), (function(err) {
+          return next(err);
+        }));
+      };
     };
     /*
     Given a list of promises, creates a promise that will be resolved or rejected
@@ -47,7 +58,8 @@
     };
     return {
       promise: promise,
-      all: all
+      all: all,
+      filter: filter
     };
   };
 }).call(this);

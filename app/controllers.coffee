@@ -1,5 +1,14 @@
 module.exports = (dependencies) ->
   {app, config, services, formidable, io} = dependencies
+
+  # Intercepts middleware handler chain with a function, passing control down the chain immediately afterwards.
+  # For debugging purposes.
+  tap = (f) -> (req, res, next) ->
+    f(req, res)
+    next()
+
+  # Converts a promise function to a valid express.js middleware filter
+  {filter} = dependencies.lib 'promises'
   
   # Retrieves a service object instance
   service = services.get
@@ -26,11 +35,7 @@ module.exports = (dependencies) ->
   
   # Asserts for existence of a thread by an id given in the request
   # NOTE: handleImageUpload does not work if this precedes it
-  validateThread = (req, res, next) ->
-    service('Thread').read req.params,
-      next,
-      ->
-        next()
+  validateThread = filter (req) -> service('Thread').read req.params
   
   # Declare a set of parameters that can be accepted in the request body 
   accept = (params...) -> (req, res, next) ->
@@ -85,13 +90,10 @@ module.exports = (dependencies) ->
   # Accepts a data collector, creating a filter that assigns thread data to it on request
   collectThread = (collector) -> [
     validateThread,
-    (req, res, next) ->
-      service('Thread').read req.params,
-        next,
-        (thread) ->
-          res[collector] 'view', 'thread'
-          res[collector] 'thread', thread
-          next()
+    filter (req, res) ->
+      service('Thread').read(req.params).then (thread) ->
+        res[collector] 'view', 'thread'
+        res[collector] 'thread', thread
   ]
   
   # Renders the panels view with data from the overview and detail data accumulators
@@ -156,12 +158,11 @@ module.exports = (dependencies) ->
     validateBoard,
     handleImageUpload,
     accept('content', 'password'),
-    (req, res, next) ->
-      service('Thread').create { thread: req.params, post: req.body, image: req.files?.image },
-        next,
-        (thread) ->
-          res.thread = thread
-          next()
+    filter (req, res) ->
+      service('Thread')
+      .create({ thread: req.params, post: req.body, image: req.files?.image })
+      .then (thread) ->
+        res.thread = thread
     (req, res, next) ->
       thread = res.thread
       socket.broadcast {thread: {board: thread.board, id: thread.id}}
@@ -223,12 +224,11 @@ module.exports = (dependencies) ->
     handleImageUpload,
     validateThread,
     accept('content', 'password'),
-    (req, res, next) ->
-      service('Thread').update { thread: req.params, post: req.body, image: req.files?.image },
-        next,
-        (thread) ->
-          res.thread = thread
-          next()
+    filter (req, res) ->
+      service('Thread')
+      .update({ thread: req.params, post: req.body, image: req.files?.image })
+      .then (thread) ->
+        res.thread = thread
     (req, res, next) ->
       thread = res.thread
       socket.broadcast {reply: {board: thread.board, thread: thread.id}}

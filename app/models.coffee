@@ -9,7 +9,7 @@ module.exports = (dependencies) ->
   
   # Declares a Mongoose schema
   schema = (name) ->
-    schemaData = require(config.paths.schemas + name + "Schema")(mongoose)
+    schemaData = require(config.paths.schemas + name + "Schema")(mongoose, dependencies)
     schema = new mongoose.Schema schemaData.definition
     if schemaData.static
       schema.static schemaData.static

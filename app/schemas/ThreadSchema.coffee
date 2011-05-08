@@ -1,5 +1,5 @@
-module.exports = (mongoose) ->
-  
+module.exports = (mongoose, dependencies) ->
+  {promise} = dependencies.lib 'promises'
   PostSchema = require('./PostSchema.js')(mongoose).definition
   
   ThreadSchema =
@@ -23,5 +23,15 @@ module.exports = (mongoose) ->
         type: PostSchema
         required: false
       posts: [new mongoose.Schema PostSchema]
+    static:
+      addReply: (board, id, post) -> promise (success, error) ->
+        Thread = mongoose.model 'Thread'
+        Thread.collection.findAndModify { board: String(board), id: Number(id) },
+          [],
+          { $push: { posts: post }, $set: { lastPost: post }, $inc: { replyCount: 1 } },
+          { new: false, upsert: false },
+          (err, thread) ->
+            return error err if err
+            success thread
   
   ThreadSchema

@@ -12,6 +12,9 @@ module.exports = (root) ->
     formidable: require 'formidable'
     imagemagick: require 'imagemagick'
     io: require 'socket.io'
+    hash: require 'hashlib'
+    q: require 'q'
+    '_': require 'underscore'
   
   dependencies.lib = (name) -> require(root + '/app/lib/' + name + '.js')(dependencies)
 
