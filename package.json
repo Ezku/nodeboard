@@ -25,6 +25,7 @@
     "formidable": ">= 0.9.11",
     "imagemagick": ">= 0.1.2",
     "socket.io": ">= 0.6.17"
+    "underscore": ">= 1.1.6"
   },
   "devDependencies": {
     "coffee-script": ">= 1.0.1",
