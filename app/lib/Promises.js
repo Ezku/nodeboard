@@ -6,7 +6,11 @@
       var deferred, result;
       deferred = q.defer();
       result = f(deferred.resolve, deferred.reject);
-      return deferred.promise;
+      if (q.isPromise(result)) {
+        return result;
+      } else {
+        return deferred.promise;
+      }
     };
     filter = function(f) {
       return function(req, res, next) {

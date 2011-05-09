@@ -4,8 +4,8 @@
   fs = require('fs');
   util = require('util');
   module.exports = function(dependencies) {
-    var Image, ImageProcessor, config, imagemagick, mongoose, promise, _;
-    _ = dependencies._, mongoose = dependencies.mongoose, imagemagick = dependencies.imagemagick, config = dependencies.config;
+    var Image, ImageProcessor, config, hash, imagemagick, mongoose, promise, _;
+    _ = dependencies._, mongoose = dependencies.mongoose, imagemagick = dependencies.imagemagick, hash = dependencies.hash, config = dependencies.config;
     promise = dependencies.lib('promises').promise;
     Image = mongoose.model('Image');
     return ImageProcessor = (function() {
@@ -20,25 +20,38 @@
           if (!this.data) {
             return success();
           }
-          return imagemagick.identify(this.data.path, __bind(function(err, features) {
-            var destinationPath, image, options;
+          return this._identify(this.data.path).then(__bind(function(features) {
+            var image;
+            image = this.getImageModel(features);
+            return this._thumbnail(image);
+          }, this));
+        }, this));
+      };
+      ImageProcessor.prototype._identify = function(path) {
+        return promise(__bind(function(success, error) {
+          return imagemagick.identify(path, __bind(function(err, features) {
             if (err) {
               return error(err);
             }
             if (_.indexOf(this.allowedImageTypes, features.format) === -1) {
               return error(new Error("image type " + features.format + " not allowed"));
             }
-            image = this.getImageModel(features);
-            options = this.getResizeOptions(image);
-            destinationPath = this.imagePath + image.fullsize;
-            return imagemagick.resize(options, __bind(function(err, stdout, stderr) {
-              if (err) {
-                return error(err);
-              }
-              return this.move(this.data.path, destinationPath).then((function() {
-                return success(image);
-              }), error);
-            }, this));
+            return success(features);
+          }, this));
+        }, this));
+      };
+      ImageProcessor.prototype._thumbnail = function(image) {
+        return promise(__bind(function(success, error) {
+          var destinationPath, options;
+          options = this.getResizeOptions(image);
+          destinationPath = this.imagePath + image.fullsize;
+          return imagemagick.resize(options, __bind(function(err, stdout, stderr) {
+            if (err) {
+              return error(err);
+            }
+            return this.move(this.data.path, destinationPath).then((function() {
+              return success(image);
+            }), error);
           }, this));
         }, this));
       };

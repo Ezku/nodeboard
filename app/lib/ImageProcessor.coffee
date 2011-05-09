@@ -3,7 +3,7 @@ fs = require 'fs'
 util = require 'util'
 
 module.exports = (dependencies) ->
-  {_, mongoose, imagemagick, config} = dependencies
+  {_, mongoose, imagemagick, hash, config} = dependencies
   {promise} = dependencies.lib 'promises'
   Image = mongoose.model 'Image'
   
@@ -15,12 +15,18 @@ module.exports = (dependencies) ->
     process: -> promise (success, error) =>
       return success() if not @data
       
-      imagemagick.identify @data.path, (err, features) =>
+      @_identify(@data.path).then (features) =>
+        image = @getImageModel(features)
+        @_thumbnail(image)
+    
+    _identify: (path) -> promise (success, error) =>
+      imagemagick.identify path, (err, features) =>
         return error err if err
         if _.indexOf(@allowedImageTypes, features.format) is -1
           return error new Error("image type #{features.format} not allowed")
-        
-        image = @getImageModel(features)
+        success features
+    
+    _thumbnail: (image) -> promise (success, error) =>
         options = @getResizeOptions(image)
         destinationPath = @imagePath + image.fullsize
         
