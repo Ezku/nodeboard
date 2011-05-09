@@ -14,8 +14,11 @@ module.exports = (dependencies) ->
   
   # Converts a promise function to a valid express.js middleware filter
   filter = (f) -> (req, res, next) ->
-    result = f req, res
-    result.then (-> next()), ((err) -> next err)
+    q.when(
+      (f req, res),
+      (-> next()),
+      ((err) -> next err)
+    )
 
   ###
   Given a list of promises, creates a promise that will be resolved or rejected

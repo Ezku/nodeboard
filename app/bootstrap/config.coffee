@@ -20,6 +20,9 @@ module.exports = (root) ->
         width: 128
         height: 128
     
+    security:
+      floodwindow: 60
+    
     boards:
       guilds:
         ak:

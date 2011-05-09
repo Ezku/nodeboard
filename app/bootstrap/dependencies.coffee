@@ -12,7 +12,7 @@ module.exports = (root) ->
     formidable: require 'formidable'
     imagemagick: require 'imagemagick'
     io: require 'socket.io'
-    hash: require 'hashlib'
+    hashlib: require 'hashlib'
     q: require 'q'
     '_': require 'underscore'
   

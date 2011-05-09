@@ -23,6 +23,9 @@
           height: 128
         }
       },
+      security: {
+        floodwindow: 60
+      },
       boards: {
         guilds: {
           ak: {

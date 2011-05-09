@@ -14,9 +14,7 @@
     };
     filter = function(f) {
       return function(req, res, next) {
-        var result;
-        result = f(req, res);
-        return result.then((function() {
+        return q.when(f(req, res), (function() {
           return next();
         }), (function(err) {
           return next(err);
