@@ -78,13 +78,10 @@ module.exports = (dependencies) ->
   # Accepts a data collector, creating a filter that assigns board data to it on request
   collectBoard = (collector) -> [
     validateBoard,
-    (req, res, next) ->
-      service('Board').read req.params,
-        next,
-        (threads) ->
-          res[collector] 'view', 'board'
-          res[collector] 'threads', threads
-          next()
+    filter (req, res) ->
+      service('Board').read(req.params).then (threads) ->
+        res[collector] 'view', 'board'
+        res[collector] 'threads', threads
   ]
   
   # Accepts a data collector, creating a filter that assigns thread data to it on request

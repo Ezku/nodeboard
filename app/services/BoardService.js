@@ -10,22 +10,25 @@
   };
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var BoardService, Thread, mongoose;
+    var BoardService, Thread, mongoose, promise;
     mongoose = dependencies.mongoose;
+    promise = dependencies.lib('promises').promise;
     Thread = mongoose.model('Thread');
     return BoardService = (function() {
       function BoardService() {
         BoardService.__super__.constructor.apply(this, arguments);
       }
       __extends(BoardService, AbstractService);
-      BoardService.prototype.read = function(query, error, success) {
-        return Thread.find({
-          board: query.board
-        }).sort('id', -1).run(function(err, threads) {
-          if (err) {
-            return error(err);
-          }
-          return success(threads);
+      BoardService.prototype.read = function(query) {
+        return promise(function(success, error) {
+          return Thread.find({
+            board: query.board
+          }).sort('id', -1).run(function(err, threads) {
+            if (err) {
+              return error(err);
+            }
+            return success(threads);
+          });
         });
       };
       return BoardService;

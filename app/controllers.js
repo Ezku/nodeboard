@@ -99,13 +99,12 @@
     panels = [collector('overview'), collector('detail')];
     collectBoard = function(collector) {
       return [
-        validateBoard, function(req, res, next) {
-          return service('Board').read(req.params, next, function(threads) {
+        validateBoard, filter(function(req, res) {
+          return service('Board').read(req.params).then(function(threads) {
             res[collector]('view', 'board');
-            res[collector]('threads', threads);
-            return next();
+            return res[collector]('threads', threads);
           });
-        }
+        })
       ];
     };
     collectThread = function(collector) {

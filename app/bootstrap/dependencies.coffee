@@ -16,6 +16,11 @@ module.exports = (root) ->
     q: require 'q'
     '_': require 'underscore'
   
-  dependencies.lib = (name) -> require(root + '/app/lib/' + name + '.js')(dependencies)
+  dependencies.lib = do ->
+    libs = {}
+    (name) ->
+      if not libs[name]?
+        libs[name] = require(root + '/app/lib/' + name + '.js')(dependencies)
+      libs[name]
 
   dependencies

@@ -15,9 +15,16 @@
       q: require('q'),
       '_': require('underscore')
     };
-    dependencies.lib = function(name) {
-      return require(root + '/app/lib/' + name + '.js')(dependencies);
-    };
+    dependencies.lib = (function() {
+      var libs;
+      libs = {};
+      return function(name) {
+        if (!(libs[name] != null)) {
+          libs[name] = require(root + '/app/lib/' + name + '.js')(dependencies);
+        }
+        return libs[name];
+      };
+    })();
     return dependencies;
   };
 }).call(this);
