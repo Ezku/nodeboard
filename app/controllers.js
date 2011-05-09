@@ -1,7 +1,7 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boardExists, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, validateBoard, validateThread;
+    var accept, app, boardExists, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receivePost, receiveReply, receiveThread, renderPanels, security, service, services, socket, static, tap, validateBoard, validateThread;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io;
     tap = function(f) {
       return function(req, res, next) {
@@ -137,6 +137,11 @@
         return next();
       };
     };
+    security = function(name) {
+      return filter(function(req, res) {
+        return dependencies.lib('security')[name](req, res);
+      });
+    };
     app.get('/', panels, static({
       title: 'Aaltoboard',
       id: "front-page",
@@ -166,17 +171,22 @@
       });
       return next();
     }, renderPanels);
+    receivePost = function(action) {
+      return [
+        accept('content', 'password'), security('preventFlood'), security('enforceUniqueImage'), filter(function(req, res) {
+          var _ref;
+          return service('Thread')[action]({
+            thread: req.params,
+            post: req.body,
+            image: (_ref = req.files) != null ? _ref.image : void 0
+          }).then(function(thread) {
+            return res.thread = thread;
+          });
+        }), security('trackUpload')
+      ];
+    };
     receiveThread = [
-      validateBoard, handleImageUpload, accept('content', 'password'), filter(function(req, res) {
-        var _ref;
-        return service('Thread').create({
-          thread: req.params,
-          post: req.body,
-          image: (_ref = req.files) != null ? _ref.image : void 0
-        }).then(function(thread) {
-          return res.thread = thread;
-        });
-      }), function(req, res, next) {
+      validateBoard, handleImageUpload, receivePost('create'), function(req, res, next) {
         var thread;
         thread = res.thread;
         socket.broadcast({
@@ -227,16 +237,7 @@
       return next();
     }, renderPanels);
     receiveReply = [
-      validateBoard, handleImageUpload, validateThread, accept('content', 'password'), filter(function(req, res) {
-        var _ref;
-        return service('Thread').update({
-          thread: req.params,
-          post: req.body,
-          image: (_ref = req.files) != null ? _ref.image : void 0
-        }).then(function(thread) {
-          return res.thread = thread;
-        });
-      }), function(req, res, next) {
+      validateBoard, handleImageUpload, validateThread, receivePost('update'), function(req, res, next) {
         var thread;
         thread = res.thread;
         socket.broadcast({

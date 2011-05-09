@@ -22,6 +22,7 @@
     schema('Thread');
     schema('Post');
     schema('Image');
+    schema('Tracker');
     service('Board');
     service('Thread');
     service('Post');

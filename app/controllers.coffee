@@ -43,7 +43,7 @@ module.exports = (dependencies) ->
     accepted = {}
     accepted[name] = input[name] for name in params
     req.body = accepted
-    do next
+    next()
   
   # Parses images uploaded in the request and stores them in the request object
   handleImageUpload = (req, res, next) ->
@@ -107,6 +107,9 @@ module.exports = (dependencies) ->
       res.locals collector
     next()
   
+  # Retrieves a security filter from the library
+  security = (name) -> filter (req, res) -> dependencies.lib('security')[name] req, res
+  
   # Front page
   app.get '/',
     panels,
@@ -150,16 +153,23 @@ module.exports = (dependencies) ->
       next()
     renderPanels
   
+  # Receiving post data and passing it through the thread service
+  receivePost = (action) -> [
+    accept('content', 'password'),
+    security('preventFlood'),
+    security('enforceUniqueImage'),
+    filter (req, res) ->
+      service('Thread')[action]({ thread: req.params, post: req.body, image: req.files?.image })
+      .then (thread) ->
+        res.thread = thread
+    security('trackUpload')
+  ]
+  
   # Creating a new thread
   receiveThread = [
     validateBoard,
     handleImageUpload,
-    accept('content', 'password'),
-    filter (req, res) ->
-      service('Thread')
-      .create({ thread: req.params, post: req.body, image: req.files?.image })
-      .then (thread) ->
-        res.thread = thread
+    receivePost('create'),
     (req, res, next) ->
       thread = res.thread
       socket.broadcast {thread: {board: thread.board, id: thread.id}}
@@ -220,12 +230,7 @@ module.exports = (dependencies) ->
     validateBoard,
     handleImageUpload,
     validateThread,
-    accept('content', 'password'),
-    filter (req, res) ->
-      service('Thread')
-      .update({ thread: req.params, post: req.body, image: req.files?.image })
-      .then (thread) ->
-        res.thread = thread
+    receivePost('update'),
     (req, res, next) ->
       thread = res.thread
       socket.broadcast {reply: {board: thread.board, thread: thread.id}}

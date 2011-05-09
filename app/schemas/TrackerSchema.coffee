@@ -3,10 +3,11 @@ module.exports = (mongoose) ->
   TrackerSchema =
     definition:
       board: String
-      id: Number
+      thread: Number
+      post: Number
       date:
         type: Date
-      contentHash: String
+      ipHash: String
       imageHash: String
   
   TrackerSchema
