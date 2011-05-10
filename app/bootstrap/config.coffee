@@ -21,7 +21,9 @@ module.exports = (root) ->
         height: 128
     
     security:
-      floodwindow: 60
+      floodWindow: 60
+      minCurtailRate: 2
+      maxPostRate: 10
     
     boards:
       guilds:

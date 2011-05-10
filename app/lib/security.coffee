@@ -14,26 +14,36 @@ module.exports = (dependencies) ->
       else
         error()
   
-  countRecentUploads = (ipHash) -> promise (success, error) ->
+  countRecentUploads = (board, ipHash) -> promise (success, error) ->
+    recent = Date.now() - config.security.floodWindow
     Tracker
-    .count(ipHash: ipHash, date: {$gt: (Date.now() - config.security.floodwindow)})
+    .count(board: board, ipHash: ipHash, date: {$gt: recent}) #TODO: make this work
     .run (err, count) ->
       return error err if err
       success count
   
-  findMatchingImage = (imageHash) -> promise (success, error) ->
+  findMatchingImage = (board, imageHash) -> promise (success, error) ->
     Tracker
-    .find({imageHash})
+    .find({board, imageHash})
     .limit(1)
     .run (err, trackers) ->
       return error err if err
       success trackers[0]
   
-  preventFlood = (req, res) -> promise (success, error) ->
+  preventFlood = (req, res) -> 
     req.hash = {} if not req.hash
     req.hash.ip = ipHash(req)
-    success()
-    # TODO: Implement
+    countRecentUploads(req.params.board, req.hash.ip).then (count) ->
+      promise (success, error) ->
+        if count < config.security.minCurtailRate
+          # Below curtail rate - do not restrict
+          success()
+        else if count < config.security.maxPostRate
+          # Above curtail rate - restrict posting speed
+          setTimeout success, count
+        else
+          # Exceeded cap, report flood
+          error new Error "flood detected; please wait before posting"
     
   enforceUniqueImage = (req, res) -> promise (success, error) ->
     return success() if not req.files?.image
