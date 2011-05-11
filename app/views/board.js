@@ -22,7 +22,6 @@
       "class": 'thread',
       id: 'thread-' + thread.id
     }, function() {
-      var replyCount;
       a({
         href: "/" + this.board + "/" + thread.id + "/",
         "class": "threadLink"
@@ -30,15 +29,14 @@
       text(this.partial("partials/post", {
         object: thread.firstPost
       }));
-      replyCount = thread.posts.length - 1;
-      if (replyCount > 1) {
+      if (thread.replyCount > 1) {
         p({
           "class": "omitted"
         }, function() {
-          return replyCount - 1 + " messages omitted.";
+          return thread.replyCount - 1 + " messages omitted.";
         });
       }
-      if (replyCount > 0) {
+      if (thread.lastPost) {
         return text(this.partial("partials/post", {
           object: thread.lastPost
         }));

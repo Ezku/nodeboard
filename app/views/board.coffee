@@ -13,10 +13,8 @@ for thread in @threads
 
     text @partial "partials/post", object: thread.firstPost
   
-    replyCount = thread.posts.length-1
-  
-    if replyCount > 1
-      p class: "omitted", -> replyCount-1 + " messages omitted."
+    if thread.replyCount > 1
+      p class: "omitted", -> thread.replyCount-1 + " messages omitted."
 
-    if replyCount > 0
+    if thread.lastPost
       text @partial "partials/post", object: thread.lastPost

@@ -15,6 +15,7 @@ module.exports = (dependencies) ->
     read: (query) -> promise (success, error) ->
       Thread
       .find(board: String(query.board), id: Number(query.id))
+      # TODO: Find out how to filter out unwanted output from posts
       .select('board', 'id', 'posts')
       .limit(1)
       .run (err, threads) ->
