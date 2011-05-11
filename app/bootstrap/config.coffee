@@ -21,9 +21,11 @@ module.exports = (root) ->
         height: 128
     
     security:
+      checkDuplicateImages: true
       floodWindow: 60
       minCurtailRate: 2
       maxPostRate: 10
+      imageHashTimeout: 10
     
     boards:
       guilds:

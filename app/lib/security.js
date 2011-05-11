@@ -1,36 +1,51 @@
 (function() {
   module.exports = function(dependencies) {
-    var Tracker, config, countRecentUploads, enforceUniqueImage, findMatchingImage, hash, hashlib, imageHash, ipHash, preventFlood, promise, trackUpload;
+    var Tracker, config, countRecentUploads, enforceUniqueImage, findMatchingImage, hash, hashlib, image, imageHash, ip, ipHash, past, preventFlood, promise, salt, trackUpload;
     config = dependencies.config, hashlib = dependencies.hashlib;
     promise = dependencies.lib('promises').promise;
     Tracker = dependencies.mongoose.model('Tracker');
+    ip = function(req) {
+      return req.connection.remoteAddress;
+    };
+    salt = function(req) {
+      var _ref;
+      return ((_ref = req.params) != null ? _ref.board : void 0) != null;
+    };
+    image = function(req) {
+      var _ref, _ref2;
+      return (_ref = req.files) != null ? (_ref2 = _ref.image) != null ? _ref2.path : void 0 : void 0;
+    };
     hash = function(data, salt) {
       return hashlib.sha1(salt + data);
     };
     ipHash = function(req) {
-      var _ref;
-      return hash(req.connection.remoteAddress, ((_ref = req.params) != null ? _ref.board : void 0) != null);
+      return hash(ip(req), salt(req));
     };
     imageHash = function(req) {
       return promise(function(success, error) {
-        return hashlib.md5_file(req.files.image.path, function(result) {
-          var _ref;
+        setTimeout(function() {
+          return error(new Error("could not hash image file: operation timed out"));
+        }, config.security.imageHashTimeout * 1000);
+        return hashlib.md5_file(image(req), function(result) {
           if (result) {
-            return success(hash(result, ((_ref = req.params) != null ? _ref.board : void 0) != null));
+            return success(hash(result, salt(req)));
           } else {
-            return error();
+            return error(new Error("could not hash image file"));
           }
         });
       });
     };
+    past = function(seconds) {
+      return {
+        $gt: new Date(Date.now() - seconds * 1000)
+      };
+    };
     countRecentUploads = function(board, ipHash) {
       return promise(function(success, error) {
-        var window;
-        window = Date.now() - config.security.floodWindow;
-        console.log(window);
         return Tracker.count({
           board: board,
-          ipHash: ipHash
+          ipHash: ipHash,
+          date: past(config.security.floodWindow)
         }).run(function(err, count) {
           if (err) {
             return error(err);
@@ -59,11 +74,10 @@
       req.hash.ip = ipHash(req);
       return countRecentUploads(req.params.board, req.hash.ip).then(function(count) {
         return promise(function(success, error) {
-          console.log(count);
           if (count < config.security.minCurtailRate) {
             return success();
           } else if (count < config.security.maxPostRate) {
-            return setTimeout(success, count);
+            return setTimeout(success, count * 1000);
           } else {
             return error(new Error("flood detected; please wait before posting"));
           }
@@ -73,14 +87,22 @@
     enforceUniqueImage = function(req, res) {
       return promise(function(success, error) {
         var _ref;
-        if (!((_ref = req.files) != null ? _ref.image : void 0)) {
+        if (!((_ref = req.files) != null ? _ref.image : void 0) || !config.security.checkDuplicateImages) {
           return success();
         }
         if (!req.hash) {
           req.hash = {};
         }
         return imageHash(req).then(function(hash) {
-          return req.hash.image = hash;
+          req.hash.image = hash;
+          return findMatchingImage(req.params.board, hash).then(function(tracker) {
+            return promise(function(success, error) {
+              if (!tracker) {
+                return success();
+              }
+              return error(new Error("duplicate image detected"));
+            });
+          });
         });
       });
     };

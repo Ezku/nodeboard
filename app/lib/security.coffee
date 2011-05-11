@@ -3,21 +3,31 @@ module.exports = (dependencies) ->
   {promise} = dependencies.lib 'promises'
   Tracker = dependencies.mongoose.model 'Tracker'
   
+  ip = (req) -> req.connection.remoteAddress
+  salt = (req) -> req.params?.board?
+  image = (req) -> req.files?.image?.path
+  
   hash = (data, salt) ->
     hashlib.sha1 (salt + data)
   ipHash = (req) ->
-    hash req.connection.remoteAddress, req.params?.board?
+    hash (ip req), (salt req)
   imageHash = (req) -> promise (success, error) ->
-    hashlib.md5_file req.files.image.path, (result) ->
+    # A bit of paranoia for the md5_file function
+    setTimeout(
+      -> error new Error "could not hash image file: operation timed out"
+      config.security.imageHashTimeout * 1000
+    )
+    hashlib.md5_file (image req), (result) ->
       if result
-        success hash result, req.params?.board?
+        success hash(result, (salt req))
       else
-        error()
+        error new Error "could not hash image file"
+  
+  past = (seconds) -> $gt: new Date (Date.now() - seconds*1000)
   
   countRecentUploads = (board, ipHash) -> promise (success, error) ->
-    recent = Date.now() - config.security.floodWindow
     Tracker
-    .count(board: board, ipHash: ipHash, date: {$gt: recent}) #TODO: make this work
+    .count(board: board, ipHash: ipHash, date: past config.security.floodWindow)
     .run (err, count) ->
       return error err if err
       success count
@@ -30,6 +40,9 @@ module.exports = (dependencies) ->
       return error err if err
       success trackers[0]
   
+  # In case of multiple uploads within a certain period of time, slow down the
+  # possible upload rate by applying a timeout. If a certain rate is nevertheless
+  # exceeded, reports an error due to flooding.
   preventFlood = (req, res) -> 
     req.hash = {} if not req.hash
     req.hash.ip = ipHash(req)
@@ -40,18 +53,22 @@ module.exports = (dependencies) ->
           success()
         else if count < config.security.maxPostRate
           # Above curtail rate - restrict posting speed
-          setTimeout success, count
+          setTimeout success, count * 1000
         else
           # Exceeded cap, report flood
           error new Error "flood detected; please wait before posting"
-    
+  
+  # Report an error if an image with the same hash has already been posted.
   enforceUniqueImage = (req, res) -> promise (success, error) ->
-    return success() if not req.files?.image
+    return success() if not req.files?.image or not config.security.checkDuplicateImages
     req.hash = {} if not req.hash
     imageHash(req).then (hash) ->
       req.hash.image = hash
-      # TODO: Implement
-    
+      findMatchingImage(req.params.board, hash).then (tracker) -> promise (success, error) ->
+        return success() if not tracker
+        error new Error "duplicate image detected"
+  
+  # Creates a tracker entry based on the current upload
   trackUpload = (req, res) -> promise (success, error) ->
     tracker = new Tracker
       board: req.params.board
