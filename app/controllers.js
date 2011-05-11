@@ -1,7 +1,7 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boardExists, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receivePost, receiveReply, receiveThread, renderPanels, security, service, services, socket, static, tap, validateBoard, validateThread;
+    var accept, app, boardExists, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validateBoard, validateThread;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io;
     tap = function(f) {
       return function(req, res, next) {
@@ -137,9 +137,9 @@
         return next();
       };
     };
-    security = function(name) {
+    tracking = function(name) {
       return filter(function(req, res) {
-        return dependencies.lib('security')[name](req, res);
+        return dependencies.lib('tracking')[name](req, res);
       });
     };
     app.get('/', panels, static({
@@ -173,7 +173,7 @@
     }, renderPanels);
     receivePost = function(action) {
       return [
-        accept('content', 'password'), security('preventFlood'), security('enforceUniqueImage'), filter(function(req, res) {
+        accept('content', 'password'), tracking('preventFlood'), tracking('enforceUniqueImage'), filter(function(req, res) {
           var _ref;
           return service('Thread')[action]({
             thread: req.params,
@@ -182,7 +182,7 @@
           }).then(function(thread) {
             return res.thread = thread;
           });
-        }), security('trackUpload')
+        }), tracking('trackUpload')
       ];
     };
     receiveThread = [

@@ -107,8 +107,8 @@ module.exports = (dependencies) ->
       res.locals collector
     next()
   
-  # Retrieves a security filter from the library
-  security = (name) -> filter (req, res) -> dependencies.lib('security')[name] req, res
+  # Retrieves a tracking filter from the library
+  tracking = (name) -> filter (req, res) -> dependencies.lib('tracking')[name] req, res
   
   # Front page
   app.get '/',
@@ -156,13 +156,13 @@ module.exports = (dependencies) ->
   # Receiving post data and passing it through the thread service
   receivePost = (action) -> [
     accept('content', 'password'),
-    security('preventFlood'),
-    security('enforceUniqueImage'),
+    tracking('preventFlood'),
+    tracking('enforceUniqueImage'),
     filter (req, res) ->
       service('Thread')[action]({ thread: req.params, post: req.body, image: req.files?.image })
       .then (thread) ->
         res.thread = thread
-    security('trackUpload')
+    tracking('trackUpload')
   ]
   
   # Creating a new thread

@@ -2,7 +2,7 @@
   module.exports = function(mongoose, dependencies) {
     var PostSchema, ThreadSchema, promise;
     promise = dependencies.lib('promises').promise;
-    PostSchema = require('./PostSchema.js')(mongoose).definition;
+    PostSchema = require('./PostSchema.js')(mongoose, dependencies).definition;
     ThreadSchema = {
       definition: {
         board: {

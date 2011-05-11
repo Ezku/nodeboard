@@ -1,5 +1,6 @@
-module.exports = (mongoose) ->
+module.exports = (mongoose, dependencies) ->
   ImageSchema = require('./ImageSchema.js')(mongoose).definition
+  {hashlib} = dependencies
   
   PostSchema =
     definition:
@@ -11,7 +12,9 @@ module.exports = (mongoose) ->
         type: String
         default: "Anonymous"
       content: String
-      password: String
+      password:
+        type: String
+        set: (password) -> hashlib.sha1 password
       image:
         type: ImageSchema
         required: false

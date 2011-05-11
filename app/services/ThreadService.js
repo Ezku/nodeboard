@@ -40,14 +40,10 @@
       };
       ThreadService.prototype.create = function(data) {
         return Sequence.next(data.thread.board).then(__bind(function(seq) {
-          return this._processImage(data.image, data.thread.board, seq.counter).then(function(image) {
+          return this._processImage(data.image, data.thread.board, seq.counter).then(__bind(function(image) {
             var post, thread;
-            thread = new Thread(data.thread);
-            post = new Post(data.post).toJSON();
-            post.image = image != null ? image.toJSON() : void 0;
-            thread.id = post.id = seq.counter;
-            thread.posts.push(post);
-            thread.firstPost = post;
+            post = this._post(data.post, seq.counter, image);
+            thread = this._thread(data.thread, post);
             return promise(function(success, error) {
               return thread.save(function(err) {
                 if (err) {
@@ -56,24 +52,35 @@
                 return success(thread);
               });
             });
-          });
+          }, this));
         }, this));
       };
       ThreadService.prototype.update = function(data) {
         return Sequence.next(data.thread.board).then(__bind(function(seq) {
-          return this._processImage(data.image, data.thread.board, seq.counter).then(function(image) {
+          return this._processImage(data.image, data.thread.board, seq.counter).then(__bind(function(image) {
             var post;
-            post = new Post(data.post).toJSON();
-            post.id = seq.counter;
-            post.image = image != null ? image.toJSON() : void 0;
+            post = this._post(data.post, seq.counter, image);
             return Thread.addReply(data.thread.board, data.thread.id, post);
-          });
+          }, this));
         }, this));
       };
       ThreadService.prototype._processImage = function(image, board, id) {
         var processor;
         processor = new ImageProcessor(image, board, id);
         return processor.process();
+      };
+      ThreadService.prototype._post = function(data, id, image) {
+        data.id = id;
+        data.image = image != null ? image.toJSON() : void 0;
+        return new Post(data).toJSON();
+      };
+      ThreadService.prototype._thread = function(data, post) {
+        var thread;
+        data.id = post.id;
+        data.firstPost = post;
+        thread = new Thread(data);
+        thread.posts.push(post);
+        return thread;
       };
       /*
       delete: (thread, error, success) ->

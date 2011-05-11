@@ -1,10 +1,9 @@
 module.exports = (mongoose, dependencies) ->
   {promise} = dependencies.lib 'promises'
-  PostSchema = require('./PostSchema.js')(mongoose).definition
+  PostSchema = require('./PostSchema.js')(mongoose, dependencies).definition
   
   ThreadSchema =
     definition:
-      # TODO: use namespaces instead of a field!
       board:
         type: String
         index: true
