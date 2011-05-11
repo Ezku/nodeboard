@@ -9,7 +9,7 @@
       span("#" + this.post.id, {
         "class": 'post-id'
       });
-      span(this.post.author, {
+      span(h(this.post.author), {
         "class": 'author'
       });
       return time(this.post.date.toString(), {
@@ -33,7 +33,7 @@
     return div({
       "class": 'post-content'
     }, function() {
-      return p(this.post.content);
+      return p(h(this.post.content));
     });
   });
 }).call(this);
