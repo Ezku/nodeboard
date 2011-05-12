@@ -1,6 +1,6 @@
 (function() {
   module.exports = function(dependencies) {
-    var app, coffeekup, config, express;
+    var app, coffeekup, config, express, helpers;
     express = dependencies.express, coffeekup = dependencies.coffeekup, config = dependencies.config;
     app = dependencies.app = express.createServer();
     app.configure(function() {
@@ -15,7 +15,12 @@
       app.use(express.methodOverride());
       app.use(app.router);
       app.use(express.static(config.paths.public));
-      return app.use(express.static(config.paths.mount));
+      app.use(express.static(config.paths.mount));
+      return app.use(dependencies.browserify({
+        base: config.paths.shared,
+        mount: '/scripts/browserify.js',
+        require: ['coffeekup']
+      }));
     });
     app.configure('development', function() {
       return app.use(express.errorHandler({
@@ -26,10 +31,8 @@
     app.configure('production', function() {
       return app.use(express.errorHandler());
     });
-    return app.dynamicHelpers({
-      config: function() {
-        return config;
-      }
-    });
+    helpers = dependencies.lib('helpers');
+    app.helpers(helpers.static);
+    return app.dynamicHelpers(helpers.dynamic);
   };
 }).call(this);

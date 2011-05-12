@@ -16,10 +16,12 @@ module.exports = (dependencies) ->
     app.use app.router
     app.use express.static config.paths.public
     app.use express.static config.paths.mount
-#    app.use dependencies.browserify
-#      base: config.paths.shared
-#      mount: '/scripts/browserify.js',
-#      filter: dependencies.jsmin.jsmin
+    
+    app.use dependencies.browserify
+      base: config.paths.shared
+      mount: '/scripts/browserify.js'
+    #  filter: dependencies.jsmin.jsmin
+      require: ['coffeekup']
 
   app.configure 'development', ->
     app.use express.errorHandler dumpExceptions: true, showStack: true
@@ -27,7 +29,7 @@ module.exports = (dependencies) ->
   app.configure 'production', ->
     app.use express.errorHandler()
   
-  app.dynamicHelpers
-    # Make config settings available in view scope
-    config: -> config
+  helpers = dependencies.lib 'helpers'
+  app.helpers helpers.static
+  app.dynamicHelpers helpers.dynamic
   
