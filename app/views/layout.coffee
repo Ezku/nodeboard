@@ -7,9 +7,10 @@ html ->
     script src: '/scripts/modernizr-1.7.min.js'
     script src: '/scripts/jquery-1.5.2.min.js'
     script src: '/scripts/jquery.timeago.js'
-    script src: '/scripts/aaltoboard.js'
     script src: '/socket.io/socket.io.js'
     script src: '/scripts/socket.io-channels-client.js'
+    script src: '/scripts/browserify.js'
+    script src: '/scripts/aaltoboard.js'
   body class: @class, id: @id, ->
     div id: "page-wrapper", ->
       header ->

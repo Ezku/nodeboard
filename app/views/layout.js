@@ -20,13 +20,16 @@
         src: '/scripts/jquery.timeago.js'
       });
       script({
-        src: '/scripts/aaltoboard.js'
-      });
-      script({
         src: '/socket.io/socket.io.js'
       });
-      return script({
+      script({
         src: '/scripts/socket.io-channels-client.js'
+      });
+      script({
+        src: '/scripts/browserify.js'
+      });
+      return script({
+        src: '/scripts/aaltoboard.js'
       });
     });
     return body({
