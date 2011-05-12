@@ -8,7 +8,7 @@ $(document).ready(function(){
   });
   
   // Thread selector
-  $("section.thread").click(function(){
+  $("#high-level section.thread").click(function(){
     console.log("click")
     var link = $(this).children("a.threadLink").attr("href");
     window.location.href = link;
