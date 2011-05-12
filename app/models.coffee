@@ -10,10 +10,10 @@ module.exports = (dependencies) ->
   # Declares a Mongoose schema
   schema = (name) ->
     schemaData = require(config.paths.schemas + name + "Schema")(mongoose, dependencies)
-    schema = new mongoose.Schema schemaData.definition
+    modelSchema = new mongoose.Schema schemaData.definition
     if schemaData.static
-      schema.static schemaData.static
-    mongoose.model name, schema
+      modelSchema.static schemaData.static
+    mongoose.model name, modelSchema
   
   # Declares a Service, ie. Model backend
   service = (name) -> dependencies.services[name] = require(config.paths.services + name + "Service")(dependencies)

@@ -7,13 +7,13 @@
     dependencies.collections = {};
     dependencies.models = {};
     schema = function(name) {
-      var schema, schemaData;
+      var modelSchema, schemaData;
       schemaData = require(config.paths.schemas + name + "Schema")(mongoose, dependencies);
-      schema = new mongoose.Schema(schemaData.definition);
+      modelSchema = new mongoose.Schema(schemaData.definition);
       if (schemaData.static) {
-        schema.static(schemaData.static);
+        modelSchema.static(schemaData.static);
       }
-      return mongoose.model(name, schema);
+      return mongoose.model(name, modelSchema);
     };
     service = function(name) {
       return dependencies.services[name] = require(config.paths.services + name + "Service")(dependencies);
