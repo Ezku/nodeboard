@@ -150,6 +150,23 @@
       view: 'index',
       title: 'Aaltoboard'
     }), renderPanels);
+    app.get('/api/', function(req, res) {
+      var boards, data, group, id, result, _ref;
+      result = {};
+      _ref = config.boards;
+      for (group in _ref) {
+        boards = _ref[group];
+        for (id in boards) {
+          data = boards[id];
+          result[id] = {
+            name: data.name,
+            url: "/api/" + id + "/",
+            group: group
+          };
+        }
+      }
+      return res.send(result);
+    });
     app.get('/api/:board/', collectBoard('local'), function(req, res) {
       return res.send({
         board: req.params.board,

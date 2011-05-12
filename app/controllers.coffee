@@ -124,6 +124,17 @@ module.exports = (dependencies) ->
     ),
     renderPanels
   
+  app.get '/api/',
+    (req, res) ->
+      result = {}
+      for group, boards of config.boards
+        for id, data of boards
+          result[id] =
+            name: data.name
+            url: "/api/#{id}/"
+            group: group
+      res.send result
+  
   # Board index
   app.get '/api/:board/',
     collectBoard('local'),
