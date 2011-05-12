@@ -1,5 +1,5 @@
 module.exports = (dependencies) ->
-  {app, config, services, formidable, io} = dependencies
+  {app, config, services, formidable, io, channels} = dependencies
 
   # Intercepts middleware handler chain with a function, passing control down the chain immediately afterwards.
   # For debugging purposes.
@@ -183,7 +183,7 @@ module.exports = (dependencies) ->
     receivePost('create'),
     (req, res, next) ->
       thread = res.thread
-      socket.broadcast {thread: {board: thread.board, id: thread.id}}
+      channel.broadcastToChannel 'newthread', thread.board, {thread: thread.id}
       next()
   ]
   
@@ -244,7 +244,7 @@ module.exports = (dependencies) ->
     receivePost('update'),
     (req, res, next) ->
       thread = res.thread
-      socket.broadcast {reply: {board: thread.board, thread: thread.id}}
+      channel.broadcastToChannel 'reply', thread.board, {thread: thread.id}
       next()
   ]
   
@@ -262,15 +262,6 @@ module.exports = (dependencies) ->
     (req, res) ->
       res.redirect "/#{req.params.board}/#{req.params.id}/"
 
-  # Socket io
+  # Socket.io channels  
   socket = io.listen app
-  
-  # Socket connection listeners
-  socket.on 'connection', (client) ->
-    console.log 'new client connection: ' + client.sessionId
-    
-    client.on 'message', -> 
-      console.log 'message'
-      
-    client.on 'disconnect', ->
-      console.log 'disconnect'
+  channel = channels.listen socket, {}

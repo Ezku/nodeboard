@@ -15,10 +15,10 @@
     promise = dependencies.lib('promises').promise;
     Thread = mongoose.model('Thread');
     return BoardService = (function() {
+      __extends(BoardService, AbstractService);
       function BoardService() {
         BoardService.__super__.constructor.apply(this, arguments);
       }
-      __extends(BoardService, AbstractService);
       BoardService.prototype.read = function(query) {
         return promise(function(success, error) {
           return Thread.find({

@@ -14,10 +14,10 @@
     mongoose = dependencies.mongoose;
     Thread = mongoose.model('Thread');
     return PostService = (function() {
+      __extends(PostService, AbstractService);
       function PostService() {
         PostService.__super__.constructor.apply(this, arguments);
       }
-      __extends(PostService, AbstractService);
       return PostService;
     })();
   };

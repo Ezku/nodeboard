@@ -22,8 +22,11 @@
       script({
         src: '/scripts/aaltoboard.js'
       });
-      return script({
+      script({
         src: '/socket.io/socket.io.js'
+      });
+      return script({
+        src: '/scripts/socket.io-channels-client.js'
       });
     });
     return body({

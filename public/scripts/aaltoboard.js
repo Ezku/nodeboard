@@ -16,19 +16,47 @@ $(document).ready(function(){
   
   // Timeago plugin
   $("time").timeago();
+ 
+  /*
+   * Socket.io channels
+   */
   
-  // Socket io
-  var socket = new io.Socket(document.domain); 
-  socket.connect();
-  socket.on('connect', function(){
-    console.log('connect');
-  });
-  socket.on('message', function(message){
-    console.log('message:', message);
-      
-    // Replying to a thread
-    if (message.reply){
-      var threadId = message.reply.thread;
+  // Check if we are on board page
+  var path = window.location.pathname;
+  if (path.length > 1){
+    var board = path.split("/")[1];
+
+    console.log("Connecting to board: " + board);
+
+    var channel = new SocketIOChannel({
+      host: document.domain,
+      channelId: board
+      //reconnectOnDisconnect: true,
+      //reconnectRetryInterval: 1000 * 10 // try to reconnect every 30 seconds
+    });
+    
+    channel.on('newthread', function(obj){  
+      console.log("New thread: "+obj.thread);
+      var $notification = $("#newThreadsNumber");
+      if ($notification.length > 0){
+        console.log("Updating notification element");
+        var amount = parseInt($notification.html());
+        $notification.html(amount+1);
+      } else {
+        console.log("Creating notification element");
+        $('<a id="newThreadsNotification" href="#"><span id="newThreadsNumber">1</span> new threads. Click to refresh.</a>')
+          .hide()
+          .insertAfter("#newThread")
+          .slideDown('slow')
+          .click(function(){
+            window.location.href=window.location.href
+            return false;
+          });
+      }
+    });
+    
+    channel.on('reply', function(obj){      
+      var threadId = obj.thread;
       console.log("New reply to thread "+threadId);
       var $thread = $("#thread-"+threadId);
       if ($thread.length > 0){
@@ -53,29 +81,18 @@ $(document).ready(function(){
       } else {
         console.log("Thread element not found: " + threadId);
       }
-    }
-    // Creating new thread
-    else if (message.thread){
-      console.log("New thread: "+message.thread.id);
-      var $notification = $("#newThreadsNumber");
-      if ($notification.length > 0){
-        console.log("Updating notification element");
-        var amount = parseInt($notification.html());
-        $notification.html(amount+1);
-      } else {
-        console.log("Creating notification element");
-        $('<a id="newThreadsNotification" href="#"><span id="newThreadsNumber">1</span> new threads. Click to refresh.</a>')
-          .hide()
-          .insertAfter("#newThread")
-          .slideDown('slow')
-          .click(function(){
-            window.location.href=window.location.href
-            return false;
-          });
-      }
-    }
-  });
-  socket.on('disconnect', function(){
-    console.log('disconnect');
-  });
+    });
+
+    channel.on('connect', function(obj){
+      console.log('Connected socket');
+    });
+
+    channel.on('disconnect', function(obj){
+      console.log('Disconnect socket');
+    })
+
+    channel.on('connectionRetry', function(obj){
+      console.log('Socket connectionRetry');
+    })
+  }     
 });

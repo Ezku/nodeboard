@@ -9,6 +9,7 @@ html ->
     script src: '/scripts/jquery.timeago.js'
     script src: '/scripts/aaltoboard.js'
     script src: '/socket.io/socket.io.js'
+    script src: '/scripts/socket.io-channels-client.js'
   body class: @class, id: @id, ->
     div id: "page-wrapper", ->
       header ->
