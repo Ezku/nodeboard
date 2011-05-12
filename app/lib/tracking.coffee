@@ -70,11 +70,12 @@ module.exports = (dependencies) ->
   
   # Creates a tracker entry based on the current upload
   trackUpload = (req, res) -> promise (success, error) ->
+    post = res.thread.lastPost or res.thread.firstPost
     tracker = new Tracker
       board: req.params.board
       thread: res.thread.id
-      post: res.thread.lastPost.id
-      date: res.thread.lastPost.date
+      post: post.id
+      date: post.date
       ipHash: req.hash.ip
       imageHash: req.hash.image
     tracker.save (err) ->

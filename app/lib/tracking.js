@@ -108,12 +108,13 @@
     };
     trackUpload = function(req, res) {
       return promise(function(success, error) {
-        var tracker;
+        var post, tracker;
+        post = res.thread.lastPost || res.thread.firstPost;
         tracker = new Tracker({
           board: req.params.board,
           thread: res.thread.id,
-          post: res.thread.lastPost.id,
-          date: res.thread.lastPost.date,
+          post: post.id,
+          date: post.date,
           ipHash: req.hash.ip,
           imageHash: req.hash.image
         });
