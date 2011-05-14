@@ -7,6 +7,26 @@ $(document).ready(function(){
     return false;
   });
   
+  // Reply to thread -form toggle
+  
+  function hideReplyForm(){
+    $("#reply form").hide();
+    updateThreadHeight();
+  }
+  
+  function updateThreadHeight(){
+    $("#detail-level .thread").css("bottom",$("#reply").outerHeight());
+  }
+  
+  hideReplyForm();
+  
+  $("#reply h4").live("click",function(){
+    $("#reply form").slideToggle(function(){
+       updateThreadHeight();
+    });
+    return false;
+  });
+  
   // Thread selector
   $("#high-level section.thread").click(function(){
     var link = $(this).children("a.threadLink").attr("href");
@@ -32,6 +52,8 @@ $(document).ready(function(){
       if(window.location.pathname !== path){
         history.pushState(null, null, path);
       }
+      
+      hideReplyForm();
     });
   }
   

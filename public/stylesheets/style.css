@@ -200,6 +200,24 @@ header nav ul li a:active {
   color: #ccc;
   margin: 5px 10px;
 }
+#detail-level section.thread {
+  position: absolute;
+  top: 50px;
+  bottom: 252px;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+#detail-level section.form {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  overflow: auto;
+  background: #eee;
+  border-top: 2px solid #ccc;
+}
 .board:nth-of-type(1) {
   margin-top: 20px;
 }
@@ -287,6 +305,9 @@ header nav ul li a:active {
 }
 #newThreadButton:hover {
   background-color: #999;
+}
+form {
+  margin-top: 10px;
 }
 form dt {
   width: 25%;
