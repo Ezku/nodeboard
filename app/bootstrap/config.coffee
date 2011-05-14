@@ -20,12 +20,17 @@ module.exports = (root) ->
         width: 128
         height: 128
     
-    security:
+    tracking:
       checkDuplicateImages: true
       floodWindow: 60
       minCurtailRate: 2
       maxPostRate: 10
       imageHashTimeout: 10
+    
+    content:
+      threadsPerPage: 10
+      maximumReplyCount: 100
+      maximumThreadAmount: 100
     
     boards:
       guilds:

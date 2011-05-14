@@ -10,8 +10,8 @@
   };
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var BoardService, Thread, mongoose, promise;
-    mongoose = dependencies.mongoose;
+    var BoardService, Thread, config, mongoose, promise;
+    mongoose = dependencies.mongoose, config = dependencies.config;
     promise = dependencies.lib('promises').promise;
     Thread = mongoose.model('Thread');
     return BoardService = (function() {
@@ -21,9 +21,11 @@
       }
       BoardService.prototype.read = function(query) {
         return promise(function(success, error) {
+          var limit, _ref, _ref2;
+          limit = (_ref = query.limit) != null ? _ref : ((_ref2 = query.pages) != null ? _ref2 : 1) * config.content.threadsPerPage;
           return Thread.find({
             board: query.board
-          }).select('board', 'id', 'firstPost', 'lastPost', 'replyCount').sort('id', -1).run(function(err, threads) {
+          }).select('board', 'id', 'firstPost', 'lastPost', 'replyCount').sort('updated', -1).limit(limit).run(function(err, threads) {
             if (err) {
               return error(err);
             }
