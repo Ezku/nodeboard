@@ -1,46 +1,18 @@
 (function() {
   module.exports = function(dependencies) {
-    var Thread, Tracker, checkOrphanedTrackers, config, deleteExpiredThreads, findTrackedThreads, images, markExpiredThreads, mersenne, mongoose, promise, q, shouldCheckOrphanedTrackers, sweepPosts, sweepTrackers, threadExists, upkeep;
+    var Thread, Tracker, all, checkOrphanedTrackers, config, findTrackedThreads, images, mersenne, mongoose, promise, q, shouldCheckOrphanedTrackers, sweepPosts, sweepThreads, sweepTrackers, threadExists, upkeep, _ref;
     mongoose = dependencies.mongoose, config = dependencies.config, q = dependencies.q, mersenne = dependencies.mersenne;
-    promise = dependencies.lib('promises').promise;
+    _ref = dependencies.lib('promises'), promise = _ref.promise, all = _ref.all;
     images = dependencies.lib('images');
     Thread = mongoose.model('Thread');
     Tracker = mongoose.model('Tracker');
-    markExpiredThreads = function(board) {
-      return promise(function(success, error) {
-        return Thread.where({
-          markedForDeletion: false
-        }).update({
-          markedForDeletion: true
-        }).sort('updated', -1).skip(config.content.maximumThreadAmount).run(function(err, threads) {
-          if (err) {
-            return error(err);
-          }
-          return success(threads);
-        });
-      });
-    };
-    sweepPosts = function(thread) {
-      var post, promises;
-      promises = (function() {
-        var _i, _len, _ref, _results;
-        _ref = thread.posts;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          post = _ref[_i];
-          images.deleteByPost(thread.board, post);
-          _results.push(sweepTrackers(thread));
-        }
-        return _results;
-      })();
-      return q.join.apply(q, promises);
-    };
     sweepTrackers = function(thread) {
       return promise(function(success, error) {
-        return Tracker["delete"]().where({
+        console.log("sweeping trackers for thread " + (thread.id.toString()));
+        return Tracker.remove({
           board: thread.board,
           thread: thread.id
-        }).run(function(err) {
+        }, function(err) {
           if (err) {
             return error(err);
           }
@@ -48,15 +20,43 @@
         });
       });
     };
-    deleteExpiredThreads = function(board) {
-      return markExpiredThreads(board).then(function(threads) {
+    sweepPosts = function(thread) {
+      var post, promises;
+      console.log("sweeping posts for thread " + (thread.id.toString()));
+      promises = (function() {
+        var _i, _len, _ref2, _results;
+        _ref2 = thread.posts;
+        _results = [];
+        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+          post = _ref2[_i];
+          images.deleteByPost(thread.board, post);
+          sweepTrackers(thread);
+          _results.push(console.log('done sweeping trackers'));
+        }
+        return _results;
+      })();
+      return all(promises);
+    };
+    sweepThreads = function(board) {
+      return Thread.sweep(board, config.content.maximumThreadAmount).then(function(threads) {
         var promises, thread;
+        console.log((function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = threads.length; _i < _len; _i++) {
+            thread = threads[_i];
+            _results.push(Number(thread.id.toString()));
+          }
+          return _results;
+        })());
         promises = (function() {
           var _i, _len, _results;
           _results = [];
           for (_i = 0, _len = threads.length; _i < _len; _i++) {
             thread = threads[_i];
+            console.log("deleting thread " + (thread.id.toString()));
             _results.push(sweepPosts(thread).then(function() {
+              console.log('done sweeping posts');
               thread.remove();
               return promise(function(success) {
                 return success(thread);
@@ -65,7 +65,7 @@
           }
           return _results;
         })();
-        return q.join.apply(q, promises);
+        return all(promises);
       });
     };
     findTrackedThreads = function(board) {
@@ -124,7 +124,7 @@
       return mersenne.rand(100) < config.content.orphanedTrackerCheckProbability;
     };
     upkeep = function(req, res) {
-      deleteExpiredThreads(req.params.board);
+      sweepThreads(req.params.board);
       if (shouldCheckOrphanedTrackers()) {
         return checkOrphanedTrackers(req.params.board);
       }

@@ -29,8 +29,8 @@ module.exports = (root) ->
     
     content:
       threadsPerPage: 10
-      maximumReplyCount: 10
-      maximumThreadAmount: 10
+      maximumReplyCount: 5
+      maximumThreadAmount: 5
       orphanedTrackerCheckProbability: 0
     
     boards:

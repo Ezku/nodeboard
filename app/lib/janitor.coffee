@@ -1,43 +1,30 @@
 module.exports = (dependencies) ->
   {mongoose, config, q, mersenne} = dependencies
-  {promise} = dependencies.lib 'promises'
+  {promise, all} = dependencies.lib 'promises'
   images = dependencies.lib 'images'
   
   Thread = mongoose.model 'Thread'
   Tracker = mongoose.model 'Tracker'
   
-  markExpiredThreads = (board) -> promise (success, error) ->
-    Thread
-    .where(markedForDeletion: false)
-    .update(markedForDeletion: true)
-    .sort('updated', -1)
-    .skip(config.content.maximumThreadAmount)
-    .run (err, threads) ->
+  sweepTrackers = (thread) -> promise (success, error) ->
+    Tracker.remove board: thread.board, thread: thread.id, (err) ->
       return error err if err
-      success threads
+      success()
   
   sweepPosts = (thread) ->
     promises = for post in thread.posts
       images.deleteByPost thread.board, post
       sweepTrackers thread
-    q.join promises...
+    all promises
   
-  sweepTrackers = (thread) -> promise (success, error) ->
-    Tracker
-    .delete()
-    .where(board: thread.board, thread: thread.id)
-    .run (err) ->
-      return error err if err
-      success()
-  
-  deleteExpiredThreads = (board) ->
-    markExpiredThreads(board).then (threads) ->
+  sweepThreads = (board) ->
+    Thread.sweep(board, config.content.maximumThreadAmount).then (threads) ->
       promises = for thread in threads
         sweepPosts(thread).then ->
           thread.remove()
           promise (success) ->
             success thread
-      q.join promises...
+      all promises
   
   findTrackedThreads = (board) -> promise (success, error) ->    
     Tracker
@@ -66,7 +53,7 @@ module.exports = (dependencies) ->
   shouldCheckOrphanedTrackers = -> mersenne.rand(100) < config.content.orphanedTrackerCheckProbability
   
   upkeep = (req, res) ->
-    deleteExpiredThreads req.params.board
+    sweepThreads req.params.board
     if shouldCheckOrphanedTrackers()
       checkOrphanedTrackers req.params.board
   
