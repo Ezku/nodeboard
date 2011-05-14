@@ -6,7 +6,7 @@ html ->
     link rel: "stylesheet", href: '/stylesheets/style.css'
     script src: '/scripts/modernizr-1.7.min.js'
     script src: '/scripts/jquery-1.5.2.min.js'
-    script src: 'http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'
+    script src: '/scripts/jquery.tmpl.min.js'
     script src: '/scripts/jquery.timeago.js'
     script src: '/socket.io/socket.io.js'
     script src: '/scripts/socket.io-channels-client.js'
