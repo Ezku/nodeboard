@@ -78,7 +78,12 @@ module.exports = (dependencies) ->
   collectBoard = (collector) -> [
     validateBoard,
     filter (req, res) ->
-      service('Board').read(req.params).then (threads) ->
+      query = {
+        board: req.params.board
+        limit: req.query.limit
+        pages: req.query.pages
+      }
+      service('Board').read(query).then (threads) ->
         res[collector] 'view', 'board'
         res[collector] 'threads', threads
   ]

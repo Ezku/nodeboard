@@ -100,7 +100,13 @@
     collectBoard = function(collector) {
       return [
         validateBoard, filter(function(req, res) {
-          return service('Board').read(req.params).then(function(threads) {
+          var query;
+          query = {
+            board: req.params.board,
+            limit: req.query.limit,
+            pages: req.query.pages
+          };
+          return service('Board').read(query).then(function(threads) {
             res[collector]('view', 'board');
             return res[collector]('threads', threads);
           });
