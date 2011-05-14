@@ -15,12 +15,14 @@
       app.use(express.methodOverride());
       app.use(app.router);
       app.use(express.static(config.paths.public));
-      app.use(express.static(config.paths.mount));
-      return app.use(dependencies.browserify({
-        base: config.paths.shared,
-        mount: '/scripts/browserify.js',
-        require: ['coffeekup']
-      }));
+      return app.use(express.static(config.paths.mount));
+      /*
+          app.use dependencies.browserify
+            base: config.paths.shared
+            mount: '/scripts/browserify.js'
+            require: ['coffeekup']
+            #filter: dependencies.jsmin.jsmin
+          */
     });
     app.configure('development', function() {
       return app.use(express.errorHandler({

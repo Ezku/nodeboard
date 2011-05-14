@@ -25,9 +25,6 @@ html ->
                 a href: "/#{label}/", title: properties.name, -> label
       
       div id: "column-wrapper", -> @body
-          
-#      footer ->
-#        "Oh, and this would be the footer."
 
     script type: 'text/x-jquery-tmpl', id: 'threadTemplate', ->
       text @partial "thread", title: '/${board}/${id}', object: {id:'${id}'}

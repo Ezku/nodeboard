@@ -14,7 +14,12 @@ module.exports = (mongoose, dependencies) ->
       content: String
       password:
         type: String
-        set: (password) -> hashlib.sha1 password
+        set: (password) ->
+          password = String(password)
+          if password.length > 0
+            hashlib.sha1 password
+          else
+            null
       image:
         type: ImageSchema
         required: false

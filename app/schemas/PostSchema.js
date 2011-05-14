@@ -18,7 +18,12 @@
         password: {
           type: String,
           set: function(password) {
-            return hashlib.sha1(password);
+            password = String(password);
+            if (password.length > 0) {
+              return hashlib.sha1(password);
+            } else {
+              return null;
+            }
           }
         },
         image: {

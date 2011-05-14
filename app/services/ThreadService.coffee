@@ -1,4 +1,4 @@
-
+fs = require 'fs'
 AbstractService = require './AbstractService.js'
 
 module.exports = (dependencies) ->
@@ -29,9 +29,11 @@ module.exports = (dependencies) ->
           post = @_post data.post, seq.counter, image
           thread = @_thread data.thread, post
           
-          promise (success, error) ->
-            thread.save (err) ->
-              return error err if err
+          promise (success, error) =>
+            thread.save (err) =>
+              if err
+                @_revert data.thread.board, post
+                return error err
               success thread
     
     
@@ -39,7 +41,13 @@ module.exports = (dependencies) ->
       Sequence.next(data.thread.board).then (seq) =>
         @_processImage(data.image, data.thread.board, seq.counter).then (image) =>
           post = @_post data.post, seq.counter, image
-          Thread.addReply data.thread.board, data.thread.id, post
+          promise (success, error) =>
+            Thread.addReply(data.thread.board, data.thread.id, post).then(
+              (thread) -> success thread
+              (err) =>
+                @_revert data.thread.board, post
+                error err
+            )
     
     _processImage: (image, board, id) ->
       processor = new ImageProcessor image, board, id
@@ -52,10 +60,16 @@ module.exports = (dependencies) ->
     
     _thread: (data, post) ->
       data.id = post.id
+      data.updated = post.date
       data.firstPost = post
       thread = new Thread data
       thread.posts.push post
       thread
+    
+    _revert: (board, post) ->
+      # TODO: check whether these paths are correct :D
+      fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.thumbnail
+      fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.fullsize
     
     ###
     delete: (thread, error, success) ->

@@ -42,6 +42,45 @@
         posts: [new mongoose.Schema(PostSchema)]
       },
       static: {
+        sweep: function(board, threadLimit) {
+          return promise(function(success, error) {
+            var Thread;
+            Thread = mongoose.model('Thread');
+            return Thread.where({
+              board: board,
+              markedForDeletion: false
+            }).sort('updated', -1).skip(threadLimit).run(function(err, threads) {
+              var thread;
+              if (err) {
+                return error(err);
+              }
+              if (!threads.length) {
+                return success([]);
+              } else {
+                return Thread.update({
+                  id: {
+                    $in: (function() {
+                      var _i, _len, _results;
+                      _results = [];
+                      for (_i = 0, _len = threads.length; _i < _len; _i++) {
+                        thread = threads[_i];
+                        _results.push(Number(thread.id.toString()));
+                      }
+                      return _results;
+                    })()
+                  }
+                }, {
+                  markedForDeletion: true
+                }, function(err) {
+                  if (err) {
+                    return error(err);
+                  }
+                  return success(threads);
+                });
+              }
+            });
+          });
+        },
         addReply: function(board, id, post) {
           return promise(function(success, error) {
             var Thread;

@@ -31,6 +31,7 @@ module.exports = (root) ->
       threadsPerPage: 10
       maximumReplyCount: 100
       maximumThreadAmount: 100
+      orphanedTrackerCheckProbability: 10
     
     boards:
       guilds:

@@ -2,7 +2,6 @@ module.exports = (dependencies) ->
   {app, config, services, formidable, io, channels} = dependencies
 
   # Intercepts middleware handler chain with a function, passing control down the chain immediately afterwards.
-  # For debugging purposes.
   tap = (f) -> (req, res, next) ->
     f(req, res)
     next()
@@ -100,15 +99,17 @@ module.exports = (dependencies) ->
       detail: res.detail()
   
   # Accepts a set of parameters, creating a filter that will assign those to either the provided collector or the request
-  static = (collector, params) -> (req, res, next) ->
+  static = (collector, params) -> tap (req, res) ->
     if typeof params is 'object'
       res[collector] name, value for name, value of params
     else
       res.locals collector
-    next()
   
   # Retrieves a tracking filter from the library
   tracking = (name) -> filter (req, res) -> dependencies.lib('tracking')[name] req, res
+  
+  # Retrieves a janitor filter from the library
+  janitor = (name) -> dependencies.lib('janitor')[name]
   
   # Front page
   app.get '/',
@@ -147,7 +148,7 @@ module.exports = (dependencies) ->
   app.get '/:board/',
     panels,
     collectBoard('overview'),
-    (req, res, next) ->
+    tap (req, res) ->
       board = req.params.board
       name = getBoardName board
       boardTitle = "/#{board}/ - #{name}"
@@ -160,8 +161,7 @@ module.exports = (dependencies) ->
         title: boardTitle
         class: "board-page"
         id: "board-page-#{board}"
-    
-      next()
+      
     renderPanels
   
   # Receiving post data and passing it through the thread service
@@ -181,10 +181,10 @@ module.exports = (dependencies) ->
     validateBoard,
     handleImageUpload,
     receivePost('create'),
-    (req, res, next) ->
+    tap (req, res) ->
       thread = res.thread
       channel.broadcastToChannel 'newthread', thread.board, {thread: thread.id}
-      next()
+    tap janitor('upkeep')
   ]
   
   app.post '/api/:board/',
@@ -217,7 +217,7 @@ module.exports = (dependencies) ->
     panels,
     collectBoard('overview'),
     collectThread('detail'),
-    (req, res, next) ->
+    tap (req, res) ->
       board = req.params.board
       name = getBoardName req.params.board
       boardTitle = "/#{board}/ - #{name}"
@@ -232,8 +232,7 @@ module.exports = (dependencies) ->
         board: board
         class: "thread-page"
         id: "thread-page-#{req.params.id}"
-      
-      next()
+    
     renderPanels
   
   # Replying to a thread
@@ -242,10 +241,9 @@ module.exports = (dependencies) ->
     handleImageUpload,
     validateThread,
     receivePost('update'),
-    (req, res, next) ->
+    tap (req, res) ->
       thread = res.thread
       channel.broadcastToChannel 'reply', thread.board, {thread: thread.id}
-      next()
   ]
   
   app.post '/api/:board/:id/',

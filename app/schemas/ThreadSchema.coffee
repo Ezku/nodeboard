@@ -33,6 +33,26 @@ module.exports = (mongoose, dependencies) ->
         required: false
       posts: [new mongoose.Schema PostSchema]
     static:
+      sweep: (board, threadLimit) -> promise (success, error) ->
+        Thread = mongoose.model 'Thread'
+        Thread
+        .where(board: board, markedForDeletion: false)
+        .sort('updated', -1)
+        .skip(threadLimit)
+        .run (err, threads) ->
+          return error err if err
+          if !threads.length
+            success []
+          else
+            Thread.update {
+                id: {$in: (Number(thread.id.toString()) for thread in threads)}
+              }, {
+                markedForDeletion: true
+              },
+              (err) ->
+                return error err if err
+                success threads
+          
       addReply: (board, id, post) -> promise (success, error) ->
         Thread = mongoose.model 'Thread'
         Thread.collection.findAndModify {
@@ -45,7 +65,9 @@ module.exports = (mongoose, dependencies) ->
           { $push: { posts: post }, $set: { lastPost: post, updated: post.date }, $inc: { replyCount: 1 } },
           { new: false, upsert: false },
           (err, thread) ->
+            # The thread does not exist, it is marked for deletion, or the maximum reply count has been reached
             return error err if err
+            # Everything went fine _b
             success thread
   
   ThreadSchema
