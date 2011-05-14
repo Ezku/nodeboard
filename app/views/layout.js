@@ -17,7 +17,7 @@
         src: '/scripts/jquery-1.5.2.min.js'
       });
       script({
-        src: 'http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'
+        src: '/scripts/jquery.tmpl.min.js'
       });
       script({
         src: '/scripts/jquery.timeago.js'

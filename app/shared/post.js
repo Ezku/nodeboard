@@ -1,1 +1,0 @@
-../views/partials/post.js
