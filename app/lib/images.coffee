@@ -1,3 +1,5 @@
+fs = require 'fs'
+
 module.exports = (dependencies) ->
   {config} = dependencies
   

@@ -8,7 +8,6 @@
     Tracker = mongoose.model('Tracker');
     sweepTrackers = function(thread) {
       return promise(function(success, error) {
-        console.log("sweeping trackers for thread " + (thread.id.toString()));
         return Tracker.remove({
           board: thread.board,
           thread: thread.id
@@ -22,7 +21,6 @@
     };
     sweepPosts = function(thread) {
       var post, promises;
-      console.log("sweeping posts for thread " + (thread.id.toString()));
       promises = (function() {
         var _i, _len, _ref2, _results;
         _ref2 = thread.posts;
@@ -30,8 +28,9 @@
         for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
           post = _ref2[_i];
           images.deleteByPost(thread.board, post);
-          sweepTrackers(thread);
-          _results.push(console.log('done sweeping trackers'));
+          _results.push(promise(function(success) {
+            return success();
+          }));
         }
         return _results;
       })();
@@ -40,28 +39,19 @@
     sweepThreads = function(board) {
       return Thread.sweep(board, config.content.maximumThreadAmount).then(function(threads) {
         var promises, thread;
-        console.log((function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = threads.length; _i < _len; _i++) {
-            thread = threads[_i];
-            _results.push(Number(thread.id.toString()));
-          }
-          return _results;
-        })());
         promises = (function() {
           var _i, _len, _results;
           _results = [];
           for (_i = 0, _len = threads.length; _i < _len; _i++) {
             thread = threads[_i];
-            console.log("deleting thread " + (thread.id.toString()));
-            _results.push(sweepPosts(thread).then(function() {
-              console.log('done sweeping posts');
-              thread.remove();
-              return promise(function(success) {
-                return success(thread);
+            _results.push((function(thread) {
+              return sweepPosts(thread).then(function() {
+                thread.remove();
+                return promise(function(success) {
+                  return success(thread);
+                });
               });
-            }));
+            })(thread));
           }
           return _results;
         })();
@@ -72,32 +62,24 @@
       return promise(function(success, error) {
         return Tracker.collection.distinct('thread', {
           board: board
-        }, function(err, trackers) {
-          var tracker;
+        }, function(err, threads) {
           if (err) {
             return error(err);
           }
-          return success((function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = trackers.length; _i < _len; _i++) {
-              tracker = trackers[_i];
-              _results.push(tracker.thread);
-            }
-            return _results;
-          })());
+          return success(threads);
         });
       });
     };
     threadExists = function(board, id) {
       return promise(function(success, error) {
-        return Thread.find({
+        return Thread.findOne({
           board: board,
           id: id
         }).run(function(err, thread) {
           if (err) {
             return error(err);
           }
+          console.log(arguments);
           return success(!!thread);
         });
       });
@@ -108,14 +90,16 @@
         _results = [];
         for (_i = 0, _len = ids.length; _i < _len; _i++) {
           id = ids[_i];
-          _results.push(threadExists(board, id).then(function(doesExist) {
-            if (!doesExist) {
-              return sweepTrackers({
-                board: board,
-                thread: id
-              });
-            }
-          }));
+          _results.push((function(id) {
+            return threadExists(board, id).then(function(doesExist) {
+              if (!doesExist) {
+                return sweepTrackers({
+                  board: board,
+                  id: id
+                });
+              }
+            });
+          })(id));
         }
         return _results;
       });

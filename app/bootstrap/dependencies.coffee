@@ -15,6 +15,7 @@ module.exports = (root) ->
     io: require 'socket.io'
     hashlib: require 'hashlib'
     q: require 'q'
+    qutil: require 'q-util'
     '_': require 'underscore'
     mersenne: require 'mersenne'
   
