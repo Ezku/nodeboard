@@ -45,7 +45,9 @@ module.exports = (mongoose, dependencies) ->
           { $push: { posts: post }, $set: { lastPost: post, updated: post.date }, $inc: { replyCount: 1 } },
           { new: false, upsert: false },
           (err, thread) ->
+            # The thread does not exist, it is marked for deletion, or the maximum reply count has been reached
             return error err if err
+            # Everything went fine _b
             success thread
   
   ThreadSchema

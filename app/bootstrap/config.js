@@ -32,8 +32,9 @@
       },
       content: {
         threadsPerPage: 10,
-        maximumReplyCount: 100,
-        maximumThreadAmount: 100
+        maximumReplyCount: 10,
+        maximumThreadAmount: 10,
+        orphanedTrackerCheckProbability: 0
       },
       boards: {
         guilds: {

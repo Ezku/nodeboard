@@ -15,7 +15,7 @@ module.exports = (dependencies) ->
     # A bit of paranoia for the md5_file function
     setTimeout(
       -> error new Error "could not hash image file: operation timed out"
-      config.security.imageHashTimeout * 1000
+      config.tracking.imageHashTimeout * 1000
     )
     hashlib.md5_file (image req), (result) ->
       if result
@@ -27,7 +27,7 @@ module.exports = (dependencies) ->
   
   countRecentUploads = (board, ipHash) -> promise (success, error) ->
     Tracker
-    .count(board: board, ipHash: ipHash, date: past config.security.floodWindow)
+    .count(board: board, ipHash: ipHash, date: past config.tracking.floodWindow)
     .run (err, count) ->
       return error err if err
       success count
@@ -48,10 +48,10 @@ module.exports = (dependencies) ->
     req.hash.ip = ipHash(req)
     countRecentUploads(req.params.board, req.hash.ip).then (count) ->
       promise (success, error) ->
-        if count < config.security.minCurtailRate
+        if count < config.tracking.minCurtailRate
           # Below curtail rate - do not restrict
           success()
-        else if count < config.security.maxPostRate
+        else if count < config.tracking.maxPostRate
           # Above curtail rate - restrict posting speed
           setTimeout success, count * 1000
         else
@@ -60,7 +60,7 @@ module.exports = (dependencies) ->
   
   # Report an error if an image with the same hash has already been posted.
   enforceUniqueImage = (req, res) -> promise (success, error) ->
-    return success() if not req.files?.image or not config.security.checkDuplicateImages
+    return success() if not req.files?.image or not config.tracking.checkDuplicateImages
     req.hash = {} if not req.hash
     imageHash(req).then (hash) ->
       req.hash.image = hash

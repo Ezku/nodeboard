@@ -1,7 +1,7 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boardExists, channel, channels, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validateBoard, validateThread;
+    var accept, app, boardExists, channel, channels, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, janitor, panels, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validateBoard, validateThread;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io, channels = dependencies.channels;
     tap = function(f) {
       return function(req, res, next) {
@@ -124,23 +124,27 @@
       });
     };
     static = function(collector, params) {
-      return function(req, res, next) {
-        var name, value;
+      return tap(function(req, res) {
+        var name, value, _results;
         if (typeof params === 'object') {
+          _results = [];
           for (name in params) {
             value = params[name];
-            res[collector](name, value);
+            _results.push(res[collector](name, value));
           }
+          return _results;
         } else {
-          res.locals(collector);
+          return res.locals(collector);
         }
-        return next();
-      };
+      });
     };
     tracking = function(name) {
       return filter(function(req, res) {
         return dependencies.lib('tracking')[name](req, res);
       });
+    };
+    janitor = function(name) {
+      return dependencies.lib('janitor')[name];
     };
     app.get('/', panels, static({
       title: 'Aaltoboard',
@@ -173,21 +177,20 @@
         threads: res.local('threads')
       });
     });
-    app.get('/:board/', panels, collectBoard('overview'), function(req, res, next) {
+    app.get('/:board/', panels, collectBoard('overview'), tap(function(req, res) {
       var board, boardTitle, name;
       board = req.params.board;
       name = getBoardName(board);
       boardTitle = "/" + board + "/ - " + name;
       res.overview('board', board);
       res.overview('title', boardTitle);
-      res.locals({
+      return res.locals({
         board: board,
         title: boardTitle,
         "class": "board-page",
         id: "board-page-" + board
       });
-      return next();
-    }, renderPanels);
+    }), renderPanels);
     receivePost = function(action) {
       return [
         accept('content', 'password'), tracking('preventFlood'), tracking('enforceUniqueImage'), filter(function(req, res) {
@@ -203,14 +206,13 @@
       ];
     };
     receiveThread = [
-      validateBoard, handleImageUpload, receivePost('create'), function(req, res, next) {
+      validateBoard, handleImageUpload, receivePost('create'), tap(function(req, res) {
         var thread;
         thread = res.thread;
-        channel.broadcastToChannel('newthread', thread.board, {
+        return channel.broadcastToChannel('newthread', thread.board, {
           thread: thread.id
         });
-        return next();
-      }
+      }), tap(janitor('upkeep'))
     ];
     app.post('/api/:board/', receiveThread, function(req, res) {
       var thread;
@@ -233,7 +235,7 @@
         thread: res.local('thread')
       });
     });
-    app.get('/:board/:id/', panels, collectBoard('overview'), collectThread('detail'), function(req, res, next) {
+    app.get('/:board/:id/', panels, collectBoard('overview'), collectThread('detail'), tap(function(req, res) {
       var board, boardTitle, name, threadTitle;
       board = req.params.board;
       name = getBoardName(req.params.board);
@@ -242,23 +244,21 @@
       res.overview('board', board);
       res.overview('title', boardTitle);
       res.detail('title', threadTitle);
-      res.locals({
+      return res.locals({
         title: threadTitle,
         board: board,
         "class": "thread-page",
         id: "thread-page-" + req.params.id
       });
-      return next();
-    }, renderPanels);
+    }), renderPanels);
     receiveReply = [
-      validateBoard, handleImageUpload, validateThread, receivePost('update'), function(req, res, next) {
+      validateBoard, handleImageUpload, validateThread, receivePost('update'), tap(function(req, res) {
         var thread;
         thread = res.thread;
-        channel.broadcastToChannel('reply', thread.board, {
+        return channel.broadcastToChannel('reply', thread.board, {
           thread: thread.id
         });
-        return next();
-      }
+      })
     ];
     app.post('/api/:board/:id/', receiveReply, function(req, res) {
       return res.send({

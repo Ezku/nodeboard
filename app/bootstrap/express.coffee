@@ -17,11 +17,13 @@ module.exports = (dependencies) ->
     app.use express.static config.paths.public
     app.use express.static config.paths.mount
     
+    ###
     app.use dependencies.browserify
       base: config.paths.shared
       mount: '/scripts/browserify.js'
-    #  filter: dependencies.jsmin.jsmin
       require: ['coffeekup']
+      #filter: dependencies.jsmin.jsmin
+    ###
 
   app.configure 'development', ->
     app.use express.errorHandler dumpExceptions: true, showStack: true

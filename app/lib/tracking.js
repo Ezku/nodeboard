@@ -25,7 +25,7 @@
       return promise(function(success, error) {
         setTimeout(function() {
           return error(new Error("could not hash image file: operation timed out"));
-        }, config.security.imageHashTimeout * 1000);
+        }, config.tracking.imageHashTimeout * 1000);
         return hashlib.md5_file(image(req), function(result) {
           if (result) {
             return success(hash(result, salt(req)));
@@ -45,7 +45,7 @@
         return Tracker.count({
           board: board,
           ipHash: ipHash,
-          date: past(config.security.floodWindow)
+          date: past(config.tracking.floodWindow)
         }).run(function(err, count) {
           if (err) {
             return error(err);
@@ -74,9 +74,9 @@
       req.hash.ip = ipHash(req);
       return countRecentUploads(req.params.board, req.hash.ip).then(function(count) {
         return promise(function(success, error) {
-          if (count < config.security.minCurtailRate) {
+          if (count < config.tracking.minCurtailRate) {
             return success();
-          } else if (count < config.security.maxPostRate) {
+          } else if (count < config.tracking.maxPostRate) {
             return setTimeout(success, count * 1000);
           } else {
             return error(new Error("flood detected; please wait before posting"));
@@ -87,7 +87,7 @@
     enforceUniqueImage = function(req, res) {
       return promise(function(success, error) {
         var _ref;
-        if (!((_ref = req.files) != null ? _ref.image : void 0) || !config.security.checkDuplicateImages) {
+        if (!((_ref = req.files) != null ? _ref.image : void 0) || !config.tracking.checkDuplicateImages) {
           return success();
         }
         if (!req.hash) {

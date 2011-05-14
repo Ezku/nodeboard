@@ -14,7 +14,8 @@
       io: require('socket.io'),
       hashlib: require('hashlib'),
       q: require('q'),
-      '_': require('underscore')
+      '_': require('underscore'),
+      mersenne: require('mersenne')
     };
     dependencies.lib = (function() {
       var libs;
