@@ -1,9 +1,14 @@
 $(document).ready(function(){
   
-  // New thread -button logic
+  // New thread -form toggle
+  
   $("#newThread").hide();
+  
   $("#newThreadButton").click(function(){
-    $("#newThread").slideDown("fast");
+    $("#newThread").slideToggle(function(){
+      console.log($("#boardHeader").outerHeight());
+      $("#threads").css("top",$("#boardHeader").outerHeight());
+    });
     return false;
   });
   
@@ -13,12 +18,11 @@ $(document).ready(function(){
     $("#reply form").hide();
     updateThreadHeight();
   }
+  hideReplyForm();
   
   function updateThreadHeight(){
     $("#detail-level .thread").css("bottom",$("#reply").outerHeight());
   }
-  
-  hideReplyForm();
   
   $("#reply h4").live("click",function(){
     $("#reply form").slideToggle(function(){

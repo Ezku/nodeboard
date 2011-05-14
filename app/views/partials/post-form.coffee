@@ -1,4 +1,4 @@
-section class: 'form', id: @form.id, ->
+div class: 'form', id: @form.id, ->
   
   if @form.title
     h4 @form.title
@@ -16,3 +16,5 @@ section class: 'form', id: @form.id, ->
     
       dt ->
       dd -> input name: 'submit', type: 'submit', value: @form.submit
+  
+  div style: 'clear:both'

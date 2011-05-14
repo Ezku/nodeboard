@@ -1,12 +1,12 @@
 (function() {
-  section({
+  div({
     "class": 'form',
     id: this.form.id
   }, function() {
     if (this.form.title) {
       h4(this.form.title);
     }
-    return form({
+    form({
       method: 'post',
       action: "" + this.form.action,
       enctype: 'multipart/form-data'
@@ -63,6 +63,9 @@
           });
         });
       });
+    });
+    return div({
+      style: 'clear:both'
     });
   });
 }).call(this);

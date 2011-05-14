@@ -115,7 +115,7 @@ h3 { font-size: @h1-size * .7; }
   left: 50%;
 }
 #page-wrapper a,
-#page-wrapper section {
+#high-level section.thread {
   -moz-transition: all .2s ease-in-out;
   -webkit-transition: all .2s ease-in-out;
   transition: all .2s ease-in-out;
@@ -251,7 +251,18 @@ header {
       border: none;
     }
   }
-
+  
+  // Board page
+  
+  div#threads{
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+  }
+  
   section.thread {
     position: relative;
     &:hover {
@@ -282,7 +293,7 @@ header {
     overflow: auto;
   }
   
-  section.form {
+  div.form {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -347,7 +358,7 @@ header {
   }
 }
 
-//// Board page
+//// Single post
 .post {
   overflow: hidden;
   padding: 5px;
@@ -380,11 +391,20 @@ header {
   }
 }
 
+// Board page
 
-// Make room for the button
-.board-page h1 {
-  padding-right: 120px;
+#boardHeader{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  z-index: 2;
+  h1 {
+    padding-right: 120px;
+  }
 }
+
 // New Thread button
 #newThreadButton{
   position: absolute;
@@ -402,8 +422,18 @@ header {
     background-color: #999;
   }
 }
+// New Thread form
+#newThread{
+  background: #eee;
+  border-bottom: 2px solid #ccc;
+}
 
 // Reply Form
+div.form{
+  padding: 10px;
+  height: auto;
+}
+
 form {
   margin-top: 10px;
   dt {

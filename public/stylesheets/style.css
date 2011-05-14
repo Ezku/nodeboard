@@ -71,7 +71,7 @@ h3 {
   bottom: 15px;
   left: 50%;
 }
-#page-wrapper a, #page-wrapper section {
+#page-wrapper a, #high-level section.thread {
   -moz-transition: all 0.2s ease-in-out;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
@@ -188,6 +188,14 @@ header nav ul li a:active {
 #high-level section:last-of-type {
   border: none;
 }
+#high-level div#threads {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
 #high-level section.thread {
   position: relative;
   /*&:active {
@@ -211,7 +219,7 @@ header nav ul li a:active {
   right: 0;
   overflow: auto;
 }
-#detail-level section.form {
+#detail-level div.form {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -227,7 +235,7 @@ header nav ul li a:active {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
-#detail-level section.form h4:hover {
+#detail-level div.form h4:hover {
   background-color: #ccc;
   -webkit-border-bottom-left-radius: 10px;
   -webkit-border-bottom-right-radius: 10px;
@@ -239,7 +247,7 @@ header nav ul li a:active {
   margin: -10px;
   cursor: pointer;
 }
-#detail-level section.form form {
+#detail-level div.form form {
   padding-top: 10px;
 }
 .board:nth-of-type(1) {
@@ -308,7 +316,15 @@ header nav ul li a:active {
   margin: 0.8em;
   float: left;
 }
-.board-page h1 {
+#boardHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  z-index: 2;
+}
+#boardHeader h1 {
   padding-right: 120px;
 }
 #newThreadButton {
@@ -329,6 +345,14 @@ header nav ul li a:active {
 }
 #newThreadButton:hover {
   background-color: #999;
+}
+#newThread {
+  background: #eee;
+  border-bottom: 2px solid #ccc;
+}
+div.form {
+  padding: 10px;
+  height: auto;
 }
 form {
   margin-top: 10px;
