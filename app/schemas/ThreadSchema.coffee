@@ -1,4 +1,5 @@
 module.exports = (mongoose, dependencies) ->
+  {config} = dependencies
   {promise} = dependencies.lib 'promises'
   PostSchema = require('./PostSchema.js')(mongoose, dependencies).definition
   
@@ -12,6 +13,15 @@ module.exports = (mongoose, dependencies) ->
         type: Number
         index: true
         required: true
+      updated:
+        type: Date
+        index: true
+        required: true
+      markedForDeletion:
+        type: Boolean
+        index: true
+        required: true
+        default: false
       replyCount:
         type: Number
         default: 0
@@ -25,9 +35,14 @@ module.exports = (mongoose, dependencies) ->
     static:
       addReply: (board, id, post) -> promise (success, error) ->
         Thread = mongoose.model 'Thread'
-        Thread.collection.findAndModify { board: String(board), id: Number(id) },
+        Thread.collection.findAndModify {
+            board: String(board),
+            id: Number(id),
+            markedForDeletion: false,
+            replyCount: { $lt: config.content.maximumReplyCount }
+          },
           [],
-          { $push: { posts: post }, $set: { lastPost: post }, $inc: { replyCount: 1 } },
+          { $push: { posts: post }, $set: { lastPost: post, updated: post.date }, $inc: { replyCount: 1 } },
           { new: false, upsert: false },
           (err, thread) ->
             return error err if err

@@ -1,6 +1,7 @@
 (function() {
   module.exports = function(mongoose, dependencies) {
-    var PostSchema, ThreadSchema, promise;
+    var PostSchema, ThreadSchema, config, promise;
+    config = dependencies.config;
     promise = dependencies.lib('promises').promise;
     PostSchema = require('./PostSchema.js')(mongoose, dependencies).definition;
     ThreadSchema = {
@@ -14,6 +15,17 @@
           type: Number,
           index: true,
           required: true
+        },
+        updated: {
+          type: Date,
+          index: true,
+          required: true
+        },
+        markedForDeletion: {
+          type: Boolean,
+          index: true,
+          required: true,
+          "default": false
         },
         replyCount: {
           type: Number,
@@ -36,13 +48,18 @@
             Thread = mongoose.model('Thread');
             return Thread.collection.findAndModify({
               board: String(board),
-              id: Number(id)
+              id: Number(id),
+              markedForDeletion: false,
+              replyCount: {
+                $lt: config.content.maximumReplyCount
+              }
             }, [], {
               $push: {
                 posts: post
               },
               $set: {
-                lastPost: post
+                lastPost: post,
+                updated: post.date
               },
               $inc: {
                 replyCount: 1
