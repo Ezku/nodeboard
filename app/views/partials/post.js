@@ -18,7 +18,7 @@
     });
     if (this.post.image) {
       if (this.jQtemplate) {
-        text('{{if image.thumbnail}}');
+        text('{{if image}}');
       }
       div({
         "class": 'post-image'
