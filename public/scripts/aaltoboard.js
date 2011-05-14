@@ -3,22 +3,19 @@ $(document).ready(function(){
   // New thread -button logic
   $("#newThread").hide();
   $("#newThreadButton").click(function(){
-    $("#newThread").slideDown("slow");
+    $("#newThread").slideDown("fast");
     return false;
   });
   
   // Thread selector
   $("#high-level section.thread").click(function(){
     var link = $(this).children("a.threadLink").attr("href");
-    //window.location.href = link;
     loadThread(link);
   })
   
   function loadThread(path){
     $.getJSON('/api'+path, function(data) {
-      
-      console.log('jsonData',data);
-      
+          
       if(!data.thread || !data.thread.posts){
         console.log("No posts found!");
         return;
@@ -29,8 +26,24 @@ $(document).ready(function(){
       
       // Update timeago plugin
       $("#detail-level time").timeago();
+      
+      // Update url with HTML5 History API 
+      // http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html
+      if(window.location.pathname !== path){
+        history.pushState(null, null, path);
+      }
     });
   }
+  
+  // Load previous state on back button click
+  $(window).bind("popstate", function(e) {
+    var path = window.location.pathname;
+    console.log("popstate",path);
+    
+    if (path.split("/").length > 3){
+      loadThread(path);
+    }
+  });
  
   /*
    * Socket.io channels
@@ -64,7 +77,7 @@ $(document).ready(function(){
           .insertAfter("#newThread")
           .slideDown('slow')
           .click(function(){
-            window.location.href=window.location.href
+            window.location.reload();
             return false;
           });
       }
