@@ -14,16 +14,18 @@ module.exports = (dependencies) ->
   sweepPosts = (thread) ->
     promises = for post in thread.posts
       images.deleteByPost thread.board, post
-      sweepTrackers thread
+      #sweepTrackers thread
+      promise (success) -> success()
     all promises
   
   sweepThreads = (board) ->
     Thread.sweep(board, config.content.maximumThreadAmount).then (threads) ->
       promises = for thread in threads
-        sweepPosts(thread).then ->
-          thread.remove()
-          promise (success) ->
-            success thread
+        do (thread) ->
+          sweepPosts(thread).then ->
+            thread.remove()
+            promise (success) ->
+              success thread
       all promises
   
   findTrackedThreads = (board) -> promise (success, error) ->    
@@ -31,24 +33,26 @@ module.exports = (dependencies) ->
     .collection
     .distinct('thread', {
       board: board
-    }, (err, trackers) ->
+    }, (err, threads) ->
       return error err if err
-      success (tracker.thread for tracker in trackers)
+      success threads
     )
   
   threadExists = (board, id) -> promise (success, error) ->
     Thread
-    .find({board, id})
+    .findOne({board, id})
     .run (err, thread) ->
       return error err if err
+      console.log arguments
       success !!thread
   
   checkOrphanedTrackers = (board) ->
     findTrackedThreads(board).then (ids) ->
       for id in ids
-        threadExists(board, id).then (doesExist) ->
-          if not doesExist
-            sweepTrackers {board: board, thread: id}
+        do (id) ->
+          threadExists(board, id).then (doesExist) ->
+            if not doesExist
+              sweepTrackers {board, id}
   
   shouldCheckOrphanedTrackers = -> mersenne.rand(100) < config.content.orphanedTrackerCheckProbability
   

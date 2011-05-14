@@ -1,4 +1,6 @@
 (function() {
+  var fs;
+  fs = require('fs');
   module.exports = function(dependencies) {
     var config, deleteByPost, uploadPath;
     config = dependencies.config;
