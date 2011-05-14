@@ -6,7 +6,7 @@ article class: 'post', id: 'post-' + @post.id, ->
   
   if @post.image
     if @jQtemplate
-      text '{{if image}}'
+      text '{{if image && image.thumbnail }}'
     div class: 'post-image', ->
       a href: "/" + @board + "/" + @post.image.fullsize, ->
         img src: "/" + @board + "/" + @post.image.thumbnail, alt: ''
