@@ -44,6 +44,24 @@
   -webkit-border-radius: @radius;
 }
 
+.border-top-radius(@radius: 5px) {
+  -webkit-border-top-left-radius: @radius;
+  -webkit-border-top-right-radius: @radius;
+  -moz-border-radius-topleft: @radius;
+  -moz-border-radius-topright: @radius;
+  border-top-left-radius: @radius;
+  border-top-right-radius: @radius;
+}
+
+.border-bottom-radius(@radius: 5px) {
+  -webkit-border-bottom-left-radius: @radius;
+  -webkit-border-bottom-right-radius: @radius;
+  -moz-border-radius-bottomleft: @radius;
+  -moz-border-radius-bottomright: @radius;
+  border-bottom-left-radius: @radius;
+  border-bottom-right-radius: @radius;
+}
+
 // HTML5 Boilerplate
 @import url("boilerplate-top.css");
 // These use LESS constants
@@ -81,6 +99,7 @@ h1 {
   background: #ccc;
   margin: 0;
   padding: 10px 10px 5px 10px;
+  .border-top-radius(10px);
 }
 h2 { font-size: @h1-size * .8; }
 h3 { font-size: @h1-size * .7; }
@@ -198,7 +217,7 @@ header {
     
     // any div inside an article
     div {
-      .border-radius(0);
+      //.border-radius(0);
       padding: 0;
       min-height: 0;
       background: transparent none;
@@ -272,6 +291,21 @@ header {
     overflow: auto;
     background: #eee;
     border-top: 2px solid #ccc;
+    .border-bottom-radius(10px);
+    
+    h4 {
+      &:hover {
+        background-color: #ccc;
+        .border-bottom-radius(10px);
+        padding: 10px;
+        margin: -10px;
+        cursor: pointer;
+      }
+    }
+    
+    form {
+      padding-top: 10px;
+    }
   }
 }
 
