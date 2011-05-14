@@ -18,7 +18,7 @@
     });
     if (this.post.image) {
       if (this.jQtemplate) {
-        text('{{if image && image.thumbnail }}');
+        text('{{if image }}{{if image.thumbnail }}');
       }
       div({
         "class": 'post-image'
@@ -33,7 +33,7 @@
         });
       });
       if (this.jQtemplate) {
-        text('{{/if}}');
+        text('{{/if}}{{/if}}');
       }
     }
     return div({
