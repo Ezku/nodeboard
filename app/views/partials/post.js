@@ -17,6 +17,9 @@
       });
     });
     if (this.post.image) {
+      if (this.jQtemplate) {
+        text('{{if image.thumbnail}}');
+      }
       div({
         "class": 'post-image'
       }, function() {
@@ -29,6 +32,9 @@
           });
         });
       });
+      if (this.jQtemplate) {
+        text('{{/if}}');
+      }
     }
     return div({
       "class": 'post-content'

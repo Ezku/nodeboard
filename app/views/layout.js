@@ -17,20 +17,26 @@
         src: '/scripts/jquery-1.5.2.min.js'
       });
       script({
+        src: 'http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'
+      });
+      script({
         src: '/scripts/jquery.timeago.js'
       });
       script({
-        src: '/scripts/aaltoboard.js'
+        src: '/socket.io/socket.io.js'
+      });
+      script({
+        src: '/scripts/socket.io-channels-client.js'
       });
       return script({
-        src: '/socket.io/socket.io.js'
+        src: '/scripts/aaltoboard.js'
       });
     });
     return body({
       "class": this["class"],
       id: this.id
     }, function() {
-      return div({
+      div({
         id: "page-wrapper"
       }, function() {
         header(function() {
@@ -66,6 +72,35 @@
         }, function() {
           return this.body;
         });
+      });
+      script({
+        type: 'text/x-jquery-tmpl',
+        id: 'threadTemplate'
+      }, function() {
+        return text(this.partial("thread", {
+          title: '/${board}/${id}',
+          object: {
+            id: '${id}'
+          }
+        }));
+      });
+      return script({
+        type: 'text/x-jquery-tmpl',
+        id: 'postTemplate'
+      }, function() {
+        return text(this.partial("partials/post", {
+          jQtemplate: true,
+          object: {
+            id: '${id}',
+            author: '${author}',
+            date: '${date}',
+            content: '${content}',
+            image: {
+              fullsize: '${image.fullsize}',
+              thumbnail: '${image.thumbnail}'
+            }
+          }
+        }));
       });
     });
   });

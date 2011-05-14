@@ -18,10 +18,10 @@
     Thread = mongoose.model('Thread');
     Post = mongoose.model('Post');
     return ThreadService = (function() {
+      __extends(ThreadService, AbstractService);
       function ThreadService() {
         ThreadService.__super__.constructor.apply(this, arguments);
       }
-      __extends(ThreadService, AbstractService);
       ThreadService.prototype.read = function(query) {
         return promise(function(success, error) {
           return Thread.find({
@@ -83,13 +83,13 @@
         return thread;
       };
       /*
-      delete: (thread, error, success) ->
-        Thread.delete { board: thread.board, id: thread.id },
-          [],
-          (err, result) ->
-            return error err if err
-            success()
-      */
+          delete: (thread, error, success) ->
+            Thread.delete { board: thread.board, id: thread.id },
+              [],
+              (err, result) ->
+                return error err if err
+                success()
+          */
       return ThreadService;
     })();
   };

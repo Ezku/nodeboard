@@ -1,8 +1,8 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boardExists, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validateBoard, validateThread;
-    app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io;
+    var accept, app, boardExists, channel, channels, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, panels, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validateBoard, validateThread;
+    app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io, channels = dependencies.channels;
     tap = function(f) {
       return function(req, res, next) {
         f(req, res);
@@ -206,11 +206,8 @@
       validateBoard, handleImageUpload, receivePost('create'), function(req, res, next) {
         var thread;
         thread = res.thread;
-        socket.broadcast({
-          thread: {
-            board: thread.board,
-            id: thread.id
-          }
+        channel.broadcastToChannel('newthread', thread.board, {
+          thread: thread.id
         });
         return next();
       }
@@ -257,11 +254,8 @@
       validateBoard, handleImageUpload, validateThread, receivePost('update'), function(req, res, next) {
         var thread;
         thread = res.thread;
-        socket.broadcast({
-          reply: {
-            board: thread.board,
-            thread: thread.id
-          }
+        channel.broadcastToChannel('reply', thread.board, {
+          thread: thread.id
         });
         return next();
       }
@@ -277,14 +271,6 @@
       return res.redirect("/" + req.params.board + "/" + req.params.id + "/");
     });
     socket = io.listen(app);
-    return socket.on('connection', function(client) {
-      console.log('new client connection: ' + client.sessionId);
-      client.on('message', function() {
-        return console.log('message');
-      });
-      return client.on('disconnect', function() {
-        return console.log('disconnect');
-      });
-    });
+    return channel = channels.listen(socket, {});
   };
 }).call(this);
