@@ -1,8 +1,5 @@
 $(document).ready(function(){
   
-  // Timeago plugin
-  $("time").timeago();
-  
   // New thread -button logic
   $("#newThread").hide();
   $("#newThreadButton").click(function(){
@@ -27,32 +24,12 @@ $(document).ready(function(){
         return;
       }
       
-      var posts = data.thread.posts;
-      console.log('posts',posts)
-      /*
-      $.each(data.thread.posts, function(i, post) {
-        console.log('post',post);
-        renderPost(post);
-      });
-      */
-      for(var i=0;i<posts.length;i++){
-        console.log('post',posts[i]);
-        renderPost(posts[i]);
-      }
+      $('#detail-level').html($('#threadTemplate').tmpl(data.thread));
+      $('#detail-level .thread').append($('#postTemplate').tmpl(data.thread.posts));
+      
+      // Update timeago plugin
+      $("#detail-level time").timeago();
     });
-    
-  }
-  
-  var coffeekup = require('coffeekup');
-  var postTemplate = require('./post');
-  
-  console.log('coffeekup',coffeekup);
-  
-  function renderPost(post){
-    console.log('renderPost',post);
-    html = coffeekup.render(postTemplate, {context: {post: post}});
-    console.log('renderedPost',html)
-    $('#detail-level').append(html);
   }
  
   /*
@@ -132,5 +109,8 @@ $(document).ready(function(){
     channel.on('connectionRetry', function(obj){
       console.log('Socket connectionRetry');
     })
-  }     
+  }   
+  
+  // Timeago plugin
+  $("time").timeago();  
 });
