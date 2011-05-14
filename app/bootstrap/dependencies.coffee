@@ -15,6 +15,7 @@ module.exports = (root) ->
     hashlib: require 'hashlib'
     q: require 'q'
     '_': require 'underscore'
+    mersenne: require 'mersenne'
   
   dependencies.lib = do ->
     libs = {}

@@ -28,7 +28,8 @@
     "underscore": ">= 1.1.6",
     "hashlib": ">= 1.0",
     "validator": ">= 0.2.1",
-    "q": ">= 0.2"
+    "q": ">= 0.2",
+    "mersenne": ">= 0.0.3"
   },
   "devDependencies": {
     "coffee-script": ">= 1.0.1",
