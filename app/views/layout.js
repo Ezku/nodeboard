@@ -101,13 +101,14 @@
         id: 'threadTemplate'
       }, function() {
         return text(this.partial("thread", {
+          jQtemplate: true,
           title: '/${board}/${id}/',
           object: {
             id: '${id}'
           }
         }));
       });
-      return script({
+      script({
         type: 'text/x-jquery-tmpl',
         id: 'postTemplate'
       }, function() {
@@ -122,6 +123,18 @@
               fullsize: '${image.fullsize}',
               thumbnail: '${image.thumbnail}'
             }
+          }
+        }));
+      });
+      return script({
+        type: 'text/x-jquery-tmpl',
+        id: 'boardThreadTemplate'
+      }, function() {
+        return text(this.partial("partials/thread", {
+          jQtemplate: true,
+          object: {
+            id: '${id}',
+            replyCount: '${replyCount-1}'
           }
         }));
       });

@@ -10,7 +10,6 @@ html ->
     script src: '/scripts/jquery.timeago.js'
     script src: '/socket.io/socket.io.js'
     script src: '/scripts/socket.io-channels-client.js'
-    #script src: '/scripts/browserify.js'
     script src: '/scripts/aaltoboard.js'
   body class: @class, id: @id, ->
     div id: "page-wrapper", ->
@@ -32,7 +31,10 @@ html ->
       div id: "column-wrapper", -> @body
 
     script type: 'text/x-jquery-tmpl', id: 'threadTemplate', ->
-      text @partial "thread", title: '/${board}/${id}/', object: {id:'${id}'}
+      text @partial "thread", jQtemplate: true, title: '/${board}/${id}/', object: {id:'${id}'}
     
     script type: 'text/x-jquery-tmpl', id: 'postTemplate', ->
       text @partial "partials/post", jQtemplate: true, object: {id:'${id}',author:'${author}',date:'${date}', content:'${content}', image:{fullsize:'${image.fullsize}',thumbnail:'${image.thumbnail}'}}
+
+    script type: 'text/x-jquery-tmpl', id: 'boardThreadTemplate', ->
+      text @partial "partials/thread", jQtemplate: true, object: {id:'${id}',replyCount:'${replyCount-1}'}

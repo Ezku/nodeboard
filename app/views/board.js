@@ -19,26 +19,26 @@
     }));
   });
   div({
-    id: 'threads'
+    id: 'boardContent'
   }, function() {
-    var thread, _i, _len, _ref, _results;
-    if (this.threads.length) {
-      _ref = this.threads;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        thread = _ref[_i];
-        _results.push(text(this.partial("partials/thread", {
-          object: thread
-        })));
+    div({
+      id: 'threads'
+    }, function() {
+      var thread, _i, _len, _ref, _results;
+      if (this.threads.length) {
+        _ref = this.threads;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          thread = _ref[_i];
+          _results.push(text(this.partial("partials/thread", {
+            object: thread
+          })));
+        }
+        return _results;
+      } else {
+        return h2("Wow! There's absolutely nothing to see here!");
       }
-      return _results;
-    } else {
-      return h2("Wow! There's absolutely nothing to see here!");
-    }
-  });
-  div({
-    id: 'footer'
-  }, function() {
+    });
     if (this.total > this.threads.length) {
       return a({
         id: "loadMore",

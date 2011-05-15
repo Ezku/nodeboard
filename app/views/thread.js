@@ -18,7 +18,7 @@
       return _results;
     }
   });
-  if ((_ref = this.thread.posts) != null ? _ref.length : void 0) {
+  if (((_ref = this.thread.posts) != null ? _ref.length : void 0) || this.jQtemplate) {
     text(this.partial("partials/post-form", {
       as: 'form',
       object: {
