@@ -3,7 +3,7 @@ div class: 'form', id: @form.id, ->
   if @form.title
     h4 @form.title
   
-  form method: 'post', action: "#{@form.action}", enctype: 'multipart/form-data', ->
+  form method: 'post', id: @form.id+'Form', action: "#{@form.action}", enctype: 'multipart/form-data', ->
     dl ->
       dt -> label for: 'content', -> 'Content'
       dd -> textarea name: 'content', id: 'content'

@@ -1,3 +1,5 @@
+# Partial: One thread in board view
+
 section class: 'thread', id: 'thread-' + @thread.id, ->
 
   a href: "/#{@board}/#{@thread.id}/", class: "threadLink"

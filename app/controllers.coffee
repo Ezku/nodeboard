@@ -162,9 +162,12 @@ module.exports = (dependencies) ->
       
       res.overview 'board', board
       res.overview 'title', boardTitle
+      threads = res.overview 'threads'
       
       res.locals
         board: board
+        total: threads.total
+        pages: if req.query.pages then req.query.pages else 1
         title: boardTitle
         class: "board-page"
         id: "board-page-#{board}"

@@ -8,6 +8,7 @@
     }
     form({
       method: 'post',
+      id: this.form.id + 'Form',
       action: "" + this.form.action,
       enctype: 'multipart/form-data'
     }, function() {

@@ -31,6 +31,12 @@ $(document).ready(function(){
     return false;
   });
   
+  // Board Load more threads
+  
+  $("#loadMore").click(function(){
+    //$.ajax()
+  });
+  
   // Thread selector
   $("#high-level section.thread").click(function(){
     var link = $(this).children("a.threadLink").attr("href");
@@ -61,7 +67,7 @@ $(document).ready(function(){
     });
   }
   
-  // Load previous state on back button click
+  // Load previous thread on back button click
   $(window).bind("popstate", function(e) {
     var path = window.location.pathname;
     console.log("popstate",path);
@@ -70,6 +76,26 @@ $(document).ready(function(){
       loadThread(path);
     }
   });
+  
+  // TODO: Submit thread reply with Ajax
+  /*
+  $("#replyForm").live("submit",function(event) {
+    event.preventDefault(); 
+    var url = "/api"+$(this).attr('action');
+    var data = { 
+        content: "Hello World" //$(this).find("textarea").text()
+      }
+    console.log("Submit reply form",url,data);
+
+    $.post(url,data)
+      .success(function(res) {
+        console.log("Post success",res);
+      })
+      .error(function(res) {
+        console.log("Post error",res);
+      });
+  });
+  */
  
   /*
    * Socket.io channels

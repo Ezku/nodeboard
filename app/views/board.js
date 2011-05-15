@@ -29,10 +29,13 @@
         object: thread
       }));
     }
-    return a({
-      id: "loadMore"
-    }, function() {
-      return "Load more";
-    });
+    if (this.total > this.threads.length) {
+      return a({
+        id: "loadMore",
+        href: ("/" + this.board + "/?pages=") + (this.pages + 1) + "#thread-" + thread.id
+      }, function() {
+        return "Load more";
+      });
+    }
   });
 }).call(this);

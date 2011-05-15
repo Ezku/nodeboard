@@ -187,14 +187,17 @@
       });
     });
     app.get('/:board/', panels, collectBoard('overview'), tap(function(req, res) {
-      var board, boardTitle, name;
+      var board, boardTitle, name, threads;
       board = req.params.board;
       name = getBoardName(board);
       boardTitle = "/" + board + "/ - " + name;
       res.overview('board', board);
       res.overview('title', boardTitle);
+      threads = res.overview('threads');
       return res.locals({
         board: board,
+        total: threads.total,
+        pages: req.query.pages ? req.query.pages : 1,
         title: boardTitle,
         "class": "board-page",
         id: "board-page-" + board

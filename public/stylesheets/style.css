@@ -361,6 +361,24 @@ header nav ul li a:active {
   background: #eee;
   border-bottom: 2px solid #ccc;
 }
+#loadMore {
+  padding: 5px 10px;
+  background-color: #ddd;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+  text-decoration: none;
+  color: #000000;
+  display: block;
+  text-align: center;
+}
+#loadMore:hover {
+  background-color: #999;
+}
 div.form {
   padding: 10px;
   height: auto;
