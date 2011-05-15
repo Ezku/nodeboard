@@ -5,6 +5,7 @@ module.exports = (dependencies) ->
 
   {mongoose} = dependencies
   {promise} = dependencies.lib 'promises'
+  NotFoundError = dependencies.lib 'errors/NotFoundError'
   ImageProcessor = dependencies.lib 'ImageProcessor'
   Sequence = mongoose.model 'Sequence'
   Thread = mongoose.model 'Thread'
@@ -20,7 +21,7 @@ module.exports = (dependencies) ->
       .limit(1)
       .run (err, threads) ->
         return error err if err
-        return error new Error("thread not found") if not threads[0]
+        return error new NotFoundError("thread not found") if not threads[0]
         success threads[0]
     
     create: (data) ->

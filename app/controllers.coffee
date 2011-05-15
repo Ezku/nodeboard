@@ -1,48 +1,34 @@
 module.exports = (dependencies) ->
   {app, config, services, formidable, io, channels} = dependencies
-
-  # Intercepts middleware handler chain with a function, passing control down the chain immediately afterwards.
-  tap = (f) -> (req, res, next) ->
-    f(req, res)
-    next()
-
-  # Converts a promise function to a valid express.js middleware filter
   {filter} = dependencies.lib 'promises'
-  
+  boards = dependencies.lib 'boards'
+
   # Retrieves a service object instance
   service = services.get
   
-  # Checks for existence of board by its short name
-  boardExists = (board) ->
-    for group, boards of config.boards
-      return true if boards[board]?
-    return false
+  # Retrieves a precondition filter
+  precondition = (condition) -> (dependencies.lib 'preconditions')[condition]
   
-  # Get board name from configuration by its short name
-  getBoardName = (board) ->
-    for group, boards of config.boards
-      return boards[board].name if boards[board]?
-    return false
+  # Retrieves a tracking filter from the library
+  tracking = (name) -> filter (req, res) -> dependencies.lib('tracking')[name] req, res
   
-  # Asserts for existence of a board by a name given in the request
-  validateBoard = (req, res, next) ->
-    board = req.params.board
-    if board? and boardExists board
+  # Retrieves a janitor filter from the library
+  janitor = (name) -> dependencies.lib('janitor')[name]
+
+  # Intercepts middleware handler chain with a function, passing control down the chain immediately afterwards.
+  tap = (f) -> (req, res, next) ->
+    try
+      f(req, res)
       next()
-    else
-      next(new Error("Board '#{board}' does not exist"))
-  
-  # Asserts for existence of a thread by an id given in the request
-  # NOTE: handleImageUpload does not work if this precedes it
-  validateThread = filter (req) -> service('Thread').read req.params
+    catch e
+      next(e)
   
   # Declare a set of parameters that can be accepted in the request body 
-  accept = (params...) -> (req, res, next) ->
+  accept = (params...) -> tap (req, res) ->
     input = req.body
     accepted = {}
     accepted[name] = input[name] for name in params
     req.body = accepted
-    next()
   
   # Parses images uploaded in the request and stores them in the request object
   handleImageUpload = (req, res, next) ->
@@ -63,20 +49,19 @@ module.exports = (dependencies) ->
   # f(key): returns the value associated with the key if any
   # f(key, value): associates key with value
   # The constructed accumulator is assigned to the request using the given name.
-  collector = (name) -> (req, res, next) ->
+  collector = (name) -> tap (req, res) ->
     data = {}
     res[name] = (key, value) ->
       return data if not key?
       return data[key] if not value?
       data[key] = value
-    next()
   
   # Declares the overview and detail data collectors
   panels = [collector('overview'), collector('detail')]
   
-  # Accepts a data collector, creating a filter that assigns board data to it on request
+  # Collects a board into a collector in the response
   collectBoard = (collector) -> [
-    validateBoard,
+    precondition('shouldHaveBoard'),
     filter (req, res) ->
       query = {
         board: req.params.board
@@ -88,13 +73,21 @@ module.exports = (dependencies) ->
         res[collector] 'threads', threads
   ]
   
-  # Accepts a data collector, creating a filter that assigns thread data to it on request
+  # Collects a thread into a collector in the response
   collectThread = (collector) -> [
-    validateThread,
+    precondition('shouldHaveThread'),
     filter (req, res) ->
       service('Thread').read(req.params).then (thread) ->
         res[collector] 'view', 'thread'
         res[collector] 'thread', thread
+  ]
+  
+  # Collects global statistics into a collector in the response
+  collectStatistics = (collector) -> [
+    filter (req, res) ->
+      dependencies.lib('statistics')().then (stats) ->
+        res[collector] 'view', 'stats'
+        res[collector] 'stats', stats
   ]
   
   # Renders the panels view with data from the overview and detail data accumulators
@@ -110,24 +103,17 @@ module.exports = (dependencies) ->
     else
       res.locals collector
   
-  # Retrieves a tracking filter from the library
-  tracking = (name) -> filter (req, res) -> dependencies.lib('tracking')[name] req, res
-  
-  # Retrieves a janitor filter from the library
-  janitor = (name) -> dependencies.lib('janitor')[name]
-  
   # Front page
   app.get '/',
     panels,
-    static(
-      title: 'Aaltoboard'
-      id: "front-page"
-      class: ""
-    ),
-    static('overview',
-      view: 'index'
-      title: 'Aaltoboard'
-    ),
+    tap (req, res) ->
+      res.locals
+        title: 'Aaltoboard'
+        id: "front-page"
+        class: ""
+      
+      res.overview 'view', 'index'
+    collectStatistics('detail'),
     renderPanels
   
   app.get '/api/',
@@ -155,19 +141,24 @@ module.exports = (dependencies) ->
   app.get '/:board/',
     panels,
     collectBoard('overview'),
+    collectStatistics('detail'),
     tap (req, res) ->
       board = req.params.board
-      name = getBoardName board
+      name = boards.getName board
       boardTitle = "/#{board}/ - #{name}"
       
       res.overview 'board', board
       res.overview 'title', boardTitle
+      threads = res.overview 'threads'
       
       res.locals
         board: board
+        total: threads.total
+        pages: if req.query.pages then req.query.pages else 1
         title: boardTitle
         class: "board-page"
         id: "board-page-#{board}"
+      
       
     renderPanels
   
@@ -185,7 +176,7 @@ module.exports = (dependencies) ->
   
   # Creating a new thread
   receiveThread = [
-    validateBoard,
+    precondition('shouldHaveBoard'),
     handleImageUpload,
     receivePost('create'),
     tap (req, res) ->
@@ -226,9 +217,9 @@ module.exports = (dependencies) ->
     collectThread('detail'),
     tap (req, res) ->
       board = req.params.board
-      name = getBoardName req.params.board
+      name = boards.getName req.params.board
       boardTitle = "/#{board}/ - #{name}"
-      threadTitle = "/#{board}/#{req.params.id}"
+      threadTitle = "/#{board}/#{req.params.id}/"
       
       res.overview 'board', board
       res.overview 'title', boardTitle
@@ -244,9 +235,9 @@ module.exports = (dependencies) ->
   
   # Replying to a thread
   receiveReply = [
-    validateBoard,
+    precondition('shouldHaveBoard'),
     handleImageUpload,
-    validateThread,
+    precondition('shouldHaveThread'),
     receivePost('update'),
     tap (req, res) ->
       thread = res.thread

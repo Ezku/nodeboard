@@ -15,14 +15,8 @@
       app.use(express.methodOverride());
       app.use(app.router);
       app.use(express.static(config.paths.public));
-      return app.use(express.static(config.paths.mount));
-      /*
-          app.use dependencies.browserify
-            base: config.paths.shared
-            mount: '/scripts/browserify.js'
-            require: ['coffeekup']
-            #filter: dependencies.jsmin.jsmin
-          */
+      app.use(express.static(config.paths.mount));
+      return app.error(dependencies.lib('errors'));
     });
     app.configure('development', function() {
       return app.use(express.errorHandler({

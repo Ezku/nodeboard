@@ -1,11 +1,13 @@
-section class: 'thread', id: 'thread-' + @thread.id, ->
+# Partial: One thread in board view
 
-  a href: "/#{@board}/#{@thread.id}/", class: "threadLink"
+section class: 'thread thread-#{@thread.id}', ->
 
-  text @partial "partials/post", object: @thread.firstPost
+  a href: "/#{@board}/#{@thread.id}/", class: "threadLink", ->
 
-  if @thread.replyCount > 1
-    p class: "omitted", -> @thread.replyCount-1 + " messages omitted."
+    text @partial "partials/post", object: @thread.firstPost
 
-  if @thread.lastPost
-    text @partial "partials/post", object: @thread.lastPost
+    if @thread.replyCount > 1
+      p class: "omitted", -> @thread.replyCount-1 + " messages omitted."
+
+    if @thread.lastPost
+      text @partial "partials/post", object: @thread.lastPost

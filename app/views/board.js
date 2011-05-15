@@ -21,18 +21,43 @@
   div({
     id: 'threads'
   }, function() {
-    var thread, _i, _len, _ref;
+    var thread, _i, _len, _ref, _results;
+<<<<<<< Updated upstream
     _ref = this.threads;
+    _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       thread = _ref[_i];
-      text(this.partial("partials/thread", {
+      _results.push(text(this.partial("partials/thread", {
         object: thread
-      }));
+      })));
     }
-    return a({
-      id: "loadMore"
-    }, function() {
-      return "Load more";
-    });
+    return _results;
+=======
+    if (this.threads.length) {
+      _ref = this.threads;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        thread = _ref[_i];
+        _results.push(text(this.partial("partials/thread", {
+          object: thread
+        })));
+      }
+      return _results;
+    } else {
+      return h2("Wow! There's absolutely nothing to see here!");
+    }
+>>>>>>> Stashed changes
+  });
+  div({
+    id: 'footer'
+  }, function() {
+    if (this.total > this.threads.length) {
+      return a({
+        id: "loadMore",
+        href: ("/" + this.board + "/?pages=") + (this.pages + 1) + "#thread-" + thread.id
+      }, function() {
+        return "Load more";
+      });
+    }
   });
 }).call(this);

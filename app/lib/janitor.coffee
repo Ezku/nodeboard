@@ -43,7 +43,6 @@ module.exports = (dependencies) ->
     .findOne({board, id})
     .run (err, thread) ->
       return error err if err
-      console.log arguments
       success !!thread
   
   checkOrphanedTrackers = (board) ->

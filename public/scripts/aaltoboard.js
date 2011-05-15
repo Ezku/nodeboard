@@ -4,11 +4,13 @@ $(document).ready(function(){
   
   $("#newThread").hide();
   
+  function updateBoardThreadsHeight(){
+    $("#threads").css("top",$("#boardHeader").outerHeight());
+  }
+  updateBoardThreadsHeight();
+  
   $("#newThreadButton").click(function(){
-    $("#newThread").slideToggle(function(){
-      console.log($("#boardHeader").outerHeight());
-      $("#threads").css("top",$("#boardHeader").outerHeight());
-    });
+    $("#newThread").slideToggle(updateBoardThreadsHeight);
     return false;
   });
   
@@ -25,19 +27,24 @@ $(document).ready(function(){
   }
   
   $("#reply h4").live("click",function(){
-    $("#reply form").slideToggle(function(){
-       updateThreadHeight();
-    });
+    $("#reply form").slideToggle(updateThreadHeight);
     return false;
   });
   
+  // Board Load more threads
+  
+  $("#loadMore").click(function(){
+    //$.ajax()
+  });
+  
   // Thread selector
-  $("#high-level section.thread").click(function(){
-    var link = $(this).children("a.threadLink").attr("href");
-    loadThread(link);
-  })
+  $("a.threadLink").click(function(e){
+    e.preventDefault();
+    loadThread($(this).attr("href"));
+  });
   
   function loadThread(path){
+    console.log("loadThread",path);
     $.getJSON('/api'+path, function(data) {
           
       if(!data.thread || !data.thread.posts){
@@ -61,7 +68,7 @@ $(document).ready(function(){
     });
   }
   
-  // Load previous state on back button click
+  // Load previous thread on back button click
   $(window).bind("popstate", function(e) {
     var path = window.location.pathname;
     console.log("popstate",path);
@@ -70,6 +77,26 @@ $(document).ready(function(){
       loadThread(path);
     }
   });
+  
+  // TODO: Submit thread reply with Ajax
+  /*
+  $("#replyForm").live("submit",function(event) {
+    event.preventDefault(); 
+    var url = "/api"+$(this).attr('action');
+    var data = { 
+        content: "Hello World" //$(this).find("textarea").text()
+      }
+    console.log("Submit reply form",url,data);
+
+    $.post(url,data)
+      .success(function(res) {
+        console.log("Post success",res);
+      })
+      .error(function(res) {
+        console.log("Post error",res);
+      });
+  });
+  */
  
   /*
    * Socket.io channels

@@ -4,6 +4,7 @@
 @linkcolor: #00B7FF;
 @hovercolor: desaturate(@linkcolor, 20%);
 @navlinkcolor: #000;
+@defaultcolor: #444;
 
 @page-width: 90%;
 @page-max-width: 1200px;
@@ -181,7 +182,7 @@ header {
           text-decoration: none;
           
           .border-radius(20px);
-          .text-shadow();
+          .text-shadow(1px, 1px, 1px);
         
           &:hover {
             color: @navlinkcolor + #666;
@@ -279,7 +280,7 @@ header {
   
   div#threads{
     position: absolute;
-    top: 50px;
+    top: 280px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -287,6 +288,7 @@ header {
   }
   
   section.thread {
+    cursor: pointer;
     position: relative;
     &:hover {
       background: #eee;
@@ -295,6 +297,11 @@ header {
       background: #ccc;
       .box-shadow(0,0,0,1)
     }*/
+  }
+  
+  a.threadLink{
+    text-decoration: none;
+    color: @defaultcolor;
   }
   
   p.omitted{
@@ -446,6 +453,23 @@ header {
 #newThread{
   background: #eee;
   border-bottom: 2px solid #ccc;
+}
+
+// Load more-button
+#loadMore{
+  //width: 100%;
+  padding: 5px 10px;
+  background-color: #ddd;
+  .border-radius(20px);
+  .box-shadow();
+  margin: 10px;
+  text-decoration: none;
+  color: @navlinkcolor;
+  display: block;
+  text-align: center;
+  &:hover {
+    background-color: #999;
+  }
 }
 
 // Reply Form
