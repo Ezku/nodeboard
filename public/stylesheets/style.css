@@ -204,13 +204,14 @@ header nav ul li a:active {
 }
 #high-level div#threads {
   position: absolute;
-  top: 50px;
+  top: 280px;
   bottom: 0;
   left: 0;
   right: 0;
   overflow: auto;
 }
 #high-level section.thread {
+  cursor: pointer;
   position: relative;
   /*&:active {
       background: #ccc;
@@ -220,6 +221,10 @@ header nav ul li a:active {
 }
 #high-level section.thread:hover {
   background: #eee;
+}
+#high-level a.threadLink {
+  text-decoration: none;
+  color: #444444;
 }
 #high-level p.omitted {
   color: #ccc;

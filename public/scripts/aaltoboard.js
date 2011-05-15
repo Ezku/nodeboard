@@ -4,11 +4,13 @@ $(document).ready(function(){
   
   $("#newThread").hide();
   
+  function updateBoardThreadsHeight(){
+    $("#threads").css("top",$("#boardHeader").outerHeight());
+  }
+  updateBoardThreadsHeight();
+  
   $("#newThreadButton").click(function(){
-    $("#newThread").slideToggle(function(){
-      console.log($("#boardHeader").outerHeight());
-      $("#threads").css("top",$("#boardHeader").outerHeight());
-    });
+    $("#newThread").slideToggle(updateBoardThreadsHeight);
     return false;
   });
   
@@ -25,9 +27,7 @@ $(document).ready(function(){
   }
   
   $("#reply h4").live("click",function(){
-    $("#reply form").slideToggle(function(){
-       updateThreadHeight();
-    });
+    $("#reply form").slideToggle(updateThreadHeight);
     return false;
   });
   
@@ -38,12 +38,13 @@ $(document).ready(function(){
   });
   
   // Thread selector
-  $("#high-level section.thread").click(function(){
-    var link = $(this).children("a.threadLink").attr("href");
-    loadThread(link);
-  })
+  $("a.threadLink").click(function(e){
+    e.preventDefault();
+    loadThread($(this).attr("href"));
+  });
   
   function loadThread(path){
+    console.log("loadThread",path);
     $.getJSON('/api'+path, function(data) {
           
       if(!data.thread || !data.thread.posts){

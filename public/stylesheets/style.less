@@ -4,6 +4,7 @@
 @linkcolor: #00B7FF;
 @hovercolor: desaturate(@linkcolor, 20%);
 @navlinkcolor: #000;
+@defaultcolor: #444;
 
 @page-width: 90%;
 @page-max-width: 1200px;
@@ -276,7 +277,7 @@ header {
   
   div#threads{
     position: absolute;
-    top: 50px;
+    top: 280px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -284,6 +285,7 @@ header {
   }
   
   section.thread {
+    cursor: pointer;
     position: relative;
     &:hover {
       background: #eee;
@@ -292,6 +294,11 @@ header {
       background: #ccc;
       .box-shadow(0,0,0,1)
     }*/
+  }
+  
+  a.threadLink{
+    text-decoration: none;
+    color: @defaultcolor;
   }
   
   p.omitted{
