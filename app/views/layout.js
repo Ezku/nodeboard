@@ -101,6 +101,7 @@
         id: 'threadTemplate'
       }, function() {
         return text(this.partial("thread", {
+          jQtemplate: true,
           title: '/${board}/${id}/',
           object: {
             id: '${id}'
