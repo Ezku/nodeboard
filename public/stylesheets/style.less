@@ -9,7 +9,7 @@
 @page-max-width: 1200px;
 @gutter: 20px;
 
-@h1-size: 26px;
+@h1-size: 28px;
 
 // LESS helpers for gradients, box-shadows etc.
 .linear-gradient(@from, @to) {
@@ -34,7 +34,7 @@
   -moz-box-shadow: @val;
   box-shadow: @val;
 }
-.text-shadow (@x: 1px, @y: 1px, @blur: 3px, @color: white) {
+.text-shadow (@x: 1px, @y: 1px, @blur: 2px, @color: white) {
   text-shadow: @x @y @blur @color;
 }
 
@@ -87,19 +87,22 @@ body {
   .linear-gradient(#ddd, #fff);
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: Georgia;
+  font-family: Helvetica, Arial, sans-serif;
+	font-weight: normal;
   letter-spacing: -1px;
   line-height: 1.4;
 }
 h1 { 
   font-size: @h1-size; 
+	letter-spacing: -2px;
+	font-weight: bold;
   margin-bottom: 10px;
   
   .text-shadow();
 
   background: #ccc;
   margin: 0;
-  padding: 10px 10px 5px 10px;
+  padding: 5px 10px 5px 10px;
   .border-top-radius(10px);
 }
 h2 {

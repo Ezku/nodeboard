@@ -11,4 +11,5 @@ div id: 'threads', ->
   for thread in @threads
     text @partial "partials/thread", object: thread
   
-  a id:"loadMore", -> "Load more"
+div id: 'footer', ->
+  a id: "show-more", -> "Show more"
