@@ -139,7 +139,7 @@ $(document).ready(function(){
     channel.on('reply', function(obj){      
       var threadId = obj.thread;
       console.log("New reply to thread "+threadId);
-      var $thread = $("#thread-"+threadId);
+      var $thread = $("#thread-preview-"+threadId);
       if ($thread.length > 0){
         // Show notification button
         var $notification = $thread.children(".newReplyNotification");

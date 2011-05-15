@@ -1,6 +1,7 @@
 (function() {
   section({
-    "class": 'thread thread-#{@thread.id}'
+    "class": 'thread',
+    id: "thread-preview-" + this.thread.id
   }, function() {
     return a({
       href: "/" + this.board + "/" + this.thread.id + "/",

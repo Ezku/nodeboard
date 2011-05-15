@@ -1,13 +1,16 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boards, channel, channels, collectBoard, collectStatistics, collectThread, collector, config, filter, formidable, handleImageUpload, io, janitor, panels, precondition, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking;
+    var accept, app, boards, channel, channels, collectBoard, collectStatistics, collectThread, collector, config, filter, formidable, handleImageUpload, io, janitor, panels, precondition, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validate;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io, channels = dependencies.channels;
     filter = dependencies.lib('promises').filter;
     boards = dependencies.lib('boards');
     service = services.get;
     precondition = function(condition) {
       return (dependencies.lib('preconditions'))[condition];
+    };
+    validate = function(validator) {
+      return (dependencies.lib('validation'))[validator];
     };
     tracking = function(name) {
       return filter(function(req, res) {
@@ -200,7 +203,7 @@
       ];
     };
     receiveThread = [
-      precondition('shouldHaveBoard'), handleImageUpload, receivePost('create'), tap(function(req, res) {
+      precondition('shouldHaveBoard'), handleImageUpload, validate('shouldHaveImage'), receivePost('create'), tap(function(req, res) {
         var thread;
         thread = res.thread;
         return channel.broadcastToChannel('newthread', thread.board, {
@@ -246,7 +249,7 @@
       });
     }), renderPanels);
     receiveReply = [
-      precondition('shouldHaveBoard'), handleImageUpload, precondition('shouldHaveThread'), receivePost('update'), tap(function(req, res) {
+      precondition('shouldHaveBoard'), handleImageUpload, precondition('shouldHaveThread'), validate('shouldHaveImageOrContent'), receivePost('update'), tap(function(req, res) {
         var thread;
         thread = res.thread;
         return channel.broadcastToChannel('reply', thread.board, {

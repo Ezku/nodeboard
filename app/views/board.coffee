@@ -17,4 +17,4 @@ div id: 'threads', ->
 
 div id: 'footer', ->
   if @total > @threads.length
-    a id:"loadMore", href:"/#{@board}/?pages="+(@pages+1)+"#thread-"+thread.id, -> "Load more"
+    a id:"loadMore", href:"/#{@board}/?pages="+(@pages+1)+"#thread-preview-"+thread?.id, -> "Load more"

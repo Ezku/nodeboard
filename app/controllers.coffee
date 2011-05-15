@@ -9,6 +9,9 @@ module.exports = (dependencies) ->
   # Retrieves a precondition filter
   precondition = (condition) -> (dependencies.lib 'preconditions')[condition]
   
+  # Retrieves a validation filter
+  validate = (validator) -> (dependencies.lib 'validation')[validator]
+  
   # Retrieves a tracking filter from the library
   tracking = (name) -> filter (req, res) -> dependencies.lib('tracking')[name] req, res
   
@@ -178,6 +181,7 @@ module.exports = (dependencies) ->
   receiveThread = [
     precondition('shouldHaveBoard'),
     handleImageUpload,
+    validate('shouldHaveImage'),
     receivePost('create'),
     tap (req, res) ->
       thread = res.thread
@@ -238,6 +242,7 @@ module.exports = (dependencies) ->
     precondition('shouldHaveBoard'),
     handleImageUpload,
     precondition('shouldHaveThread'),
+    validate('shouldHaveImageOrContent'),
     receivePost('update'),
     tap (req, res) ->
       thread = res.thread
