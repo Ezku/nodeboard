@@ -79,7 +79,6 @@
           if (err) {
             return error(err);
           }
-          console.log(arguments);
           return success(!!thread);
         });
       });

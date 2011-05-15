@@ -11,9 +11,10 @@
   fs = require('fs');
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var ImageProcessor, Post, Sequence, Thread, ThreadService, mongoose, promise;
+    var ImageProcessor, NotFoundError, Post, Sequence, Thread, ThreadService, mongoose, promise;
     mongoose = dependencies.mongoose;
     promise = dependencies.lib('promises').promise;
+    NotFoundError = dependencies.lib('errors/NotFoundError');
     ImageProcessor = dependencies.lib('ImageProcessor');
     Sequence = mongoose.model('Sequence');
     Thread = mongoose.model('Thread');
@@ -33,7 +34,7 @@
               return error(err);
             }
             if (!threads[0]) {
-              return error(new Error("thread not found"));
+              return error(new NotFoundError("thread not found"));
             }
             return success(threads[0]);
           });

@@ -9,8 +9,11 @@ div id: 'boardHeader', ->
   
 div id: 'boardContent', ->
   div id: 'threads', ->
-    for thread in @threads
-      text @partial "partials/thread", object: thread
+    if @threads.length
+	  for thread in @threads
+        text @partial "partials/thread", object: thread
+    else
+      h2 "Wow! There's absolutely nothing to see here!"
   
   if @total > @threads.length
     a id:"loadMore", href:"/#{@board}/?pages="+(@pages+1), -> "Load more"

@@ -1,54 +1,36 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boardExists, channel, channels, collectBoard, collectThread, collector, config, filter, formidable, getBoardName, handleImageUpload, io, janitor, panels, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validateBoard, validateThread;
+    var accept, app, boards, channel, channels, collectBoard, collectStatistics, collectThread, collector, config, filter, formidable, handleImageUpload, io, janitor, panels, precondition, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io, channels = dependencies.channels;
+    filter = dependencies.lib('promises').filter;
+    boards = dependencies.lib('boards');
+    service = services.get;
+    precondition = function(condition) {
+      return (dependencies.lib('preconditions'))[condition];
+    };
+    tracking = function(name) {
+      return filter(function(req, res) {
+        return dependencies.lib('tracking')[name](req, res);
+      });
+    };
+    janitor = function(name) {
+      return dependencies.lib('janitor')[name];
+    };
     tap = function(f) {
       return function(req, res, next) {
-        f(req, res);
-        return next();
+        try {
+          f(req, res);
+          return next();
+        } catch (e) {
+          return next(e);
+        }
       };
     };
-    filter = dependencies.lib('promises').filter;
-    service = services.get;
-    boardExists = function(board) {
-      var boards, group, _ref;
-      _ref = config.boards;
-      for (group in _ref) {
-        boards = _ref[group];
-        if (boards[board] != null) {
-          return true;
-        }
-      }
-      return false;
-    };
-    getBoardName = function(board) {
-      var boards, group, _ref;
-      _ref = config.boards;
-      for (group in _ref) {
-        boards = _ref[group];
-        if (boards[board] != null) {
-          return boards[board].name;
-        }
-      }
-      return false;
-    };
-    validateBoard = function(req, res, next) {
-      var board;
-      board = req.params.board;
-      if ((board != null) && boardExists(board)) {
-        return next();
-      } else {
-        return next(new Error("Board '" + board + "' does not exist"));
-      }
-    };
-    validateThread = filter(function(req) {
-      return service('Thread').read(req.params);
-    });
     accept = function() {
       var params;
       params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return function(req, res, next) {
+      return tap(function(req, res) {
         var accepted, input, name, _i, _len;
         input = req.body;
         accepted = {};
@@ -56,9 +38,8 @@
           name = params[_i];
           accepted[name] = input[name];
         }
-        req.body = accepted;
-        return next();
-      };
+        return req.body = accepted;
+      });
     };
     handleImageUpload = function(req, res, next) {
       var form;
@@ -81,10 +62,10 @@
       });
     };
     collector = function(name) {
-      return function(req, res, next) {
+      return tap(function(req, res) {
         var data;
         data = {};
-        res[name] = function(key, value) {
+        return res[name] = function(key, value) {
           if (!(key != null)) {
             return data;
           }
@@ -93,13 +74,12 @@
           }
           return data[key] = value;
         };
-        return next();
-      };
+      });
     };
     panels = [collector('overview'), collector('detail')];
     collectBoard = function(collector) {
       return [
-        validateBoard, filter(function(req, res) {
+        precondition('shouldHaveBoard'), filter(function(req, res) {
           var query;
           query = {
             board: req.params.board,
@@ -115,10 +95,20 @@
     };
     collectThread = function(collector) {
       return [
-        validateThread, filter(function(req, res) {
+        precondition('shouldHaveThread'), filter(function(req, res) {
           return service('Thread').read(req.params).then(function(thread) {
             res[collector]('view', 'thread');
             return res[collector]('thread', thread);
+          });
+        })
+      ];
+    };
+    collectStatistics = function(collector) {
+      return [
+        filter(function(req, res) {
+          return dependencies.lib('statistics')().then(function(stats) {
+            res[collector]('view', 'stats');
+            return res[collector]('stats', stats);
           });
         })
       ];
@@ -144,22 +134,14 @@
         }
       });
     };
-    tracking = function(name) {
-      return filter(function(req, res) {
-        return dependencies.lib('tracking')[name](req, res);
+    app.get('/', panels, tap(function(req, res) {
+      res.locals({
+        title: 'Aaltoboard',
+        id: "front-page",
+        "class": ""
       });
-    };
-    janitor = function(name) {
-      return dependencies.lib('janitor')[name];
-    };
-    app.get('/', panels, static({
-      title: 'Aaltoboard',
-      id: "front-page",
-      "class": ""
-    }), static('overview', {
-      view: 'index',
-      title: 'Aaltoboard'
-    }), renderPanels);
+      return res.overview('view', 'index');
+    }), collectStatistics('detail'), renderPanels);
     app.get('/api/', function(req, res) {
       var boards, data, group, id, result, _ref;
       result = {};
@@ -186,10 +168,10 @@
         threads: threads
       });
     });
-    app.get('/:board/', panels, collectBoard('overview'), tap(function(req, res) {
+    app.get('/:board/', panels, collectBoard('overview'), collectStatistics('detail'), tap(function(req, res) {
       var board, boardTitle, name, threads;
       board = req.params.board;
-      name = getBoardName(board);
+      name = boards.getName(board);
       boardTitle = "/" + board + "/ - " + name;
       res.overview('board', board);
       res.overview('title', boardTitle);
@@ -218,7 +200,7 @@
       ];
     };
     receiveThread = [
-      validateBoard, handleImageUpload, receivePost('create'), tap(function(req, res) {
+      precondition('shouldHaveBoard'), handleImageUpload, receivePost('create'), tap(function(req, res) {
         var thread;
         thread = res.thread;
         return channel.broadcastToChannel('newthread', thread.board, {
@@ -250,9 +232,9 @@
     app.get('/:board/:id/', panels, collectBoard('overview'), collectThread('detail'), tap(function(req, res) {
       var board, boardTitle, name, threadTitle, threads;
       board = req.params.board;
-      name = getBoardName(req.params.board);
+      name = boards.getName(req.params.board);
       boardTitle = "/" + board + "/ - " + name;
-      threadTitle = "/" + board + "/" + req.params.id;
+      threadTitle = "/" + board + "/" + req.params.id + "/";
       res.overview('board', board);
       res.overview('title', boardTitle);
       res.detail('title', threadTitle);
@@ -267,7 +249,7 @@
       });
     }), renderPanels);
     receiveReply = [
-      validateBoard, handleImageUpload, validateThread, receivePost('update'), tap(function(req, res) {
+      precondition('shouldHaveBoard'), handleImageUpload, precondition('shouldHaveThread'), receivePost('update'), tap(function(req, res) {
         var thread;
         thread = res.thread;
         return channel.broadcastToChannel('reply', thread.board, {

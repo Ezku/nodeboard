@@ -39,17 +39,20 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: Georgia;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: normal;
   letter-spacing: -1px;
   line-height: 1.4;
 }
 h1 {
-  font-size: 26px;
+  font-size: 28px;
+  letter-spacing: -2px;
+  font-weight: bold;
   margin-bottom: 10px;
-  text-shadow: 1px 1px 3px white;
+  text-shadow: 1px 1px 2px white;
   background: #ccc;
   margin: 0;
-  padding: 10px 10px 5px 10px;
+  padding: 5px 10px 5px 10px;
   -webkit-border-top-left-radius: 10px;
   -webkit-border-top-right-radius: 10px;
   -moz-border-radius-topleft: 10px;
@@ -58,11 +61,11 @@ h1 {
   border-top-right-radius: 10px;
 }
 h2 {
-  font-size: 20.8px;
+  font-size: 22.400000000000002px;
   padding: 10px 10px 5px 10px;
 }
 h3 {
-  font-size: 18.2px;
+  font-size: 19.599999999999998px;
 }
 #page-wrapper {
   width: 90%;
@@ -125,7 +128,7 @@ header nav ul li a {
   border-radius: 20px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
-  text-shadow: 1px 1px 3px white;
+  text-shadow: 1px 1px 1px white;
 }
 header nav ul li a:hover {
   color: #666666;

@@ -101,7 +101,7 @@
         id: 'threadTemplate'
       }, function() {
         return text(this.partial("thread", {
-          title: '/${board}/${id}',
+          title: '/${board}/${id}/',
           object: {
             id: '${id}'
           }

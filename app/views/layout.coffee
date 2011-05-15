@@ -31,7 +31,7 @@ html ->
       div id: "column-wrapper", -> @body
 
     script type: 'text/x-jquery-tmpl', id: 'threadTemplate', ->
-      text @partial "thread", title: '/${board}/${id}', object: {id:'${id}'}
+      text @partial "thread", title: '/${board}/${id}/', object: {id:'${id}'}
     
     script type: 'text/x-jquery-tmpl', id: 'postTemplate', ->
       text @partial "partials/post", jQtemplate: true, object: {id:'${id}',author:'${author}',date:'${date}', content:'${content}', image:{fullsize:'${image.fullsize}',thumbnail:'${image.thumbnail}'}}
