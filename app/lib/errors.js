@@ -13,7 +13,6 @@
           error: err
         });
       } else {
-        console.log("unhandled error");
         return next();
       }
     };

@@ -1,7 +1,6 @@
 (function() {
   var _ref;
   h1(this.title);
-  console.log('thread');
   section({
     "class": 'thread',
     id: 'thread-' + this.thread.id
