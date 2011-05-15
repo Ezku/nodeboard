@@ -11,6 +11,8 @@ html ->
     script src: '/socket.io/socket.io.js'
     script src: '/scripts/socket.io-channels-client.js'
     script src: '/scripts/aaltoboard.js'
+    script src: '/scripts/fancybox/jquery.fancybox-1.3.4.pack.js'
+    link rel: "stylesheet", href: '/scripts/fancybox/jquery.fancybox-1.3.4.css'
   body class: @class, id: @id, ->
     div id: "page-wrapper", ->
       header ->

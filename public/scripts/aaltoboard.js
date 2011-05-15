@@ -49,8 +49,9 @@ $(document).ready(function(){
       
       $('#threads').html($('#boardThreadTemplate').tmpl(data.threads));
       
-      // Update timeago plugin
+      // Update timeago plugin and lightbox
       $("#threads time").timeago();
+      setFancybox();
       
       // Hide thread links
       $("a.threadLink").hide();
@@ -96,6 +97,7 @@ $(document).ready(function(){
       }
       
       hideReplyForm();
+      setFancybox();
     });
   }
   
@@ -210,4 +212,14 @@ $(document).ready(function(){
   
   // Timeago plugin
   $("time").timeago();  
+  
+  // Fancybox
+  function setFancybox(){
+    $(".post-image a").fancybox({
+      'overlayColor'		: '#000',
+      'overlayOpacity'	: 0.8
+    });
+  }
+  setFancybox();
+  
 });

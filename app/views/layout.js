@@ -28,8 +28,15 @@
       script({
         src: '/scripts/socket.io-channels-client.js'
       });
-      return script({
+      script({
         src: '/scripts/aaltoboard.js'
+      });
+      script({
+        src: '/scripts/fancybox/jquery.fancybox-1.3.4.pack.js'
+      });
+      return link({
+        rel: "stylesheet",
+        href: '/scripts/fancybox/jquery.fancybox-1.3.4.css'
       });
     });
     return body({
