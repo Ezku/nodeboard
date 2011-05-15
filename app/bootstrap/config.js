@@ -37,7 +37,7 @@
         orphanedTrackerCheckProbability: 10
       },
       boards: {
-        guilds: {
+        tkk: {
           ak: {
             name: "Arkkitehtikilta"
           },
@@ -65,11 +65,42 @@
           pjk: {
             name: "Puunjalostajakilta"
           },
+          tf: {
+            name: "Teknologföreningen"
+          },
           tik: {
             name: "Tietokilta"
           },
           vk: {
             name: "Vuorimieskilta"
+          }
+        },
+        aalto: {
+          tkk: {
+            name: "TKK"
+          },
+          hse: {
+            name: "HSE"
+          },
+          taik: {
+            name: "TAIK"
+          }
+        },
+        common: {
+          b: {
+            name: "Satunnainen"
+          },
+          op: {
+            name: "Opintosektori"
+          },
+          byro: {
+            name: "Byrokratia"
+          },
+          meta: {
+            name: "Metalauta"
+          },
+          int: {
+            name: "International"
           }
         }
       }

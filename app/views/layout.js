@@ -41,29 +41,52 @@
       }, function() {
         header(function() {
           return nav(function() {
-            return ul(function() {
-              var label, properties, _ref, _results;
-              li(function() {
+            ul(function() {
+              var boards, group, _ref, _results;
+              li({
+                "class": "home"
+              }, function() {
                 return a({
                   href: "/"
                 }, function() {
                   return "Aaltoboard";
                 });
               });
-              _ref = this.config.boards.guilds;
+              _ref = this.config.boards;
               _results = [];
-              for (label in _ref) {
-                properties = _ref[label];
-                _results.push(li(function() {
-                  return a({
-                    href: "/" + label + "/",
-                    title: properties.name
+              for (group in _ref) {
+                boards = _ref[group];
+                _results.push(ul({
+                  "class": "board-group"
+                }, function() {
+                  var label, properties;
+                  li({
+                    "class": 'separator'
                   }, function() {
-                    return label;
+                    return '[';
+                  });
+                  for (label in boards) {
+                    properties = boards[label];
+                    li(function() {
+                      return a({
+                        href: "/" + label + "/",
+                        title: properties.name
+                      }, function() {
+                        return label;
+                      });
+                    });
+                  }
+                  return li({
+                    "class": 'separator'
+                  }, function() {
+                    return ']';
                   });
                 }));
               }
               return _results;
+            });
+            return div({
+              style: "clear: both;"
             });
           });
         });

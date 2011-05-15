@@ -1,9 +1,13 @@
 h1 @title
 
 for category, boards of @config.boards
+  h2 -> switch category
+    when "tkk" then "TKK Guilds"
+    when "aalto" then "The Aalto Trifecta"
+    when "common" then "General discussion"
+  
   for label, properties of boards
-
     article class: "board #{category}", ->
       a href: "/#{label}/", title: properties.name, -> 
-        h2 label.toUpperCase() 
+        h3 label.toUpperCase() 
         p properties.name

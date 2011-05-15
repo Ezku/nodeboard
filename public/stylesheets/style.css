@@ -23,7 +23,7 @@ html {
   height: 100%;
 }
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px Helvetica, Arial, sans-serif;
   overflow: hidden;
   height: 100%;
   background-color: #ffffff;
@@ -40,6 +40,7 @@ h4,
 h5,
 h6 {
   font-family: Georgia;
+  letter-spacing: -1px;
   line-height: 1.4;
 }
 h1 {
@@ -58,6 +59,7 @@ h1 {
 }
 h2 {
   font-size: 20.8px;
+  padding: 10px 10px 5px 10px;
 }
 h3 {
   font-size: 18.2px;
@@ -91,9 +93,21 @@ header nav {
 }
 header nav ul {
   list-style: none;
-  width: 100%;
   height: 30px;
   margin: 0;
+  float: left;
+  display: block;
+}
+header nav ul .board-group {
+  margin-left: 10px;
+}
+header nav ul li.separator {
+  padding: 2px 8px;
+  margin-left: -10px;
+  font-weight: bold;
+}
+header nav ul li.home {
+  font-weight: bold;
 }
 header nav ul li {
   margin: 0;
@@ -250,9 +264,6 @@ header nav ul li a:active {
 #detail-level div.form form {
   padding-top: 10px;
 }
-.board:nth-of-type(1) {
-  margin-top: 20px;
-}
 .board a {
   display: block;
   overflow: hidden;
@@ -276,11 +287,11 @@ header nav ul li a:active {
   color: #444;
   float: right;
 }
-.board a h2 {
+.board a h3 {
   padding-right: 20px;
   float: left;
 }
-.board a h2, .board a p {
+.board a h3, .board a p {
   line-height: 40px;
 }
 .post {
@@ -372,7 +383,7 @@ form input[type=text], form input[type=password], form textarea {
   display: block;
   padding: 0 5px;
   width: 90%;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px Helvetica, Arial, sans-serif;
 }
 form textarea {
   height: 120px;
