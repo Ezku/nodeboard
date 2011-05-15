@@ -1,6 +1,7 @@
 module.exports = (dependencies) ->
   {config, hashlib} = dependencies
   {promise} = dependencies.lib 'promises'
+  ValidationError = dependencies.lib 'errors/ValidationError'
   Tracker = dependencies.mongoose.model 'Tracker'
   
   ip = (req) -> req.connection.remoteAddress
@@ -56,7 +57,7 @@ module.exports = (dependencies) ->
           setTimeout success, count * 1000
         else
           # Exceeded cap, report flood
-          error new Error "flood detected; please wait before posting"
+          error new ValidationError "flood detected; please wait before posting"
   
   # Report an error if an image with the same hash has already been posted.
   enforceUniqueImage = (req, res) -> promise (success, error) ->
@@ -66,7 +67,7 @@ module.exports = (dependencies) ->
       req.hash.image = hash
       findMatchingImage(req.params.board, hash).then (tracker) -> promise (success, error) ->
         return success() if not tracker
-        error new Error "duplicate image detected"
+        error new ValidationError "duplicate image detected"
   
   # Creates a tracker entry based on the current upload
   trackUpload = (req, res) -> promise (success, error) ->

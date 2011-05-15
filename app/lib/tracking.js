@@ -1,8 +1,9 @@
 (function() {
   module.exports = function(dependencies) {
-    var Tracker, config, countRecentUploads, enforceUniqueImage, findMatchingImage, hash, hashlib, image, imageHash, ip, ipHash, past, preventFlood, promise, salt, trackUpload;
+    var Tracker, ValidationError, config, countRecentUploads, enforceUniqueImage, findMatchingImage, hash, hashlib, image, imageHash, ip, ipHash, past, preventFlood, promise, salt, trackUpload;
     config = dependencies.config, hashlib = dependencies.hashlib;
     promise = dependencies.lib('promises').promise;
+    ValidationError = dependencies.lib('errors/ValidationError');
     Tracker = dependencies.mongoose.model('Tracker');
     ip = function(req) {
       return req.connection.remoteAddress;
@@ -79,7 +80,7 @@
           } else if (count < config.tracking.maxPostRate) {
             return setTimeout(success, count * 1000);
           } else {
-            return error(new Error("flood detected; please wait before posting"));
+            return error(new ValidationError("flood detected; please wait before posting"));
           }
         });
       });
@@ -100,7 +101,7 @@
               if (!tracker) {
                 return success();
               }
-              return error(new Error("duplicate image detected"));
+              return error(new ValidationError("duplicate image detected"));
             });
           });
         });
