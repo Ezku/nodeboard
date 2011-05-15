@@ -178,9 +178,12 @@
       return res.send(result);
     });
     app.get('/api/:board/', collectBoard('local'), function(req, res) {
+      var threads;
+      threads = res.local('threads');
       return res.send({
         board: req.params.board,
-        threads: res.local('threads')
+        total: threads.total,
+        threads: threads
       });
     });
     app.get('/:board/', panels, collectBoard('overview'), tap(function(req, res) {

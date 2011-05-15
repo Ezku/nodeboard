@@ -29,7 +29,16 @@
             if (err) {
               return error(err);
             }
-            return success(threads);
+            return Thread.count({
+              board: query.board,
+              markedForDeletion: false
+            }).run(function(err, count) {
+              if (err) {
+                return error(err);
+              }
+              threads.total = count;
+              return success(threads);
+            });
           });
         });
       };

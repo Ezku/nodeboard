@@ -18,4 +18,9 @@ module.exports = (dependencies) ->
       .limit(limit)
       .run (err, threads) ->
         return error err if err
-        success threads
+        Thread
+        .count(board: query.board, markedForDeletion: false)
+        .run (err, count) ->
+          return error err if err
+          threads.total = count
+          success threads

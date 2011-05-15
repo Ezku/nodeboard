@@ -145,9 +145,11 @@ module.exports = (dependencies) ->
   app.get '/api/:board/',
     collectBoard('local'),
     (req, res) ->
+      threads = res.local 'threads'
       res.send {
         board: req.params.board
-        threads: res.local 'threads'
+        total: threads.total
+        threads: threads
       }
   
   app.get '/:board/',
