@@ -4,13 +4,13 @@ $(document).ready(function(){
   
   $("#newThread").hide();
   
-  function updateBoardThreadsHeight(){
-    $("#threads").css("top",$("#boardHeader").outerHeight());
+  function updateBoardContentHeight(){
+    $("#boardContent").css("top",$("#boardHeader").outerHeight());
   }
-  updateBoardThreadsHeight();
+  updateBoardContentHeight();
   
   $("#newThreadButton").click(function(){
-    $("#newThread").slideToggle(updateBoardThreadsHeight);
+    $("#newThread").slideToggle(updateBoardContentHeight);
     return false;
   });
   
@@ -32,16 +32,47 @@ $(document).ready(function(){
   });
   
   // Board Load more threads
-  
-  $("#loadMore").click(function(){
-    //$.ajax()
+  $("#loadMore").click(function(e){
+    e.preventDefault();
+    loadBoardThreads($(this).attr("href"));
   });
+  
+  function loadBoardThreads(path){
+    console.log("loadBoardThreads",path);
+    $.getJSON('/api'+path, function(data) {
+      
+      console.log("loadBoardThreads data:",data)
+      if(!data.threads){
+        console.log("No threads found!");
+        return;
+      }
+      
+      $('#threads').html($('#boardThreadTemplate').tmpl(data.threads));
+      
+      // Update timeago plugin
+      $("#threads time").timeago();
+      
+      // Hide thread links
+      $("a.threadLink").hide();
+      
+      // Update Load more -button
+      if(data.total > data.threads.length){
+        var pos = path.search("pages=")+6;
+        var pages = parseInt(path.substr(pos));
+        var newPath = path.substr(0,pos) + (pages+1);
+        $("#loadMore").attr("href",newPath)
+      } else {
+        $("#loadMore").hide();
+      }
+    });
+  }
   
   // Thread selector
-  $("a.threadLink").click(function(e){
-    e.preventDefault();
-    loadThread($(this).attr("href"));
+  $("#high-level section.thread").live("click",function(){
+    var link = $(this).children("a.threadLink").attr("href");
+    loadThread(link);
   });
+  $("a.threadLink").hide();
   
   function loadThread(path){
     console.log("loadThread",path);

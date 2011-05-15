@@ -248,7 +248,7 @@
       });
     });
     app.get('/:board/:id/', panels, collectBoard('overview'), collectThread('detail'), tap(function(req, res) {
-      var board, boardTitle, name, threadTitle;
+      var board, boardTitle, name, threadTitle, threads;
       board = req.params.board;
       name = getBoardName(req.params.board);
       boardTitle = "/" + board + "/ - " + name;
@@ -256,9 +256,12 @@
       res.overview('board', board);
       res.overview('title', boardTitle);
       res.detail('title', threadTitle);
+      threads = res.overview('threads');
       return res.locals({
         title: threadTitle,
         board: board,
+        total: threads.total,
+        pages: req.query.pages ? req.query.pages : 1,
         "class": "thread-page",
         id: "thread-page-" + req.params.id
       });

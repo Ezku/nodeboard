@@ -19,20 +19,26 @@
     }));
   });
   div({
-    id: 'threads'
+    id: 'boardContent'
   }, function() {
-    var thread, _i, _len, _ref;
-    _ref = this.threads;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      thread = _ref[_i];
-      text(this.partial("partials/thread", {
-        object: thread
-      }));
-    }
+    div({
+      id: 'threads'
+    }, function() {
+      var thread, _i, _len, _ref, _results;
+      _ref = this.threads;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        thread = _ref[_i];
+        _results.push(text(this.partial("partials/thread", {
+          object: thread
+        })));
+      }
+      return _results;
+    });
     if (this.total > this.threads.length) {
       return a({
         id: "loadMore",
-        href: ("/" + this.board + "/?pages=") + (this.pages + 1) + "#thread-" + thread.id
+        href: ("/" + this.board + "/?pages=") + (this.pages + 1)
       }, function() {
         return "Load more";
       });

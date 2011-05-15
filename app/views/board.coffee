@@ -7,9 +7,10 @@ div id: 'boardHeader', ->
     submit: 'Create thread'
     id: 'newThread'
   
-div id: 'threads', ->
-  for thread in @threads
-    text @partial "partials/thread", object: thread
+div id: 'boardContent', ->
+  div id: 'threads', ->
+    for thread in @threads
+      text @partial "partials/thread", object: thread
   
   if @total > @threads.length
-    a id:"loadMore", href:"/#{@board}/?pages="+(@pages+1)+"#thread-"+thread.id, -> "Load more"
+    a id:"loadMore", href:"/#{@board}/?pages="+(@pages+1), -> "Load more"

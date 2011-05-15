@@ -202,7 +202,7 @@ header nav ul li a:active {
 #high-level section:last-of-type {
   border: none;
 }
-#high-level div#threads {
+#high-level div#boardContent {
   position: absolute;
   top: 280px;
   bottom: 0;
