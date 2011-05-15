@@ -13,7 +13,7 @@
       __extends(PreconditionError, Error);
       function PreconditionError(msg) {
         this.name = 'PreconditionError';
-        PreconditionError.__super__.constructor.call(this, msg);
+        this.message = msg;
         Error.captureStackTrace(this, arguments.callee);
       }
       return PreconditionError;

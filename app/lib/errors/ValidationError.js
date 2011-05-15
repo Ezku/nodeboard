@@ -13,7 +13,7 @@
       __extends(ValidationError, Error);
       function ValidationError(msg) {
         this.name = 'ValidationError';
-        ValidationError.__super__.constructor.call(this, msg);
+        this.message = msg;
         Error.captureStackTrace(this, arguments.callee);
       }
       return ValidationError;

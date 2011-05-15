@@ -13,7 +13,7 @@
       __extends(NotFoundError, Error);
       function NotFoundError(msg) {
         this.name = 'NotFoundError';
-        NotFoundError.__super__.constructor.call(this, msg);
+        this.message = msg;
         Error.captureStackTrace(this, arguments.callee);
       }
       return NotFoundError;

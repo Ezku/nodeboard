@@ -15,17 +15,16 @@
       app.use(express.methodOverride());
       app.use(app.router);
       app.use(express.static(config.paths.public));
-      app.use(express.static(config.paths.mount));
-      return app.error(dependencies.lib('errors'));
+      return app.use(express.static(config.paths.mount));
     });
     app.configure('development', function() {
-      return app.use(express.errorHandler({
+      return app.error(dependencies.lib('errors')(express.errorHandler({
         dumpExceptions: true,
         showStack: true
-      }));
+      })));
     });
     app.configure('production', function() {
-      return app.use(express.errorHandler());
+      return app.error(dependencies.lib('errors')());
     });
     helpers = dependencies.lib('helpers');
     app.helpers(helpers.static);

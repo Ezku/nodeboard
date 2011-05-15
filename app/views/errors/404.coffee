@@ -1,3 +1,3 @@
-h1 @error?.message ? "Looking for something?"
+h1 "Looking for something?"
 
-section class: "error", -> h2 @error?.description ? "Well, it's not here."
+section class: "error", -> h2 "Well, it's not here."

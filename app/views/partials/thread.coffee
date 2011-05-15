@@ -1,6 +1,6 @@
 # Partial: One thread in board view
 
-section class: 'thread thread-#{@thread.id}', ->
+section class: 'thread', id: "thread-preview-#{@thread.id}", ->
 
   if @thread.firstPost
     text @partial "partials/post", object: @thread.firstPost

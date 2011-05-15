@@ -16,13 +16,12 @@ module.exports = (dependencies) ->
     app.use app.router
     app.use express.static config.paths.public
     app.use express.static config.paths.mount
-    app.error dependencies.lib 'errors'
 
   app.configure 'development', ->
-    app.use express.errorHandler dumpExceptions: true, showStack: true
+    app.error dependencies.lib('errors')(express.errorHandler dumpExceptions: true, showStack: true)
 
   app.configure 'production', ->
-    app.use express.errorHandler()
+    app.error dependencies.lib('errors')()
   
   helpers = dependencies.lib 'helpers'
   app.helpers helpers.static
