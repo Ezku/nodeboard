@@ -289,12 +289,12 @@ $(document).ready(function(){
     if (!parent){
       parent = "";
     } else {
-      parent = parent + " ";
+      parent = parent + " "
     }
     $(parent + ".post-content").each(function(){
       var content = $(this).html();
       content = convertLinebreaks(content);
-      content = convertReplyLinks(content);
+      content = convertRefLinks(content);
       $(this).html(content);
     })
   }
@@ -304,12 +304,19 @@ $(document).ready(function(){
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
   }
   
-  function convertReplyLinks(str) {
+  function convertRefLinks(str) {
     console.log("convertReplyLinks",str)
-    var pos = str.search("&gt;&gt;");
-    if (pos > -1){
-      var id = 1;
-      return '<a href="#post-'+id+'">'+str+'</a>'
+    var lines = str.split("<br />");
+    
+    for(var i=0;i<lines.length;i++){
+      var pos = lines[i].search("&gt;&gt;");
+      if (pos > -1){
+        var id = lines[i].substring(pos+8);
+        var link = '<a class="reflink" href="#post-'+id+'">';
+        lines[i] = lines[i].substring(0,pos)+link + lines[i].substring(pos) +'</a>'
+      }
     }
+    console.log(lines.join("<br />"))
+    return lines.join("<br />");
   }
 });
