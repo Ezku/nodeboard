@@ -95,12 +95,17 @@ $(document).ready(function(){
   // Thread selector
   $("section.thread-preview").live("click",function(){
     var link = $(this).children("a.threadLink").attr("href");
-    loadThread(link);
+    if($(this).parent().attr("id") === "overview"){
+      window.location = link;
+    } else {
+      loadThread(link);
+    }
   });
   $("a.threadLink").hide();
   
   function loadThread(path){
     console.log("loadThread",path);
+    $.fancybox.showActivity();
     $.getJSON('/api'+path, function(data) {
           
       if(!data.thread || !data.thread.posts){
@@ -130,14 +135,36 @@ $(document).ready(function(){
       $("#detail-level time").timeago();
       hideReplyForm();
       setFancybox();
-      formatContent();
+      formatContent("#detail-level");
       
       // Show controls
       $("section.thread article.post").hover(function() {
           $(this).find(".controls").toggle();
       });
+      
+      $.fancybox.hideActivity();
     });
   }
+  
+  // Load previous state on back button click etc
+  $(window).bind("popstate", function(e) {
+    var path = window.location.pathname;
+    console.log("popstate",path);
+    var slashes = path.split("/").length-1;
+    
+    // Thread view
+    if (slashes >= 3){
+      loadThread(path);
+    }
+    
+    // Board main view, load first thread
+    else if(slashes = 2){
+      var url = $(".thread-preview:first").children("a.threadLink").attr("href");
+      if (url){
+        loadThread(url)
+      }
+    }
+  });
   
   $(".controls .reply").live("click",function() {
     $("#reply form").slideDown(updateThreadHeight);
@@ -166,16 +193,6 @@ $(document).ready(function(){
       alert("Could not delete post without password");
     }
     return false;
-  });
-  
-  // Load previous thread on back button click
-  $(window).bind("popstate", function(e) {
-    var path = window.location.pathname;
-    console.log("popstate",path);
-    
-    if (path.split("/").length > 3){
-      loadThread(path);
-    }
   });
  
   /*
@@ -267,9 +284,14 @@ $(document).ready(function(){
   }
   setFancybox();
   
-  function formatContent(){
-    console.log("formatContent");
-    $(".post-content").each(function(){
+  function formatContent(parent){
+    console.log("formatContent",parent);
+    if (!parent){
+      parent = "";
+    } else {
+      parent = parent + " ";
+    }
+    $(parent + ".post-content").each(function(){
       var content = $(this).html();
       content = convertLinebreaks(content);
       content = convertReplyLinks(content);

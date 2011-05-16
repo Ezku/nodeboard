@@ -154,7 +154,6 @@ module.exports = (dependencies) ->
   app.get '/:board/',
     panels,
     collectBoard('overview'),
-    collectOverview('detail'),
     tap (req, res) ->
       board = req.params.board
       name = boards.getName board
