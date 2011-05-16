@@ -47,14 +47,29 @@ $(document).ready(function(){
         return;
       }
       
-      $('#threads').html($('#boardThreadTemplate').tmpl(data.threads));
+      // Add board name to threads objects
+      $(data.threads).each(function(){
+        this.board = data.board;
+        this.firstPost.board = data.board;
+        if (this.lastPost) {
+          this.lastPost.board = data.board;
+        }
+      });
       
-      // Update timeago plugin and lightbox
-      $("#threads time").timeago();
-      setFancybox();
+      $('.threads').html($('#boardThreadTemplate').tmpl(data.threads));
       
       // Hide thread links
       $("a.threadLink").hide();
+      
+      // Update timeago plugin and lightbox
+      $(".threads time").timeago();
+      setFancybox();
+      
+      // Update selected thread
+      if($("#detail-level .thread")){
+        var id=$("#detail-level .thread").attr("id").split("-")[1];
+        $("#thread-preview-"+id).addClass("selected");
+      }
       
       // Update Load more -button
       if(data.total > data.threads.length){
@@ -83,6 +98,15 @@ $(document).ready(function(){
         console.log("No posts found!");
         return;
       }
+      
+      // Update selected thread overview
+      $(".thread-preview").removeClass("selected");
+      $("#thread-preview-"+data.id).addClass("selected");
+      
+      // Add board name to posts
+      $(data.thread.posts).each(function(){
+        this.board = data.board;
+      });
       
       $('#detail-level').html($('#threadTemplate').tmpl(data.thread));
       $('#detail-level .thread').append($('#postTemplate').tmpl(data.thread.posts));

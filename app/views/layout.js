@@ -142,6 +142,7 @@
           jQtemplate: true,
           object: {
             id: '${id}',
+            board: '${board}',
             replyCount: '${replyCount-1}'
           }
         }));

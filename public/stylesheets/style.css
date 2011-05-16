@@ -93,6 +93,7 @@ header {
 }
 header nav {
   width: 100%;
+  overflow: hidden;
 }
 header nav ul {
   list-style: none;
@@ -224,14 +225,15 @@ header nav ul li a:active {
 section.thread-preview {
   cursor: pointer;
   position: relative;
-  /*&:active {
-    background: #ccc;
-    .box-shadow(0,0,0,1)
-  }*/
-
 }
 section.thread-preview:hover {
   background: #eee;
+}
+section.thread-preview.selected {
+  background: #ddd;
+  -webkit-box-shadow: 0 0 0 #000000;
+  -moz-box-shadow: 0 0 0 #000000;
+  box-shadow: 0 0 0 #000000;
 }
 #detail-level section.thread {
   position: absolute;

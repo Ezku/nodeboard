@@ -39,4 +39,4 @@ html ->
       text @partial "partials/post", jQtemplate: true, object: {id:'${id}',author:'${author}',date:'${date}', board: '${board}', content:'${content}', image:{fullsize:'${image.fullsize}',thumbnail:'${image.thumbnail}'}}
 
     script type: 'text/x-jquery-tmpl', id: 'boardThreadTemplate', ->
-      text @partial "partials/thread", jQtemplate: true, object: {id:'${id}',replyCount:'${replyCount-1}'}
+      text @partial "partials/thread", jQtemplate: true, object: {id:'${id}', board: '${board}', replyCount:'${replyCount-1}'}

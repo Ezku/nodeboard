@@ -42,7 +42,7 @@
     if (this.total > this.threads.length) {
       return a({
         id: "loadMore",
-        href: ("/" + this.board + "/?pages=") + (this.pages + 1) + "#thread-preview-" + (typeof thread !== "undefined" && thread !== null ? thread.id : void 0)
+        href: ("/" + this.board + "/?pages=") + (this.pages + 1)
       }, function() {
         return "Load more";
       });
