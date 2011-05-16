@@ -1,3 +1,12 @@
+/**
+ * Aaltoboard front-end javascripts
+ */
+
+var debug = true;
+if (!debug){
+  window.console.log = function(){};
+}
+
 $(document).ready(function(){
   
   // New thread -form toggle
@@ -121,7 +130,7 @@ $(document).ready(function(){
       $("#detail-level time").timeago();
       hideReplyForm();
       setFancybox();
-      convertContentLinebreaks();
+      formatContent();
       
       // Show controls
       $("section.thread article.post").hover(function() {
@@ -139,8 +148,24 @@ $(document).ready(function(){
   $(".controls .delete").live("click",function() {
     var pw = prompt("Enter password to delete","");
     if(pw){
-      alert("Sorry, delete is not implemented yet");
+      $.ajax({
+        type: 'POST',
+        url: "/api"+$(this).attr("href"),
+        data: {password:pw},
+        success: function(data,textStatus){
+          console.log("Delete success", data, textStatus);
+          alert("Post deleted!");
+          //window.location.reload();
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          console.log("Delete error", textStatus, errorThrown);
+          alert("Delete failed: " + errorThrown);
+        }
+      });
+    } else {
+      alert("Could not delete post without password");
     }
+    return false;
   });
   
   // Load previous thread on back button click
@@ -242,15 +267,27 @@ $(document).ready(function(){
   }
   setFancybox();
   
-  function convertContentLinebreaks(){
+  function formatContent(){
+    console.log("formatContent");
     $(".post-content").each(function(){
-      $(this).html(convertLinebreaks( $(this).html() ));
+      var content = $(this).html();
+      content = convertLinebreaks(content);
+      content = convertReplyLinks(content);
+      $(this).html(content);
     })
   }
-  convertContentLinebreaks();
+  formatContent();
   
   function convertLinebreaks(str) {     
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
   }
   
+  function convertReplyLinks(str) {
+    console.log("convertReplyLinks",str)
+    var pos = str.search("&gt;&gt;");
+    if (pos > -1){
+      var id = 1;
+      return '<a href="#post-'+id+'">'+str+'</a>'
+    }
+  }
 });

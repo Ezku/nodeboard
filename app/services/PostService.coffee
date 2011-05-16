@@ -24,7 +24,6 @@ module.exports = (dependencies) ->
           
           if (not post.password is hashlib.sha1 password)
             return error new ValidationError "unable to delete post; password does not match"
-          return error new Error
           
           if thread.id is post.id
             janitor.sweepThread(thread).then succeed post

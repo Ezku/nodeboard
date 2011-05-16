@@ -131,7 +131,7 @@ module.exports = (dependencies) ->
       res.send result
   
   # Post deletion
-  app.get '/api/:board/:id/delete/',
+  app.post '/api/:board/:id/delete/',
     precondition('shouldHaveBoard'),
     accept('password'),
     filter (req, res) ->

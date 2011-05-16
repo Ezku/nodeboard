@@ -164,7 +164,7 @@
       }
       return res.send(result);
     });
-    app.get('/api/:board/:id/delete/', precondition('shouldHaveBoard'), accept('password'), filter(function(req, res) {
+    app.post('/api/:board/:id/delete/', precondition('shouldHaveBoard'), accept('password'), filter(function(req, res) {
       var _ref;
       return service('Post').remove(req.params.board, req.params.id, (_ref = req.body) != null ? _ref.password : void 0);
     }), function(req, res) {

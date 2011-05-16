@@ -65,7 +65,6 @@
               if (!post.password === hashlib.sha1(password)) {
                 return error(new ValidationError("unable to delete post; password does not match"));
               }
-              return error(new Error);
               if (thread.id === post.id) {
                 return janitor.sweepThread(thread).then(succeed(post));
               } else {

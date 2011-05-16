@@ -11,7 +11,9 @@
         id: 'reply-' + this.post.id
       });
       return a("Delete", {
-        "class": "delete"
+        "class": "delete",
+        id: 'delete-' + this.post.id,
+        href: "/" + this.post.board + "/" + this.post.id + "/delete/"
       });
     });
     div({
