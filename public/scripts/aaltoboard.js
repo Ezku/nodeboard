@@ -121,6 +121,7 @@ $(document).ready(function(){
       $("#detail-level time").timeago();
       hideReplyForm();
       setFancybox();
+      convertContentLinebreaks();
       
       // Show controls
       $("section.thread article.post").hover(function() {
@@ -148,26 +149,6 @@ $(document).ready(function(){
       loadThread(path);
     }
   });
-  
-  // TODO: Submit thread reply with Ajax
-  /*
-  $("#replyForm").live("submit",function(event) {
-    event.preventDefault(); 
-    var url = "/api"+$(this).attr('action');
-    var data = { 
-        content: "Hello World" //$(this).find("textarea").text()
-      }
-    console.log("Submit reply form",url,data);
-
-    $.post(url,data)
-      .success(function(res) {
-        console.log("Post success",res);
-      })
-      .error(function(res) {
-        console.log("Post error",res);
-      });
-  });
-  */
  
   /*
    * Socket.io channels
@@ -259,5 +240,16 @@ $(document).ready(function(){
     });
   }
   setFancybox();
+  
+  function convertContentLinebreaks(){
+    $(".post-content").each(function(){
+      $(this).html(convertLinebreaks( $(this).html() ));
+    })
+  }
+  convertContentLinebreaks();
+  
+  function convertLinebreaks(str) {     
+    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
+  }
   
 });
