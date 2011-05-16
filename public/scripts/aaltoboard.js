@@ -111,19 +111,33 @@ $(document).ready(function(){
       $('#detail-level').html($('#threadTemplate').tmpl(data.thread));
       $('#detail-level .thread').append($('#postTemplate').tmpl(data.thread.posts));
       
-      // Update timeago plugin
-      $("#detail-level time").timeago();
-      
       // Update url with HTML5 History API 
       // http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html
       if(window.location.pathname !== path){
         history.pushState(null, null, path);
       }
       
+      // Update UI stuff
+      $("#detail-level time").timeago();
       hideReplyForm();
       setFancybox();
+      
+      // Show controls
+      $("section.thread article.post").hover(function() {
+          $(this).find(".controls").toggle();
+      });
     });
   }
+  
+  $(".controls .reply").live("click",function() {
+    alert("Reply not implemented yet");
+  });
+  $(".controls .delete").live("click",function() {
+    var pw = prompt("Enter password to delete","");
+    if(pw){
+      alert("Sorry, delete is not implemented yet");
+    }
+  });
   
   // Load previous thread on back button click
   $(window).bind("popstate", function(e) {

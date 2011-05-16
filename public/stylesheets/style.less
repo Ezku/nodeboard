@@ -419,7 +419,9 @@ section.thread-preview {
     font-weight: bold;
     margin: 0 0.2em;
   }
-  
+  time {
+    margin: 0 0.2em;
+  }
   .post-image {
     margin: 5px 5px 0 0;
     float: left;
@@ -427,6 +429,26 @@ section.thread-preview {
   .post-content {
     margin: 0.8em;
     float: left;
+  }
+  
+  .controls {
+    float: right;
+    display: none;
+    
+    a {
+      padding: 2px 8px;
+      margin-right: 5px;
+      color: #ccc;
+      text-decoration: none;
+      
+      .border-radius(20px);
+      .text-shadow(1px, 1px, 1px);
+    
+      &:hover {
+        color: @navlinkcolor;
+        background-color: #999;
+      }
+    }
   }
 }
 

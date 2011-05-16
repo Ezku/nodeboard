@@ -4,6 +4,16 @@
     id: 'post-' + this.post.id
   }, function() {
     div({
+      "class": 'controls'
+    }, function() {
+      a("Reply", {
+        "class": "reply"
+      });
+      return a("Delete", {
+        "class": "delete"
+      });
+    });
+    div({
       "class": 'meta'
     }, function() {
       span("#" + this.post.id, {

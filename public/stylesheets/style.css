@@ -337,6 +337,9 @@ section.thread-preview.selected {
   font-weight: bold;
   margin: 0 0.2em;
 }
+.post time {
+  margin: 0 0.2em;
+}
 .post .post-image {
   margin: 5px 5px 0 0;
   float: left;
@@ -344,6 +347,24 @@ section.thread-preview.selected {
 .post .post-content {
   margin: 0.8em;
   float: left;
+}
+.post .controls {
+  float: right;
+  display: none;
+}
+.post .controls a {
+  padding: 2px 8px;
+  margin-right: 5px;
+  color: #ccc;
+  text-decoration: none;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  text-shadow: 1px 1px 1px white;
+}
+.post .controls a:hover {
+  color: #000000;
+  background-color: #999;
 }
 .boardHeader {
   position: absolute;

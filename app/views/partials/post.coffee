@@ -1,4 +1,9 @@
 article class: 'post', id: 'post-' + @post.id, ->
+  
+  div class: 'controls', ->
+    a "Reply", class: "reply"
+    a "Delete", class: "delete"
+  
   div class: 'meta', ->
     span "#" + @post.id, class: 'post-id'
     span (h @post.author), class: 'author'
