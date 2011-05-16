@@ -24,10 +24,10 @@
         "class": 'post-image'
       }, function() {
         return a({
-          href: "/" + this.board + "/" + this.post.image.fullsize
+          href: "/" + this.post.board + "/" + this.post.image.fullsize
         }, function() {
           return img({
-            src: "/" + this.board + "/" + this.post.image.thumbnail,
+            src: "/" + this.post.board + "/" + this.post.image.thumbnail,
             alt: ''
           });
         });

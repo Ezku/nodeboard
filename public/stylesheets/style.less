@@ -123,7 +123,7 @@ h3 { font-size: @h1-size * .7; }
   left: 50%;
 }
 #page-wrapper a,
-#high-level section.thread {
+#high-level section.thread-preview {
   -moz-transition: all .2s ease-in-out;
   -webkit-transition: all .2s ease-in-out;
   transition: all .2s ease-in-out;
@@ -278,25 +278,13 @@ header {
   
   // Board page
   
-  div#boardContent{
+  div.boardContent{
     position: absolute;
     top: 280px;
     bottom: 0;
     left: 0;
     right: 0;
     overflow: auto;
-  }
-  
-  section.thread {
-    cursor: pointer;
-    position: relative;
-    &:hover {
-      background: #eee;
-    }
-    /*&:active {
-      background: #ccc;
-      .box-shadow(0,0,0,1)
-    }*/
   }
   
   a.threadLink{
@@ -308,6 +296,18 @@ header {
     color: #ccc;
     margin: 5px 10px;
   }
+}
+  
+section.thread-preview {
+  cursor: pointer;
+  position: relative;
+  &:hover {
+    background: #eee;
+  }
+  /*&:active {
+    background: #ccc;
+    .box-shadow(0,0,0,1)
+  }*/
 }
 
 // Thread page right column
@@ -348,6 +348,17 @@ header {
       padding-top: 10px;
     }
   }
+
+	dl {
+		dt {
+			clear: left;
+			float: left;
+			width: 33%;
+		}
+		dd {
+			float: left;
+		}
+	}
 }
 
 //// Front page
@@ -420,7 +431,7 @@ header {
 
 // Board page
 
-#boardHeader{
+.boardHeader{
   position: absolute;
   top: 0;
   left: 0;

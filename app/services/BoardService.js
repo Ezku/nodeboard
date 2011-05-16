@@ -19,12 +19,25 @@
       function BoardService() {
         BoardService.__super__.constructor.apply(this, arguments);
       }
+      BoardService.prototype.index = function() {
+        return promise(function(success, error) {
+          return Thread.find({
+            markedForDeletion: false
+          }).sort('updated', -1).limit(config.content.threadsPerPage).run(function(err, threads) {
+            if (err) {
+              return error(err);
+            }
+            return success(threads);
+          });
+        });
+      };
       BoardService.prototype.read = function(query) {
         return promise(function(success, error) {
           var limit, _ref, _ref2;
           limit = (_ref = query.limit) != null ? _ref : ((_ref2 = query.pages) != null ? _ref2 : 1) * config.content.threadsPerPage;
           return Thread.find({
-            board: query.board
+            board: query.board,
+            markedForDeletion: false
           }).select('board', 'id', 'firstPost', 'lastPost', 'replyCount').sort('updated', -1).limit(limit).run(function(err, threads) {
             if (err) {
               return error(err);

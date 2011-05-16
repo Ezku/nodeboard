@@ -30,11 +30,19 @@
             board: String(query.board),
             id: Number(query.id)
           }).select('board', 'id', 'posts').limit(1).run(function(err, threads) {
+            var post, thread, _i, _len, _ref;
             if (err) {
               return error(err);
             }
             if (!threads[0]) {
               return error(new NotFoundError("thread not found"));
+            }
+            thread = threads[0];
+            _ref = thread.posts;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              post = _ref[_i];
+              delete post.password;
+              post.board = thread.board;
             }
             return success(threads[0]);
           });

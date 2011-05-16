@@ -5,7 +5,7 @@ $(document).ready(function(){
   $("#newThread").hide();
   
   function updateBoardContentHeight(){
-    $("#boardContent").css("top",$("#boardHeader").outerHeight());
+    $(".boardContent").css("top",$(".boardHeader").outerHeight());
   }
   updateBoardContentHeight();
   
@@ -69,7 +69,7 @@ $(document).ready(function(){
   }
   
   // Thread selector
-  $("#high-level section.thread").live("click",function(){
+  $("section.thread-preview").live("click",function(){
     var link = $(this).children("a.threadLink").attr("href");
     loadThread(link);
   });

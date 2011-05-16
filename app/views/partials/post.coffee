@@ -8,8 +8,8 @@ article class: 'post', id: 'post-' + @post.id, ->
     if @jQtemplate
       text '{{if image }}{{if image.thumbnail }}'
     div class: 'post-image', ->
-      a href: "/" + @board + "/" + @post.image.fullsize, ->
-        img src: "/" + @board + "/" + @post.image.thumbnail, alt: ''
+      a href: "/" + @post.board + "/" + @post.image.fullsize, ->
+        img src: "/" + @post.board + "/" + @post.image.thumbnail, alt: ''
     if @jQtemplate
       text '{{/if}}{{/if}}'
   

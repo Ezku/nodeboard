@@ -1,4 +1,4 @@
-div id: 'boardHeader', ->
+div class: 'boardHeader', ->
   h1 @title
   a id: "newThreadButton", href: "#newThread", -> "New Thread"
 
@@ -7,8 +7,8 @@ div id: 'boardHeader', ->
     submit: 'Create thread'
     id: 'newThread'
   
-div id: 'boardContent', ->
-  div id: 'threads', ->
+div class: 'boardContent', ->
+  div class: 'threads', ->
     if @threads.length
       for thread in @threads
         text @partial "partials/thread", object: thread

@@ -22,4 +22,7 @@ module.exports = (dependencies) ->
 
   all = qutil.whenAll
   
-  { promise, all, filter }
+  succeed = (result) -> promise (success) -> success result
+  fail = (reason) -> promise (success, error) -> error reason
+  
+  { promise, all, filter, succeed, fail }

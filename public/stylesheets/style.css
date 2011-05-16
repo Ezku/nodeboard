@@ -76,7 +76,7 @@ h3 {
   bottom: 15px;
   left: 50%;
 }
-#page-wrapper a, #high-level section.thread {
+#page-wrapper a, #high-level section.thread-preview {
   -moz-transition: all 0.2s ease-in-out;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
@@ -205,25 +205,13 @@ header nav ul li a:active {
 #high-level section:last-of-type {
   border: none;
 }
-#high-level div#boardContent {
+#high-level div.boardContent {
   position: absolute;
   top: 280px;
   bottom: 0;
   left: 0;
   right: 0;
   overflow: auto;
-}
-#high-level section.thread {
-  cursor: pointer;
-  position: relative;
-  /*&:active {
-      background: #ccc;
-      .box-shadow(0,0,0,1)
-    }*/
-
-}
-#high-level section.thread:hover {
-  background: #eee;
 }
 #high-level a.threadLink {
   text-decoration: none;
@@ -232,6 +220,18 @@ header nav ul li a:active {
 #high-level p.omitted {
   color: #ccc;
   margin: 5px 10px;
+}
+section.thread-preview {
+  cursor: pointer;
+  position: relative;
+  /*&:active {
+    background: #ccc;
+    .box-shadow(0,0,0,1)
+  }*/
+
+}
+section.thread-preview:hover {
+  background: #eee;
 }
 #detail-level section.thread {
   position: absolute;
@@ -271,6 +271,14 @@ header nav ul li a:active {
 }
 #detail-level div.form form {
   padding-top: 10px;
+}
+#detail-level dl dt {
+  clear: left;
+  float: left;
+  width: 33%;
+}
+#detail-level dl dd {
+  float: left;
 }
 .board a {
   display: block;
@@ -335,7 +343,7 @@ header nav ul li a:active {
   margin: 0.8em;
   float: left;
 }
-#boardHeader {
+.boardHeader {
   position: absolute;
   top: 0;
   left: 0;
@@ -343,7 +351,7 @@ header nav ul li a:active {
   height: auto;
   z-index: 2;
 }
-#boardHeader h1 {
+.boardHeader h1 {
   padding-right: 120px;
 }
 #newThreadButton {

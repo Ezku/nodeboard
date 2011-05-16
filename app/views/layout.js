@@ -125,6 +125,7 @@
             id: '${id}',
             author: '${author}',
             date: '${date}',
+            board: '${board}',
             content: '${content}',
             image: {
               fullsize: '${image.fullsize}',

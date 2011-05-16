@@ -62,6 +62,14 @@ module.exports = (dependencies) ->
   # Declares the overview and detail data collectors
   panels = [collector('overview'), collector('detail')]
   
+  # Collects an overview of recent threads into a collector in the response
+  collectOverview = (collector) -> [
+    filter (req, res) ->
+      service('Board').index().then (threads) ->
+        res[collector] 'view', 'overview'
+        res[collector] 'threads', threads
+  ]
+  
   # Collects a board into a collector in the response
   collectBoard = (collector) -> [
     precondition('shouldHaveBoard'),
@@ -83,14 +91,6 @@ module.exports = (dependencies) ->
       service('Thread').read(req.params).then (thread) ->
         res[collector] 'view', 'thread'
         res[collector] 'thread', thread
-  ]
-  
-  # Collects global statistics into a collector in the response
-  collectStatistics = (collector) -> [
-    filter (req, res) ->
-      dependencies.lib('statistics')().then (stats) ->
-        res[collector] 'view', 'stats'
-        res[collector] 'stats', stats
   ]
   
   # Renders the panels view with data from the overview and detail data accumulators
@@ -116,7 +116,7 @@ module.exports = (dependencies) ->
         class: ""
       
       res.overview 'view', 'index'
-    collectStatistics('detail'),
+    collectOverview('detail'),
     renderPanels
   
   app.get '/api/',
@@ -144,7 +144,7 @@ module.exports = (dependencies) ->
   app.get '/:board/',
     panels,
     collectBoard('overview'),
-    collectStatistics('detail'),
+    collectOverview('detail'),
     tap (req, res) ->
       board = req.params.board
       name = boards.getName board

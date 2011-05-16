@@ -1,6 +1,6 @@
 (function() {
   div({
-    id: 'boardHeader'
+    "class": 'boardHeader'
   }, function() {
     h1(this.title);
     a({
@@ -19,10 +19,10 @@
     }));
   });
   div({
-    id: 'boardContent'
+    "class": 'boardContent'
   }, function() {
     div({
-      id: 'threads'
+      "class": 'threads'
     }, function() {
       var thread, _i, _len, _ref, _results;
       if (this.threads.length) {

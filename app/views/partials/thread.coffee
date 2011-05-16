@@ -1,8 +1,9 @@
 # Partial: One thread in board view
 
-section class: 'thread', id: "thread-preview-#{@thread.id}", ->
+section class: 'thread-preview', id: "thread-preview-#{@thread.id}", ->
 
   if @thread.firstPost
+    @thread.firstPost.board = @thread.board
     text @partial "partials/post", object: @thread.firstPost
   if @jQtemplate
     text '{{tmpl(firstPost) "#postTemplate"}}'
@@ -20,8 +21,9 @@ section class: 'thread', id: "thread-preview-#{@thread.id}", ->
       text '{{/if}}'
 
   if @thread.lastPost
+    @thread.lastPost.board = @thread.board
     text @partial "partials/post", object: @thread.lastPost
   if @jQtemplate
     text '{{if lastPost }}{{tmpl(lastPost) "#postTemplate"}}{{/if}}'
     
-  a href: "/#{@board}/#{@thread.id}/", class: "threadLink", -> "Open thread"
+  a href: "/#{@thread.board}/#{@thread.id}/", class: "threadLink", -> "Open thread"

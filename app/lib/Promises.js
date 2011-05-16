@@ -1,6 +1,6 @@
 (function() {
   module.exports = function(dependencies) {
-    var all, filter, promise, q, qutil;
+    var all, fail, filter, promise, q, qutil, succeed;
     q = dependencies.q, qutil = dependencies.qutil;
     promise = function(f) {
       var deferred, result;
@@ -22,10 +22,22 @@
       };
     };
     all = qutil.whenAll;
+    succeed = function(result) {
+      return promise(function(success) {
+        return success(result);
+      });
+    };
+    fail = function(reason) {
+      return promise(function(success, error) {
+        return error(reason);
+      });
+    };
     return {
       promise: promise,
       all: all,
-      filter: filter
+      filter: filter,
+      succeed: succeed,
+      fail: fail
     };
   };
 }).call(this);

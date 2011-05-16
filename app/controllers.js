@@ -1,7 +1,7 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boards, channel, channels, collectBoard, collectStatistics, collectThread, collector, config, filter, formidable, handleImageUpload, io, janitor, panels, precondition, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validate;
+    var accept, app, boards, channel, channels, collectBoard, collectOverview, collectStatistics, collectThread, collector, config, filter, formidable, handleImageUpload, io, janitor, panels, precondition, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validate;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io, channels = dependencies.channels;
     filter = dependencies.lib('promises').filter;
     boards = dependencies.lib('boards');
@@ -80,6 +80,16 @@
       });
     };
     panels = [collector('overview'), collector('detail')];
+    collectOverview = function(collector) {
+      return [
+        filter(function(req, res) {
+          return service('Board').index().then(function(threads) {
+            res[collector]('view', 'overview');
+            return res[collector]('threads', threads);
+          });
+        })
+      ];
+    };
     collectBoard = function(collector) {
       return [
         precondition('shouldHaveBoard'), filter(function(req, res) {
@@ -109,7 +119,7 @@
     collectStatistics = function(collector) {
       return [
         filter(function(req, res) {
-          return dependencies.lib('statistics')().then(function(stats) {
+          return dependencies.lib('statistics')(req, res).then(function(stats) {
             res[collector]('view', 'stats');
             return res[collector]('stats', stats);
           });
@@ -144,7 +154,7 @@
         "class": ""
       });
       return res.overview('view', 'index');
-    }), collectStatistics('detail'), renderPanels);
+    }), collectOverview('detail'), renderPanels);
     app.get('/api/', function(req, res) {
       var boards, data, group, id, result, _ref;
       result = {};
@@ -171,7 +181,7 @@
         threads: threads
       });
     });
-    app.get('/:board/', panels, collectBoard('overview'), collectStatistics('detail'), tap(function(req, res) {
+    app.get('/:board/', panels, collectBoard('overview'), collectOverview('detail'), tap(function(req, res) {
       var board, boardTitle, name, threads;
       board = req.params.board;
       name = boards.getName(board);
