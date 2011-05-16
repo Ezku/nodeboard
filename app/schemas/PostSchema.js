@@ -1,8 +1,8 @@
 (function() {
   module.exports = function(mongoose, dependencies) {
-    var ImageSchema, PostSchema, hashlib;
+    var ImageSchema, PostSchema, hashes;
     ImageSchema = require('./ImageSchema.js')(mongoose).definition;
-    hashlib = dependencies.hashlib;
+    hashes = dependencies.lib('hashes');
     PostSchema = {
       definition: {
         id: Number,
@@ -23,7 +23,7 @@
             }
             password = String(password);
             if (password.length > 0) {
-              return hashlib.sha1(password);
+              return hashes.sha1(password);
             } else {
               return null;
             }

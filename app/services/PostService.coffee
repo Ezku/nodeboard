@@ -1,8 +1,9 @@
 AbstractService = require './AbstractService.js'
 
 module.exports = (dependencies) ->
-  {mongoose, hashlib} = dependencies
+  {mongoose} = dependencies
   {promise, succeed} = dependencies.lib 'promises'
+  hashes = dependencies.lib 'hashes'
   images = dependencies.lib 'images'
   janitor = dependencies.lib 'janitor'
   ValidationError = dependencies.lib 'errors/ValidationError'
@@ -22,7 +23,7 @@ module.exports = (dependencies) ->
           post = (post for post in thread.posts when post.id = id)[0]
           return error new PreconditionError "no such post" if not post
           
-          if (not post.password is hashlib.sha1 password)
+          if (not post.password is hashes.sha1 password)
             return error new ValidationError "unable to delete post; password does not match"
           return error new Error
           

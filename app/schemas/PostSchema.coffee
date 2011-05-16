@@ -1,6 +1,6 @@
 module.exports = (mongoose, dependencies) ->
   ImageSchema = require('./ImageSchema.js')(mongoose).definition
-  {hashlib} = dependencies
+  hashes = dependencies.lib 'hashes'
   
   PostSchema =
     definition:
@@ -18,7 +18,7 @@ module.exports = (mongoose, dependencies) ->
           return null if not password?
           password = String(password)
           if password.length > 0
-            hashlib.sha1 password
+            hashes.sha1 password
           else
             null
       image:

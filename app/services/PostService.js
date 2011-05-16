@@ -10,9 +10,10 @@
   };
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var PostService, PreconditionError, Thread, Tracker, ValidationError, hashlib, images, janitor, mongoose, promise, succeed, _ref;
-    mongoose = dependencies.mongoose, hashlib = dependencies.hashlib;
+    var PostService, PreconditionError, Thread, Tracker, ValidationError, hashes, images, janitor, mongoose, promise, succeed, _ref;
+    mongoose = dependencies.mongoose;
     _ref = dependencies.lib('promises'), promise = _ref.promise, succeed = _ref.succeed;
+    hashes = dependencies.lib('hashes');
     images = dependencies.lib('images');
     janitor = dependencies.lib('janitor');
     ValidationError = dependencies.lib('errors/ValidationError');
@@ -62,7 +63,7 @@
               if (!post) {
                 return error(new PreconditionError("no such post"));
               }
-              if (!post.password === hashlib.sha1(password)) {
+              if (!post.password === hashes.sha1(password)) {
                 return error(new ValidationError("unable to delete post; password does not match"));
               }
               return error(new Error);

@@ -1,6 +1,7 @@
 module.exports = (dependencies) ->
-  {config, hashlib} = dependencies
-  {promise} = dependencies.lib 'promises'
+  {config} = dependencies
+  {promise, succeed} = dependencies.lib 'promises'
+  hashes = dependencies.lib 'hashes'
   ValidationError = dependencies.lib 'errors/ValidationError'
   Tracker = dependencies.mongoose.model 'Tracker'
   
@@ -9,20 +10,12 @@ module.exports = (dependencies) ->
   image = (req) -> req.files?.image?.path
   
   hash = (data, salt) ->
-    hashlib.sha1 (salt + data)
+    hashes.sha1 (salt + data)
   ipHash = (req) ->
     hash (ip req), (salt req)
-  imageHash = (req) -> promise (success, error) ->
-    # A bit of paranoia for the md5_file function
-    setTimeout(
-      -> error new Error "could not hash image file: operation timed out"
-      config.tracking.imageHashTimeout * 1000
-    )
-    hashlib.md5_file (image req), (result) ->
-      if result
-        success hash(result, (salt req))
-      else
-        error new Error "could not hash image file"
+  imageHash = (req) ->
+    hashes.md5_file(image req).then (result) ->
+      succeed hash(result, (salt req))
   
   past = (seconds) -> $gt: new Date (Date.now() - seconds*1000)
   

@@ -1,39 +1,31 @@
 (function() {
   module.exports = function(dependencies) {
-    var Tracker, ValidationError, config, countRecentUploads, enforceUniqueImage, findMatchingImage, hash, hashlib, image, imageHash, ip, ipHash, past, preventFlood, promise, salt, trackUpload;
-    config = dependencies.config, hashlib = dependencies.hashlib;
-    promise = dependencies.lib('promises').promise;
+    var Tracker, ValidationError, config, countRecentUploads, enforceUniqueImage, findMatchingImage, hash, hashes, image, imageHash, ip, ipHash, past, preventFlood, promise, salt, succeed, trackUpload, _ref;
+    config = dependencies.config;
+    _ref = dependencies.lib('promises'), promise = _ref.promise, succeed = _ref.succeed;
+    hashes = dependencies.lib('hashes');
     ValidationError = dependencies.lib('errors/ValidationError');
     Tracker = dependencies.mongoose.model('Tracker');
     ip = function(req) {
       return req.connection.remoteAddress;
     };
     salt = function(req) {
-      var _ref;
-      return ((_ref = req.params) != null ? _ref.board : void 0) != null;
+      var _ref2;
+      return ((_ref2 = req.params) != null ? _ref2.board : void 0) != null;
     };
     image = function(req) {
-      var _ref, _ref2;
-      return (_ref = req.files) != null ? (_ref2 = _ref.image) != null ? _ref2.path : void 0 : void 0;
+      var _ref2, _ref3;
+      return (_ref2 = req.files) != null ? (_ref3 = _ref2.image) != null ? _ref3.path : void 0 : void 0;
     };
     hash = function(data, salt) {
-      return hashlib.sha1(salt + data);
+      return hashes.sha1(salt + data);
     };
     ipHash = function(req) {
       return hash(ip(req), salt(req));
     };
     imageHash = function(req) {
-      return promise(function(success, error) {
-        setTimeout(function() {
-          return error(new Error("could not hash image file: operation timed out"));
-        }, config.tracking.imageHashTimeout * 1000);
-        return hashlib.md5_file(image(req), function(result) {
-          if (result) {
-            return success(hash(result, salt(req)));
-          } else {
-            return error(new Error("could not hash image file"));
-          }
-        });
+      return hashes.md5_file(image(req)).then(function(result) {
+        return succeed(hash(result, salt(req)));
       });
     };
     past = function(seconds) {
@@ -87,8 +79,8 @@
     };
     enforceUniqueImage = function(req, res) {
       return promise(function(success, error) {
-        var _ref;
-        if (!((_ref = req.files) != null ? _ref.image : void 0) || !config.tracking.checkDuplicateImages) {
+        var _ref2;
+        if (!((_ref2 = req.files) != null ? _ref2.image : void 0) || !config.tracking.checkDuplicateImages) {
           return success();
         }
         if (!req.hash) {

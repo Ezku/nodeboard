@@ -49,7 +49,7 @@
     return div({
       "class": 'post-content'
     }, function() {
-      return p(text((h(this.post.content)).replace(/(\r\n|\n){3,}/, "\n\n\n").replace(/(\r\n|\n)+/g, "<br>\n")));
+      return p(h(this.post.content));
     });
   });
 }).call(this);
