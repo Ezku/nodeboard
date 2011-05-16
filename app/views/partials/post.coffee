@@ -1,7 +1,7 @@
 article class: 'post', id: 'post-' + @post.id, ->
   
   div class: 'controls', ->
-    a "Reply", class: "reply"
+    a "Reply", class: "reply", id: 'reply-'+@post.id
     a "Delete", class: "delete"
   
   div class: 'meta', ->

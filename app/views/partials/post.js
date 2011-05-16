@@ -7,7 +7,8 @@
       "class": 'controls'
     }, function() {
       a("Reply", {
-        "class": "reply"
+        "class": "reply",
+        id: 'reply-' + this.post.id
       });
       return a("Delete", {
         "class": "delete"

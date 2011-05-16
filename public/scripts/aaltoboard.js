@@ -131,8 +131,11 @@ $(document).ready(function(){
   }
   
   $(".controls .reply").live("click",function() {
-    alert("Reply not implemented yet");
+    $("#reply form").slideDown(updateThreadHeight);
+    var id = $(this).attr("id").split("-")[1];
+    $("#reply textarea#content").val(">>"+id);
   });
+  
   $(".controls .delete").live("click",function() {
     var pw = prompt("Enter password to delete","");
     if(pw){
@@ -164,8 +167,6 @@ $(document).ready(function(){
     var channel = new SocketIOChannel({
       host: document.domain,
       channelId: board
-      //reconnectOnDisconnect: true,
-      //reconnectRetryInterval: 1000 * 10 // try to reconnect every 30 seconds
     });
     
     channel.on('newthread', function(obj){  
