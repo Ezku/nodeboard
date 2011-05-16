@@ -28,9 +28,9 @@ module.exports = (dependencies) ->
   
   # Declare a set of parameters that can be accepted in the request body 
   accept = (params...) -> tap (req, res) ->
-    input = req.body
+    input = req.body ? {}
     accepted = {}
-    accepted[name] = input[name] for name in params
+    accepted[name] = input[name] for name in params when input[name]?
     req.body = accepted
   
   # Parses images uploaded in the request and stores them in the request object
@@ -129,6 +129,16 @@ module.exports = (dependencies) ->
             url: "/api/#{id}/"
             group: group
       res.send result
+  
+  # Post deletion
+  app.get '/api/:board/:id/delete/',
+    precondition('shouldHaveBoard'),
+    accept('password'),
+    filter (req, res) ->
+      service('Post').remove(req.params.board, req.params.id, req.body?.password)
+    (req, res) ->
+      res.send success: true
+        
   
   # Board index
   app.get '/api/:board/',

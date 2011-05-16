@@ -15,6 +15,7 @@ module.exports = (mongoose, dependencies) ->
       password:
         type: String
         set: (password) ->
+          return null if not password?
           password = String(password)
           if password.length > 0
             hashlib.sha1 password
@@ -23,5 +24,6 @@ module.exports = (mongoose, dependencies) ->
       image:
         type: ImageSchema
         required: false
+    
   
   PostSchema
