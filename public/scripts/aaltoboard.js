@@ -47,10 +47,17 @@ $(document).ready(function(){
         return;
       }
       
-      $('#threads').html($('#boardThreadTemplate').tmpl(data.threads));
+      $(data.threads).each(function(){
+        this.firstPost.board = data.board;
+        if (this.lastPost) {
+          this.lastPost.board = data.board
+        }
+      });
+      
+      $('.threads').html($('#boardThreadTemplate').tmpl(data.threads));
       
       // Update timeago plugin and lightbox
-      $("#threads time").timeago();
+      $(".threads time").timeago();
       setFancybox();
       
       // Hide thread links
@@ -83,6 +90,11 @@ $(document).ready(function(){
         console.log("No posts found!");
         return;
       }
+      console.log(data);
+      
+      $(data.thread.posts).each(function(){
+        this.board = data.board;
+      });
       
       $('#detail-level').html($('#threadTemplate').tmpl(data.thread));
       $('#detail-level .thread').append($('#postTemplate').tmpl(data.thread.posts));

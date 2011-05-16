@@ -1,6 +1,6 @@
 (function() {
   module.exports = function(dependencies) {
-    var Thread, Tracker, all, checkOrphanedTrackers, config, findTrackedThreads, images, mersenne, mongoose, promise, q, shouldCheckOrphanedTrackers, sweepPosts, sweepThreads, sweepTrackers, threadExists, upkeep, _ref;
+    var Thread, Tracker, all, checkOrphanedTrackers, config, findTrackedThreads, images, mersenne, mongoose, promise, q, shouldCheckOrphanedTrackers, sweepPosts, sweepThread, sweepThreads, sweepTrackers, threadExists, upkeep, _ref;
     mongoose = dependencies.mongoose, config = dependencies.config, q = dependencies.q, mersenne = dependencies.mersenne;
     _ref = dependencies.lib('promises'), promise = _ref.promise, all = _ref.all;
     images = dependencies.lib('images');
@@ -36,6 +36,14 @@
       })();
       return all(promises);
     };
+    sweepThread = function(thread) {
+      return all([sweepPosts(thread), sweepTrackers(thread)]).then(function() {
+        thread.remove();
+        return promise(function(success) {
+          return success(thread);
+        });
+      });
+    };
     sweepThreads = function(board) {
       return Thread.sweep(board, config.content.maximumThreadAmount).then(function(threads) {
         var promises, thread;
@@ -45,12 +53,7 @@
           for (_i = 0, _len = threads.length; _i < _len; _i++) {
             thread = threads[_i];
             _results.push((function(thread) {
-              return sweepPosts(thread).then(function() {
-                thread.remove();
-                return promise(function(success) {
-                  return success(thread);
-                });
-              });
+              return sweepThread(thread);
             })(thread));
           }
           return _results;
@@ -113,7 +116,8 @@
       }
     };
     return {
-      upkeep: upkeep
+      upkeep: upkeep,
+      sweepThread: sweepThread
     };
   };
 }).call(this);

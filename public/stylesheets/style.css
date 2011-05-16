@@ -93,6 +93,7 @@ header {
 }
 header nav {
   width: 100%;
+  overflow: hidden;
 }
 header nav ul {
   list-style: none;
