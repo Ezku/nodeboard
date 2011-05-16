@@ -2,7 +2,7 @@
   div({
     id: 'boardHeader'
   }, function() {
-    return h1("Most recent threads");
+    return h1("Aaltoboard overview");
   });
   div({
     id: 'boardContent'

@@ -28,8 +28,9 @@
         return promise(function(success, error) {
           return Thread.find({
             board: String(query.board),
-            id: Number(query.id)
-          }).select('board', 'id', 'posts').limit(1).run(function(err, threads) {
+            id: Number(query.id),
+            markedForDeletion: false
+          }).exclude('firstPost', 'lastPost', 'posts.password').limit(1).run(function(err, threads) {
             var post, thread, _i, _len, _ref;
             if (err) {
               return error(err);
@@ -41,7 +42,6 @@
             _ref = thread.posts;
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               post = _ref[_i];
-              delete post.password;
               post.board = thread.board;
             }
             return success(threads[0]);
@@ -106,14 +106,6 @@
         fs.unlinkSync(config.paths.mount + ("/" + board + "/") + ((_ref = post.image) != null ? _ref.thumbnail : void 0));
         return fs.unlinkSync(config.paths.mount + ("/" + board + "/") + ((_ref2 = post.image) != null ? _ref2.fullsize : void 0));
       };
-      /*
-          delete: (thread, error, success) ->
-            Thread.delete { board: thread.board, id: thread.id },
-              [],
-              (err, result) ->
-                return error err if err
-                success()
-          */
       return ThreadService;
     })();
   };

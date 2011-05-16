@@ -11,6 +11,7 @@ module.exports = (dependencies) ->
     index: -> promise (success, error) ->
       Thread
       .find(markedForDeletion: false)
+      .exclude('posts', 'firstPost.password', 'lastPost.password')
       .sort('updated', -1)
       .limit(config.content.threadsPerPage)
       .run (err, threads) ->
@@ -21,8 +22,7 @@ module.exports = (dependencies) ->
       limit = query.limit ? ((query.pages ? 1) * config.content.threadsPerPage)
       Thread
       .find(board: query.board, markedForDeletion: false)
-      # TODO: Find out how to filter out unwanted output from posts
-      .select('board', 'id', 'firstPost', 'lastPost', 'replyCount')
+      .exclude('posts', 'firstPost.password', 'lastPost.password')
       .sort('updated', -1)
       .limit(limit)
       .run (err, threads) ->

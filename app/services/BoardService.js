@@ -23,7 +23,7 @@
         return promise(function(success, error) {
           return Thread.find({
             markedForDeletion: false
-          }).sort('updated', -1).limit(config.content.threadsPerPage).run(function(err, threads) {
+          }).exclude('posts', 'firstPost.password', 'lastPost.password').sort('updated', -1).limit(config.content.threadsPerPage).run(function(err, threads) {
             if (err) {
               return error(err);
             }
@@ -38,7 +38,7 @@
           return Thread.find({
             board: query.board,
             markedForDeletion: false
-          }).select('board', 'id', 'firstPost', 'lastPost', 'replyCount').sort('updated', -1).limit(limit).run(function(err, threads) {
+          }).exclude('posts', 'firstPost.password', 'lastPost.password').sort('updated', -1).limit(limit).run(function(err, threads) {
             if (err) {
               return error(err);
             }

@@ -1,7 +1,7 @@
 (function() {
   var __slice = Array.prototype.slice;
   module.exports = function(dependencies) {
-    var accept, app, boards, channel, channels, collectBoard, collectOverview, collectStatistics, collectThread, collector, config, filter, formidable, handleImageUpload, io, janitor, panels, precondition, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validate;
+    var accept, app, boards, channel, channels, collectBoard, collectOverview, collectThread, collector, config, filter, formidable, handleImageUpload, io, janitor, panels, precondition, receivePost, receiveReply, receiveThread, renderPanels, service, services, socket, static, tap, tracking, validate;
     app = dependencies.app, config = dependencies.config, services = dependencies.services, formidable = dependencies.formidable, io = dependencies.io, channels = dependencies.channels;
     filter = dependencies.lib('promises').filter;
     boards = dependencies.lib('boards');
@@ -112,16 +112,6 @@
           return service('Thread').read(req.params).then(function(thread) {
             res[collector]('view', 'thread');
             return res[collector]('thread', thread);
-          });
-        })
-      ];
-    };
-    collectStatistics = function(collector) {
-      return [
-        filter(function(req, res) {
-          return dependencies.lib('statistics')(req, res).then(function(stats) {
-            res[collector]('view', 'stats');
-            return res[collector]('stats', stats);
           });
         })
       ];

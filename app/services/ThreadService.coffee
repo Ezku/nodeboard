@@ -15,15 +15,14 @@ module.exports = (dependencies) ->
     
     read: (query) -> promise (success, error) ->
       Thread
-      .find(board: String(query.board), id: Number(query.id))
-      .select('board', 'id', 'posts')
+      .find(board: String(query.board), id: Number(query.id), markedForDeletion: false)
+      .exclude('firstPost', 'lastPost', 'posts.password')
       .limit(1)
       .run (err, threads) ->
         return error err if err
         return error new NotFoundError("thread not found") if not threads[0]
         thread = threads[0]
         for post in thread.posts
-          delete post.password
           post.board = thread.board
         success threads[0]
     
@@ -71,15 +70,6 @@ module.exports = (dependencies) ->
       thread
     
     _revert: (board, post) ->
-      # TODO: check whether these paths are correct :D
       fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.thumbnail
       fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.fullsize
-    
-    ###
-    delete: (thread, error, success) ->
-      Thread.delete { board: thread.board, id: thread.id },
-        [],
-        (err, result) ->
-          return error err if err
-          success()
-    ###
+
