@@ -18,6 +18,10 @@
       return app.use(express.static(config.paths.mount));
     });
     app.configure('development', function() {
+      app.use(express.errorHandler({
+        dumpExceptions: true,
+        showStack: true
+      }));
       return app.error(dependencies.lib('errors')(express.errorHandler({
         dumpExceptions: true,
         showStack: true

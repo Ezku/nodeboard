@@ -34,12 +34,14 @@
       var params;
       params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return tap(function(req, res) {
-        var accepted, input, name, _i, _len;
-        input = req.body;
+        var accepted, input, name, _i, _len, _ref;
+        input = (_ref = req.body) != null ? _ref : {};
         accepted = {};
         for (_i = 0, _len = params.length; _i < _len; _i++) {
           name = params[_i];
-          accepted[name] = input[name];
+          if (input[name] != null) {
+            accepted[name] = input[name];
+          }
         }
         return req.body = accepted;
       });
@@ -161,6 +163,14 @@
         }
       }
       return res.send(result);
+    });
+    app.get('/api/:board/:id/delete/', precondition('shouldHaveBoard'), accept('password'), filter(function(req, res) {
+      var _ref;
+      return service('Post').remove(req.params.board, req.params.id, (_ref = req.body) != null ? _ref.password : void 0);
+    }), function(req, res) {
+      return res.send({
+        success: true
+      });
     });
     app.get('/api/:board/', collectBoard('local'), function(req, res) {
       var threads;

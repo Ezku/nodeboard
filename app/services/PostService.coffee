@@ -6,25 +6,33 @@ module.exports = (dependencies) ->
   images = dependencies.lib 'images'
   janitor = dependencies.lib 'janitor'
   ValidationError = dependencies.lib 'errors/ValidationError'
+  PreconditionError = dependencies.lib 'errors/PreconditionError'
   Thread = mongoose.model 'Thread'
   Tracker = mongoose.model 'Tracker'
   
   class PostService extends AbstractService
     remove: (board, id, password) -> promise (success, error) ->
-      Tracker.find(board: board, post: id).run (err, tracker) ->
+      return error new PreconditionError "no password given" if (String(password ? '').length is 0)
+      
+      Tracker.findOne(board: board, post: id).run (err, tracker) ->
         return error err if err
-        Thread.find(markedForDeletion: false, id: tracker.thread).run (err, thread) ->
+        return error new PreconditionError "no such post" if not tracker
+        Thread.findOne(markedForDeletion: false, id: tracker.thread).run (err, thread) ->
           return error err if err
           post = (post for post in thread.posts when post.id = id)[0]
-          if not post.password is hashlib.sha1 password
+          return error new PreconditionError "no such post" if not post
+          
+          if (not post.password is hashlib.sha1 password)
             return error new ValidationError "unable to delete post; password does not match"
+          return error new Error
+          
           if thread.id is post.id
             janitor.sweepThread(thread).then succeed post
           else
             images.deleteByPost thread.board, post
             tracker.remove()
             post.remove()
-            if thread.lastPost.id is postid
+            if thread.lastPost?.id is post.id
               thread.lastPost.remove()
             thread.save()
             succeed post
