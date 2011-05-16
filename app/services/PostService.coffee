@@ -15,7 +15,7 @@ module.exports = (dependencies) ->
         return error err if err
         Thread.find(markedForDeletion: false, id: tracker.thread).run (err, thread) ->
           return error err if err
-          post = (post in thread.posts when post.id = id)
+          post = (post for post in thread.posts when post.id = id)[0]
           if not post.password is hashlib.sha1 password
             return error new ValidationError "unable to delete post; password does not match"
           if thread.id is post.id
