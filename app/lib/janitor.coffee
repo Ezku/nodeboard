@@ -14,18 +14,20 @@ module.exports = (dependencies) ->
   sweepPosts = (thread) ->
     promises = for post in thread.posts
       images.deleteByPost thread.board, post
-      #sweepTrackers thread
       promise (success) -> success()
     all promises
+  
+  sweepThread = (thread) ->
+    all([sweepPosts(thread), sweepTrackers(thread)]).then ->
+      thread.remove()
+      promise (success) ->
+        success thread
   
   sweepThreads = (board) ->
     Thread.sweep(board, config.content.maximumThreadAmount).then (threads) ->
       promises = for thread in threads
         do (thread) ->
-          sweepPosts(thread).then ->
-            thread.remove()
-            promise (success) ->
-              success thread
+          sweepThread(thread)
       all promises
   
   findTrackedThreads = (board) -> promise (success, error) ->    
@@ -60,4 +62,4 @@ module.exports = (dependencies) ->
     if shouldCheckOrphanedTrackers()
       checkOrphanedTrackers req.params.board
   
-  { upkeep }
+  { upkeep, sweepThread }
