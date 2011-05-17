@@ -73,6 +73,7 @@
             post = this._post(data.post, seq.counter, image);
             return promise(__bind(function(success, error) {
               return Thread.addReply(data.thread.board, data.thread.id, post).then(function(thread) {
+                thread.lastPost = post;
                 return success(thread);
               }, __bind(function(err) {
                 this._revert(data.thread.board, post);

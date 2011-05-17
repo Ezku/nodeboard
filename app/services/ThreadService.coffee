@@ -46,7 +46,9 @@ module.exports = (dependencies) ->
           post = @_post data.post, seq.counter, image
           promise (success, error) =>
             Thread.addReply(data.thread.board, data.thread.id, post).then(
-              (thread) -> success thread
+              (thread) ->
+                thread.lastPost = post
+                success thread
               (err) =>
                 @_revert data.thread.board, post
                 error err
