@@ -31,7 +31,7 @@
         imageHashTimeout: 10
       },
       content: {
-        threadsPerPage: 10,
+        threadsPerPage: 2,
         maximumReplyCount: 100,
         maximumThreadAmount: 100,
         orphanedTrackerCheckProbability: 10

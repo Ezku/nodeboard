@@ -126,6 +126,7 @@
             author: '${author}',
             date: '${date}',
             board: '${board}',
+            thread: '${thread}',
             content: '${content}',
             image: {
               fullsize: '${image.fullsize}',

@@ -4,6 +4,7 @@ section class: 'thread', id: 'thread-' + @thread.id, ->
   if @thread.posts?.length
     for post in @thread.posts
       post.board = @thread.board
+      post.thread = @thread.id
       text @partial "partials/post", object: post
 
 if @thread.posts?.length || @jQtemplate

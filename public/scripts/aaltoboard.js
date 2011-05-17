@@ -56,12 +56,14 @@ $(document).ready(function(){
         return;
       }
       
-      // Add board name to threads objects
+      // Add board name and thread id to threads objects
       $(data.threads).each(function(){
         this.board = data.board;
         this.firstPost.board = data.board;
+        this.firstPost.thread = this.id;
         if (this.lastPost) {
           this.lastPost.board = data.board;
+          this.lastPost.thread = this.id;
         }
       });
       
@@ -117,9 +119,10 @@ $(document).ready(function(){
       $(".thread-preview").removeClass("selected");
       $("#thread-preview-"+data.id).addClass("selected");
       
-      // Add board name to posts
+      // Add board name and thread id to posts
       $(data.thread.posts).each(function(){
         this.board = data.board;
+        this.thread = data.id;
       });
       
       $('#detail-level').html($('#threadTemplate').tmpl(data.thread));

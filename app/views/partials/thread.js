@@ -5,6 +5,7 @@
   }, function() {
     if (this.thread.firstPost) {
       this.thread.firstPost.board = this.thread.board;
+      this.thread.firstPost.thread = this.thread.id;
       text(this.partial("partials/post", {
         object: this.thread.firstPost
       }));
@@ -32,6 +33,7 @@
     }
     if (this.thread.lastPost) {
       this.thread.lastPost.board = this.thread.board;
+      this.thread.lastPost.thread = this.thread.id;
       text(this.partial("partials/post", {
         object: this.thread.lastPost
       }));

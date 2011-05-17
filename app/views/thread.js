@@ -12,6 +12,7 @@
       for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
         post = _ref2[_i];
         post.board = this.thread.board;
+        post.thread = this.thread.id;
         _results.push(text(this.partial("partials/post", {
           object: post
         })));

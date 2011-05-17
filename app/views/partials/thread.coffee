@@ -4,6 +4,7 @@ section class: 'thread-preview', id: "thread-preview-#{@thread.id}", ->
 
   if @thread.firstPost
     @thread.firstPost.board = @thread.board
+    @thread.firstPost.thread = @thread.id;
     text @partial "partials/post", object: @thread.firstPost
   if @jQtemplate
     text '{{tmpl(firstPost) "#postTemplate"}}'
@@ -22,6 +23,7 @@ section class: 'thread-preview', id: "thread-preview-#{@thread.id}", ->
 
   if @thread.lastPost
     @thread.lastPost.board = @thread.board
+    @thread.lastPost.thread = @thread.id
     text @partial "partials/post", object: @thread.lastPost
   if @jQtemplate
     text '{{if lastPost }}{{tmpl(lastPost) "#postTemplate"}}{{/if}}'
