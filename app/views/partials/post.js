@@ -38,11 +38,12 @@
       }, function() {
         return a({
           href: "/" + this.post.board + "/" + this.post.image.fullsize,
-          rel: this.post.board + "-" + this.post.thread
+          rel: this.post.board + "-" + this.post.thread,
+          title: this.post.content
         }, function() {
           return img({
             src: "/" + this.post.board + "/" + this.post.image.thumbnail,
-            alt: ''
+            alt: "post-image"
           });
         });
       });

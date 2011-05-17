@@ -317,8 +317,9 @@ $(document).ready(function(){
   // Fancybox
   function setFancybox(){
     $(".post-image a").fancybox({
-      'overlayColor'		: '#000',
-      'overlayOpacity'	: 0.8
+      'overlayColor' : '#000',
+      'overlayOpacity' : 0.8,
+      'titlePosition': "inside"
     });
   }
   setFancybox();
