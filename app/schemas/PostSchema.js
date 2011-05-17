@@ -16,18 +16,7 @@
         },
         content: String,
         password: {
-          type: String,
-          set: function(password) {
-            if (!(password != null)) {
-              return null;
-            }
-            password = String(password);
-            if (password.length > 0) {
-              return hashes.sha1(password);
-            } else {
-              return null;
-            }
-          }
+          type: String
         },
         image: {
           type: ImageSchema,

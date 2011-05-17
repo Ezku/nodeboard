@@ -11,11 +11,12 @@
   fs = require('fs');
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var ImageProcessor, NotFoundError, Post, Sequence, Thread, ThreadService, mongoose, promise;
+    var ImageProcessor, NotFoundError, Post, Sequence, Thread, ThreadService, hashes, mongoose, promise;
     mongoose = dependencies.mongoose;
     promise = dependencies.lib('promises').promise;
     NotFoundError = dependencies.lib('errors/NotFoundError');
     ImageProcessor = dependencies.lib('ImageProcessor');
+    hashes = dependencies.lib('hashes');
     Sequence = mongoose.model('Sequence');
     Thread = mongoose.model('Thread');
     Post = mongoose.model('Post');
@@ -91,6 +92,8 @@
       ThreadService.prototype._post = function(data, id, image) {
         data.id = id;
         data.image = image != null ? image.toJSON() : void 0;
+        data.password = (data.password != null) && String(data.password).length > 0 ? hashes.sha1(data.password) : null;
+        console.log(data);
         return new Post(data).toJSON();
       };
       ThreadService.prototype._thread = function(data, post) {

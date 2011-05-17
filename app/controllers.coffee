@@ -135,7 +135,7 @@ module.exports = (dependencies) ->
     precondition('shouldHaveBoard'),
     accept('password'),
     filter (req, res) ->
-      service('Post').remove(req.params.board, req.params.id, req.body?.password)
+      service('Post').remove(String(req.params.board), Number(req.params.id), req.body?.password)
     (req, res) ->
       res.send success: true
         

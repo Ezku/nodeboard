@@ -153,6 +153,8 @@ $(document).ready(function(){
         url: "/api"+$(this).attr("href"),
         data: {password:pw},
         success: function(data,textStatus){
+		  // TODO: This only guarantees the request went fine. Parse data to find out actual outcome.
+		  // It's either {success: true} or {error: whatever}.
           console.log("Delete success", data, textStatus);
           alert("Post deleted!");
           //window.location.reload();

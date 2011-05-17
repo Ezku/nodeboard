@@ -1,6 +1,6 @@
 module.exports = (dependencies) ->
   {mongoose, config, q, mersenne} = dependencies
-  {promise, all} = dependencies.lib 'promises'
+  {promise, all, succeed} = dependencies.lib 'promises'
   images = dependencies.lib 'images'
   
   Thread = mongoose.model 'Thread'
@@ -13,8 +13,7 @@ module.exports = (dependencies) ->
   
   sweepPosts = (thread) ->
     promises = for post in thread.posts
-      images.deleteByPost thread.board, post
-      promise (success) -> success()
+      images.deleteByPost(thread.board, post)
     all promises
   
   sweepThread = (thread) ->

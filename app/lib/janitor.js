@@ -1,8 +1,8 @@
 (function() {
   module.exports = function(dependencies) {
-    var Thread, Tracker, all, checkOrphanedTrackers, config, findTrackedThreads, images, mersenne, mongoose, promise, q, shouldCheckOrphanedTrackers, sweepPosts, sweepThread, sweepThreads, sweepTrackers, threadExists, upkeep, _ref;
+    var Thread, Tracker, all, checkOrphanedTrackers, config, findTrackedThreads, images, mersenne, mongoose, promise, q, shouldCheckOrphanedTrackers, succeed, sweepPosts, sweepThread, sweepThreads, sweepTrackers, threadExists, upkeep, _ref;
     mongoose = dependencies.mongoose, config = dependencies.config, q = dependencies.q, mersenne = dependencies.mersenne;
-    _ref = dependencies.lib('promises'), promise = _ref.promise, all = _ref.all;
+    _ref = dependencies.lib('promises'), promise = _ref.promise, all = _ref.all, succeed = _ref.succeed;
     images = dependencies.lib('images');
     Thread = mongoose.model('Thread');
     Tracker = mongoose.model('Tracker');
@@ -27,10 +27,7 @@
         _results = [];
         for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
           post = _ref2[_i];
-          images.deleteByPost(thread.board, post);
-          _results.push(promise(function(success) {
-            return success();
-          }));
+          _results.push(images.deleteByPost(thread.board, post));
         }
         return _results;
       })();

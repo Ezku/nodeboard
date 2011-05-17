@@ -5,7 +5,7 @@ module.exports = (dependencies) ->
   {promise} = dependencies.lib 'promises'
   
   hash = (algorithm) -> (string) ->
-    crypto.createHash(algorithm).update(string).digest()
+    crypto.createHash(algorithm).update(string).digest('hex')
   
   sha1 = hash 'sha1'
   md5 = hash 'md5'

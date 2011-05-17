@@ -14,16 +14,8 @@ module.exports = (mongoose, dependencies) ->
       content: String
       password:
         type: String
-        set: (password) ->
-          return null if not password?
-          password = String(password)
-          if password.length > 0
-            hashes.sha1 password
-          else
-            null
       image:
         type: ImageSchema
         required: false
-    
   
   PostSchema

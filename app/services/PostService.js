@@ -10,9 +10,9 @@
   };
   AbstractService = require('./AbstractService.js');
   module.exports = function(dependencies) {
-    var PostService, PreconditionError, Thread, Tracker, ValidationError, hashes, images, janitor, mongoose, promise, succeed, _ref;
-    mongoose = dependencies.mongoose;
-    _ref = dependencies.lib('promises'), promise = _ref.promise, succeed = _ref.succeed;
+    var PostService, PreconditionError, Thread, Tracker, ValidationError, all, handle, hashes, images, janitor, mongoose, promise, succeed, _, _ref;
+    _ = dependencies._, mongoose = dependencies.mongoose;
+    _ref = dependencies.lib('promises'), promise = _ref.promise, succeed = _ref.succeed, all = _ref.all;
     hashes = dependencies.lib('hashes');
     images = dependencies.lib('images');
     janitor = dependencies.lib('janitor');
@@ -20,6 +20,16 @@
     PreconditionError = dependencies.lib('errors/PreconditionError');
     Thread = mongoose.model('Thread');
     Tracker = mongoose.model('Tracker');
+    handle = function(result) {
+      return function(err) {
+        return promise(function(success, error) {
+          if (err) {
+            return error(err);
+          }
+          return success(result);
+        });
+      };
+    };
     return PostService = (function() {
       __extends(PostService, AbstractService);
       function PostService() {
@@ -27,7 +37,7 @@
       }
       PostService.prototype.remove = function(board, id, password) {
         return promise(function(success, error) {
-          if (String(password != null ? password : '').length === 0) {
+          if ((!(password != null)) || (String(password).length === 0)) {
             return error(new PreconditionError("no password given"));
           }
           return Tracker.findOne({
@@ -48,35 +58,28 @@
               if (err) {
                 return error(err);
               }
-              post = ((function() {
-                var _i, _len, _ref2, _results;
-                _ref2 = thread.posts;
-                _results = [];
-                for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-                  post = _ref2[_i];
-                  if (post.id = id) {
-                    _results.push(post);
-                  }
-                }
-                return _results;
-              })())[0];
+              post = _(thread.posts).find(function(post) {
+                return Number(post.id) === id;
+              });
               if (!post) {
                 return error(new PreconditionError("no such post"));
               }
-              if (!post.password === hashes.sha1(password)) {
+              if (!(String(post.password) === hashes.sha1(password))) {
                 return error(new ValidationError("unable to delete post; password does not match"));
               }
-              if (thread.id === post.id) {
-                return janitor.sweepThread(thread).then(succeed(post));
+              if (Number(thread.id) === Number(post.id)) {
+                return janitor.sweepThread(thread).then(function() {
+                  return success(post);
+                });
               } else {
-                images.deleteByPost(thread.board, post);
-                tracker.remove();
-                post.remove();
-                if (((_ref2 = thread.lastPost) != null ? _ref2.id : void 0) === post.id) {
-                  thread.lastPost.remove();
-                }
-                thread.save();
-                return succeed(post);
+                return all([images.deleteByPost(thread.board, post), tracker.remove(handle()), post.remove(handle()), ((_ref2 = thread.lastPost) != null ? _ref2.id : void 0) === post.id ? thread.lastPost.remove(handle()) : void 0]).then(function() {
+                  return thread.save(function(err) {
+                    if (err) {
+                      return error(err);
+                    }
+                    return success(post);
+                  });
+                }, error);
               }
             });
           });

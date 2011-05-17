@@ -7,6 +7,7 @@ module.exports = (dependencies) ->
   {promise} = dependencies.lib 'promises'
   NotFoundError = dependencies.lib 'errors/NotFoundError'
   ImageProcessor = dependencies.lib 'ImageProcessor'
+  hashes = dependencies.lib 'hashes'
   Sequence = mongoose.model 'Sequence'
   Thread = mongoose.model 'Thread'
   Post = mongoose.model 'Post'
@@ -61,6 +62,11 @@ module.exports = (dependencies) ->
     _post: (data, id, image) ->
       data.id = id
       data.image = image?.toJSON()
+      data.password =
+        if (data.password? and String(data.password).length > 0)
+          hashes.sha1 data.password
+        else null
+      console.log data
       new Post(data).toJSON()
     
     _thread: (data, post) ->

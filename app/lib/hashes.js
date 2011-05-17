@@ -7,7 +7,7 @@
     promise = dependencies.lib('promises').promise;
     hash = function(algorithm) {
       return function(string) {
-        return crypto.createHash(algorithm).update(string).digest();
+        return crypto.createHash(algorithm).update(string).digest('hex');
       };
     };
     sha1 = hash('sha1');

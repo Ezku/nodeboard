@@ -23,6 +23,14 @@
         if (!fallback) {
           template = 'errors/500';
         }
+        res.responseCode = (function() {
+          switch (template) {
+            case 'errors/404':
+              return 404;
+            default:
+              return 500;
+          }
+        })();
         if (shouldRespondWithJson(req)) {
           return res.send({
             error: err.message

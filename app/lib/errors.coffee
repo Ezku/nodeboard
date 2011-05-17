@@ -14,6 +14,10 @@ module.exports = (dependencies) ->
     if not fallback
       template = 'errors/500'
     
+    res.responseCode = switch template
+      when 'errors/404' then 404
+      else 500
+    
     if shouldRespondWithJson req
       res.send {
         error: err.message
