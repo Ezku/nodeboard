@@ -93,7 +93,6 @@
         data.id = id;
         data.image = image != null ? image.toJSON() : void 0;
         data.password = (data.password != null) && String(data.password).length > 0 ? hashes.sha1(data.password) : null;
-        console.log(data);
         return new Post(data).toJSON();
       };
       ThreadService.prototype._thread = function(data, post) {

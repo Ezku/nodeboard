@@ -66,7 +66,7 @@ module.exports = (dependencies) ->
         if (data.password? and String(data.password).length > 0)
           hashes.sha1 data.password
         else null
-      console.log data
+      
       new Post(data).toJSON()
     
     _thread: (data, post) ->
