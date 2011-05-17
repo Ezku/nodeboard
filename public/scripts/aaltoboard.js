@@ -51,6 +51,8 @@ $(document).ready(function(){
   $("#loadMore").click(function(e){
     e.preventDefault();
     loadBoardThreads($(this).attr("href"));
+    $(this).hide();
+    $('.threads').append('<p style="text-align:center"><img src="/img/ajax-loader.gif" /></p>');
   });
   
   function loadBoardThreads(path){
@@ -94,7 +96,7 @@ $(document).ready(function(){
         var pos = path.search("pages=")+6;
         var pages = parseInt(path.substr(pos));
         var newPath = path.substr(0,pos) + (pages+1);
-        $("#loadMore").attr("href",newPath)
+        $("#loadMore").attr("href",newPath).show();
       } else {
         $("#loadMore").hide();
       }
