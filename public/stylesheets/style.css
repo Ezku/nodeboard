@@ -447,7 +447,7 @@ a#newThreadsNotification {
   min-height: 0px;
   margin: 10px 0;
   padding: 5px 10px;
-  background-color: rgba(255, 250, 205, 0.8);
+  background-color: #fffacd;
   border-radius: 20px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
@@ -456,9 +456,14 @@ a#newThreadsNotification {
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   color: #000000;
   text-decoration: none;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  z-index: 2;
 }
 a#newThreadsNotification:hover {
-  background-color: rgba(255, 250, 100, 0.8);
+  background-color: #fffa64;
 }
 span.newReplyNotification {
   display: block;

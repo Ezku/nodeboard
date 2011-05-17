@@ -261,7 +261,7 @@ $(document).ready(function(){
         console.log("Creating notification element");
         $('<a id="newThreadsNotification" href="#"><span id="newThreadsNumber">1</span> new threads. Click to refresh.</a>')
           .hide()
-          .insertAfter("#newThread")
+          .insertBefore("#newThreadButton")
           .slideDown('slow')
           .click(function(){
             window.location.reload();
