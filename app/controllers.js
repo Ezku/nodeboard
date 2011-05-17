@@ -181,7 +181,7 @@
         threads: threads
       });
     });
-    app.get('/:board/', panels, collectBoard('overview'), collectOverview('detail'), tap(function(req, res) {
+    app.get('/:board/', panels, collectBoard('overview'), tap(function(req, res) {
       var board, boardTitle, name, threads;
       board = req.params.board;
       name = boards.getName(board);
