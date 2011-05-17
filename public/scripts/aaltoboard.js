@@ -166,33 +166,67 @@ $(document).ready(function(){
     }
   });
   
+  // Reply to post
   $(".controls .reply").live("click",function() {
+    // Show reply form
     $("#reply form").slideDown(updateThreadHeight);
+    // Ad >>id to reply message
     var id = $(this).attr("id").split("-")[1];
-    $("#reply textarea#content").val(">>"+id);
+    var currentmsg = $("#reply textarea#content").val();
+    currentmsg = currentmsg ? currentmsg+"\n" : currentmsg; 
+    $("#reply textarea#content").val(currentmsg+">>"+id);
   });
   
+  // Delete post
   $(".controls .delete").live("click",function() {
-    var pw = prompt("Enter password to delete","");
+    // Define error callback
+    var error = function(message){
+      alert("Delete error: " + message);
+    }
+    
+    var isFirstPost = $(this).attr("href") === window.location.pathname;
+    
+    // Ask for password 
+    var confirmMsg = "Enter password to delete";  
+    if (isFirstPost){
+     confirmMsg = "Deleting the first post deletes whole thread! \n" + confirmMsg;
+    } 
+    var pw = prompt(confirmMsg,"");
+    
+    // If user enters a password, continue delete
     if(pw){
       $.ajax({
         type: 'POST',
-        url: "/api"+$(this).attr("href"),
+        url: "/api"+$(this).attr("href") + "delete/",
         data: {password:pw},
         success: function(data,textStatus){
-		  // TODO: This only guarantees the request went fine. Parse data to find out actual outcome.
-		  // It's either {success: true} or {error: whatever}.
-          console.log("Delete success", data, textStatus);
-          alert("Post deleted!");
-          //window.location.reload();
+          console.log("Delete query success", data, textStatus);
+          
+          // Data is either {success: true} or {error: whatever}.
+          if (data.success){
+            alert("Post deleted!");
+            
+            if(isFirstPost){
+              // Go to board main view
+              var board = window.location.pathname.split("/")[1];
+              window.location = "/"+board+"/";
+            } else {
+              // Reload thread
+              loadThread(window.location.pathname);
+            }
+          } else if(data.error){
+            error(data.error);
+          } else {
+            error("Unknown error");
+          }
         },
         error: function(jqXHR, textStatus, errorThrown){
-          console.log("Delete error", textStatus, errorThrown);
-          alert("Delete failed: " + errorThrown);
+          console.log("Delete query error", textStatus, errorThrown);
+          error(errorThrown);
         }
       });
     } else {
-      alert("Could not delete post without password");
+      error("Could not delete post without password");
     }
     return false;
   });
@@ -293,7 +327,7 @@ $(document).ready(function(){
     } else {
       parent = parent + " "
     }
-    $(parent + ".post-content").each(function(){
+    $(parent + ".post-content p").each(function(){
       var content = $(this).html();
       content = convertLinebreaks(content);
       content = convertRefLinks(content);
@@ -307,7 +341,7 @@ $(document).ready(function(){
   }
   
   function convertRefLinks(str) {
-    console.log("convertReplyLinks",str)
+    //console.log("convertReplyLinks",str)
     var lines = str.split("<br />");
     
     for(var i=0;i<lines.length;i++){
@@ -318,7 +352,6 @@ $(document).ready(function(){
         lines[i] = lines[i].substring(0,pos)+link + lines[i].substring(pos) +'</a>'
       }
     }
-    console.log(lines.join("<br />"))
     return lines.join("<br />");
   }
 });

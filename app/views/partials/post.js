@@ -13,7 +13,7 @@
       return a("Delete", {
         "class": "delete",
         id: 'delete-' + this.post.id,
-        href: "/" + this.post.board + "/" + this.post.id + "/delete/"
+        href: "/" + this.post.board + "/" + this.post.id + "/"
       });
     });
     div({
