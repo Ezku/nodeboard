@@ -195,6 +195,44 @@ header nav ul li a:active {
   left: 51%;
   right: 0;
 }
+.columnHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  z-index: 2;
+}
+.columnContent {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+.columnFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  overflow: auto;
+  background: #eee;
+  padding: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.boardHeader h1 {
+  padding-right: 120px;
+}
+.boardContent {
+  top: 280px;
+}
 #high-level section {
   display: block;
   margin: 0;
@@ -205,14 +243,6 @@ header nav ul li a:active {
 }
 #high-level section:last-of-type {
   border: none;
-}
-#high-level div.boardContent {
-  position: absolute;
-  top: 280px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: auto;
 }
 #high-level a.threadLink {
   text-decoration: none;
@@ -235,30 +265,7 @@ section.thread-preview.selected {
   -moz-box-shadow: 0 0 0 #000000;
   box-shadow: 0 0 0 #000000;
 }
-#detail-level section.thread {
-  position: absolute;
-  top: 50px;
-  bottom: 252px;
-  left: 0;
-  right: 0;
-  overflow: auto;
-}
-#detail-level div.form {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: auto;
-  overflow: auto;
-  background: #eee;
-  -webkit-border-bottom-left-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-#detail-level div.form h4:hover {
+div.form h4:hover {
   background-color: #ccc;
   -webkit-border-bottom-left-radius: 10px;
   -webkit-border-bottom-right-radius: 10px;
@@ -270,7 +277,7 @@ section.thread-preview.selected {
   margin: -10px;
   cursor: pointer;
 }
-#detail-level div.form form {
+div.form form {
   padding-top: 10px;
 }
 .board a {
@@ -357,17 +364,6 @@ section.thread-preview.selected {
   color: #000000;
   background-color: #999;
 }
-.boardHeader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: auto;
-  z-index: 2;
-}
-.boardHeader h1 {
-  padding-right: 120px;
-}
 #newThreadButton {
   position: absolute;
   top: 10px;
@@ -408,10 +404,6 @@ section.thread-preview.selected {
 }
 #loadMore:hover {
   background-color: #999;
-}
-div.form {
-  padding: 10px;
-  height: auto;
 }
 form {
   margin-top: 10px;

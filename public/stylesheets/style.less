@@ -219,6 +219,8 @@ header {
   padding: 0 5px 5px 0;
 }
 
+// Columns
+
 #high-level,
 #detail-level {
 
@@ -259,6 +261,51 @@ header {
   right: 0;
 }
 
+.columnHeader{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  z-index: 2;
+}
+
+.columnContent {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+
+.columnFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  overflow: auto;
+  background: #eee;
+  padding: 10px;
+  //border-top: 2px solid #ccc;
+  .border-bottom-radius(10px);
+}
+
+// Board page
+
+// TODO
+
+.boardHeader {
+  h1 {
+    padding-right: 120px;
+  }
+}
+
+.boardContent{
+  top: 280px;
+}
+
 
 // Left column
 
@@ -275,17 +322,6 @@ header {
     &:last-of-type {
       border: none;
     }
-  }
-  
-  // Board page
-  
-  div.boardContent{
-    position: absolute;
-    top: 280px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
   }
   
   a.threadLink{
@@ -311,43 +347,21 @@ section.thread-preview {
   }
 }
 
-// Thread page right column
+// Reply form
 
-#detail-level{
-
-  section.thread {
-    position: absolute;
-    top: 50px;
-    bottom: 252px;
-    left: 0;
-    right: 0;
-    overflow: auto;
+div.form {
+  h4 {
+    &:hover {
+      background-color: #ccc;
+      .border-bottom-radius(10px);
+      padding: 10px;
+      margin: -10px;
+      cursor: pointer;
+    }
   }
   
-  div.form {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: auto;
-    overflow: auto;
-    background: #eee;
-    //border-top: 2px solid #ccc;
-    .border-bottom-radius(10px);
-    
-    h4 {
-      &:hover {
-        background-color: #ccc;
-        .border-bottom-radius(10px);
-        padding: 10px;
-        margin: -10px;
-        cursor: pointer;
-      }
-    }
-    
-    form {
-      padding-top: 10px;
-    }
+  form {
+    padding-top: 10px;
   }
 }
 
@@ -441,20 +455,6 @@ section.thread-preview {
   }
 }
 
-// Board page
-
-.boardHeader{
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: auto;
-  z-index: 2;
-  h1 {
-    padding-right: 120px;
-  }
-}
-
 // New Thread button
 #newThreadButton{
   position: absolute;
@@ -493,12 +493,6 @@ section.thread-preview {
   &:hover {
     background-color: #999;
   }
-}
-
-// Reply Form
-div.form{
-  padding: 10px;
-  height: auto;
 }
 
 form {

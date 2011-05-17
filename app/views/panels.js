@@ -1,6 +1,7 @@
 (function() {
   div({
-    id: "high-level"
+    id: "high-level",
+    "class": "column"
   }, function() {
     var _ref;
     if ((_ref = this.overview) != null ? _ref.view : void 0) {
@@ -10,7 +11,8 @@
     }
   });
   div({
-    id: "detail-level"
+    id: "detail-level",
+    "class": "column"
   }, function() {
     var _ref;
     if ((_ref = this.detail) != null ? _ref.view : void 0) {

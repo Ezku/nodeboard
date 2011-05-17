@@ -1,4 +1,4 @@
-div class: 'boardHeader', ->
+div class: 'columnHeader', ->
   h1 @title
   a id: "newThreadButton", href: "#newThread", -> "New Thread"
 
@@ -7,7 +7,7 @@ div class: 'boardHeader', ->
     submit: 'Create thread'
     id: 'newThread'
   
-div class: 'boardContent', ->
+div class: 'columnContent', ->
   div class: 'threads', ->
     if @threads.length
       for thread in @threads

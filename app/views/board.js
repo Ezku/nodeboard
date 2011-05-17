@@ -1,6 +1,6 @@
 (function() {
   div({
-    "class": 'boardHeader'
+    "class": 'columnHeader'
   }, function() {
     h1(this.title);
     a({
@@ -19,7 +19,7 @@
     }));
   });
   div({
-    "class": 'boardContent'
+    "class": 'columnContent'
   }, function() {
     div({
       "class": 'threads'

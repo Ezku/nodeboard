@@ -17,24 +17,16 @@ $(document).ready(function(){
   var currentThread = pathParts[2];
   
   // New thread -form toggle
-  
   $("#newThread").hide();
-  
-  function updateBoardContentHeight(){
-    $(".boardContent").css("top",$(".boardHeader").outerHeight());
-  }
-  updateBoardContentHeight();
-  
   $("#newThreadButton").click(function(){
-    $("#newThread").slideToggle(updateBoardContentHeight);
+    $("#newThread").slideToggle(updateColumnContentHeight);
     return false;
   });
   
   // Reply to thread -form toggle
-  
   function hideReplyForm(){
     $("#reply form").hide();
-    updateThreadHeight();
+    updateColumnContentHeight();
   }
   hideReplyForm();
   
@@ -43,9 +35,26 @@ $(document).ready(function(){
   }
   
   $("#reply h4").live("click",function(){
-    $("#reply form").slideToggle(updateThreadHeight);
+    $("#reply form").slideToggle(updateColumnContentHeight);
     return false;
   });
+  
+  // Update content area height
+  function updateColumnContentHeight(){
+    $(".column").each(function(){
+      var $content = $(this).find(".columnContent");
+      
+      var top = $(this).find(".columnHeader").outerHeight();
+      if(top){
+        $content.css("top",top)
+      }
+      var bottom = $(this).find(".columnFooter").outerHeight();
+      if(bottom){
+         $content.css("bottom",bottom)
+      }
+    });
+  }
+  updateColumnContentHeight();
   
   // Board Load more threads
   $("#loadMore").click(function(e){
