@@ -7,7 +7,14 @@ if (!debug){
   window.console.log = function(){};
 }
 
+    
+    
+
 $(document).ready(function(){
+  
+  var pathParts = window.location.pathname.split("/");
+  var currentBoard = pathParts[1];
+  var currentThread = pathParts[2];
   
   // New thread -form toggle
   
@@ -101,12 +108,13 @@ $(document).ready(function(){
       window.location = link;
     } else {
       loadThread(link);
+      $(this).children(".newReplyNotification").remove();
     }
   });
   $("a.threadLink").hide();
   
-  function loadThread(path){
-    console.log("loadThread",path);
+  function loadThread(path,update){
+    console.log("loadThread",path,update);
     $.fancybox.showActivity();
     $.getJSON('/api'+path, function(data) {
           
@@ -114,6 +122,9 @@ $(document).ready(function(){
         console.log("No posts found!");
         return;
       }
+      
+      // Update current thread
+      currentThread = data.id;
       
       // Update selected thread overview
       $(".thread-preview").removeClass("selected");
@@ -125,8 +136,11 @@ $(document).ready(function(){
         this.thread = data.id;
       });
       
-      $('#detail-level').html($('#threadTemplate').tmpl(data.thread));
-      $('#detail-level .thread').append($('#postTemplate').tmpl(data.thread.posts));
+      if(!update){
+        $('#detail-level').html($('#threadTemplate').tmpl(data.thread));
+      }
+      
+      $('#detail-level .thread').html($('#postTemplate').tmpl(data.thread.posts));
       
       // Update url with HTML5 History API 
       // http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html
@@ -147,6 +161,10 @@ $(document).ready(function(){
       
       $.fancybox.hideActivity();
     });
+  }
+  
+  function reloadCurrentThread(){
+    loadThread("/"+currentBoard+"/"+currentThread+"/",true);
   }
   
   // Load previous state on back button click etc
@@ -273,28 +291,37 @@ $(document).ready(function(){
     channel.on('reply', function(obj){      
       var threadId = obj.thread;
       console.log("New reply to thread "+threadId);
-      var $thread = $("#thread-preview-"+threadId);
-      if ($thread.length > 0){
-        // Show notification button
-        var $notification = $thread.children(".newReplyNotification");
-        if ($notification.length > 0){
-          console.log("Updating notification element");
-          var amount = parseInt($notification.html());
-          $notification.html(amount+1);
-        } else {
-          console.log("Creating notification element");
-          $('<span class="newReplyNotification">1</span>')
-            .hide()
-            .prependTo($thread)
-            .fadeIn();
-        }
-        // Blink the thread element
-        $thread.toggleClass('hilight');
-        setTimeout(function(){
+      
+      // If thread is open, reload it
+      if (threadId == currentThread){
+        reloadCurrentThread();
+      }
+      
+      // Set new replies notification
+      else {
+        var $thread = $("#thread-preview-"+threadId);
+        if ($thread.length > 0){
+          // Show notification button
+          var $notification = $thread.children(".newReplyNotification");
+          if ($notification.length > 0){
+            console.log("Updating notification element");
+            var amount = parseInt($notification.html());
+            $notification.html(amount+1);
+          } else {
+            console.log("Creating notification element");
+            $('<span class="newReplyNotification">1</span>')
+              .hide()
+              .prependTo($thread)
+              .fadeIn();
+          }
+          // Blink the thread element
           $thread.toggleClass('hilight');
-        },1000);
-      } else {
-        console.log("Thread element not found: " + threadId);
+          setTimeout(function(){
+            $thread.toggleClass('hilight');
+          },1000);
+        } else {
+          console.log("Thread element not found: " + threadId);
+        }
       }
     });
 
