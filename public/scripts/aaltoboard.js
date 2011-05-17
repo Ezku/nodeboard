@@ -158,7 +158,7 @@ $(document).ready(function(){
     }
     
     // Board main view, load first thread
-    else if(slashes = 2){
+    else if(slashes === 2){
       var url = $(".thread-preview:first").children("a.threadLink").attr("href");
       if (url){
         loadThread(url)
