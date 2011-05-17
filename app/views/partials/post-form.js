@@ -17,7 +17,10 @@
           return label({
             "for": 'content'
           }, function() {
-            return 'Content';
+            text('Content');
+            return span(" *", {
+              title: "Mandatory field"
+            });
           });
         });
         dd(function() {
@@ -30,7 +33,12 @@
           return label({
             "for": 'image'
           }, function() {
-            return 'Image';
+            text('Image');
+            if (this.form.id === "newThread") {
+              return span(" *", {
+                title: "Mandatory field"
+              });
+            }
           });
         });
         dd(function() {
