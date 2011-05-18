@@ -1,8 +1,7 @@
 (function() {
   module.exports = function(mongoose, dependencies) {
-    var ImageSchema, PostSchema, hashes;
+    var ImageSchema, PostSchema;
     ImageSchema = require('./ImageSchema.js')(mongoose).definition;
-    hashes = dependencies.lib('hashes');
     PostSchema = {
       definition: {
         id: Number,
