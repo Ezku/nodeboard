@@ -173,20 +173,6 @@ header nav ul li a:active {
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
-#high-level section, #detail-level section {
-  padding: 10px 10px;
-}
-#high-level article, #detail-level article {
-  clear: both;
-}
-#high-level article div, #detail-level article div {
-  padding: 0;
-  min-height: 0;
-  background: transparent none;
-  -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
-}
 #high-level {
   left: 0;
   right: 51%;
@@ -227,34 +213,54 @@ header nav ul li a:active {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
-.boardHeader h1 {
+.index .board a {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0 10px;
+  text-decoration: none;
+}
+.index .board a:hover {
+  background: white;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.index .board a:active {
+  background: #999;
+  -webkit-box-shadow: 0 0 0 #000000;
+  -moz-box-shadow: 0 0 0 #000000;
+  box-shadow: 0 0 0 #000000;
+}
+.index .board a p {
+  color: #444;
+  float: right;
+}
+.index .board a h3 {
+  padding-right: 20px;
+  float: left;
+}
+.index .board a h3, .index .board a p {
+  line-height: 40px;
+}
+.board .columnHeader h1 {
   padding-right: 120px;
 }
-.boardContent {
+.board .columnContent {
   top: 280px;
-}
-#high-level section {
-  display: block;
-  margin: 0;
-  padding: 10px 10px;
-  border-bottom: 2px solid #eee;
-  overflow: hidden;
-  text-decoration: none;
-}
-#high-level section:last-of-type {
-  border: none;
-}
-#high-level a.threadLink {
-  text-decoration: none;
-  color: #444444;
-}
-#high-level p.omitted {
-  color: #ccc;
-  margin: 5px 10px;
 }
 section.thread-preview {
   cursor: pointer;
   position: relative;
+  display: block;
+  margin: 0;
+  padding: 10px 10px;
+  overflow: hidden;
+  text-decoration: none;
+  border-bottom: 2px solid #eee;
+}
+section.thread-preview:last-of-type {
+  border: none;
 }
 section.thread-preview:hover {
   background: #eee;
@@ -265,7 +271,102 @@ section.thread-preview.selected {
   -moz-box-shadow: 0 0 0 #000000;
   box-shadow: 0 0 0 #000000;
 }
-div.form h4:hover {
+section.thread-preview a.threadLink {
+  text-decoration: none;
+  color: #444444;
+}
+section.thread-preview p.omitted {
+  color: #ccc;
+  margin: 5px 10px;
+}
+#newThreadButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: block;
+  padding: 5px 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  color: #000000;
+}
+#newThreadButton:hover {
+  background-color: #999;
+}
+#newThread {
+  background: #eee;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+}
+#loadMore {
+  padding: 5px 10px;
+  background-color: #ddd;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+  text-decoration: none;
+  color: #000000;
+  display: block;
+  text-align: center;
+}
+#loadMore:hover {
+  background-color: #999;
+}
+a#newThreadsNotification {
+  display: block;
+  text-align: center;
+  min-height: 0px;
+  margin: 10px 0;
+  padding: 5px 10px;
+  background-color: #fffacd;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  color: #000000;
+  text-decoration: none;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  z-index: 2;
+}
+a#newThreadsNotification:hover {
+  background-color: #fffa64;
+}
+span.newReplyNotification {
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  background-color: rgba(255, 250, 205, 0.8);
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.hilight {
+  background-color: rgba(255, 250, 205, 0.8) !important;
+}
+.thread .threadItems {
+  padding: 10px;
+}
+#reply h4:hover {
   background-color: #ccc;
   -webkit-border-bottom-left-radius: 10px;
   -webkit-border-bottom-right-radius: 10px;
@@ -277,38 +378,8 @@ div.form h4:hover {
   margin: -10px;
   cursor: pointer;
 }
-div.form form {
-  padding-top: 10px;
-}
-.board a {
-  display: block;
-  overflow: hidden;
-  margin: 0;
-  padding: 0 10px;
-  text-decoration: none;
-}
-.board a:hover {
-  background: white;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-}
-.board a:active {
-  background: #999;
-  -webkit-box-shadow: 0 0 0 #000000;
-  -moz-box-shadow: 0 0 0 #000000;
-  box-shadow: 0 0 0 #000000;
-}
-.board a p {
-  color: #444;
-  float: right;
-}
-.board a h3 {
-  padding-right: 20px;
-  float: left;
-}
-.board a h3, .board a p {
-  line-height: 40px;
+#reply form {
+  margin-top: 20px;
 }
 .post {
   overflow: hidden;
@@ -364,50 +435,6 @@ div.form form {
   color: #000000;
   background-color: #999;
 }
-#newThreadButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: block;
-  padding: 5px 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  text-decoration: none;
-  color: #000000;
-}
-#newThreadButton:hover {
-  background-color: #999;
-}
-#newThread {
-  background: #eee;
-  border-bottom: 2px solid #ccc;
-}
-#loadMore {
-  padding: 5px 10px;
-  background-color: #ddd;
-  border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  margin: 10px;
-  text-decoration: none;
-  color: #000000;
-  display: block;
-  text-align: center;
-}
-#loadMore:hover {
-  background-color: #999;
-}
-form {
-  margin-top: 10px;
-}
 form dt {
   width: 25%;
   clear: both;
@@ -427,51 +454,4 @@ form input[type=text], form input[type=password], form textarea {
 }
 form textarea {
   height: 120px;
-}
-footer {
-  clear: both;
-  overflow: hidden;
-  margin-top: 30px;
-}
-a#newThreadsNotification {
-  display: block;
-  text-align: center;
-  min-height: 0px;
-  margin: 10px 0;
-  padding: 5px 10px;
-  background-color: #fffacd;
-  border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  color: #000000;
-  text-decoration: none;
-  position: absolute;
-  top: 0;
-  left: 10px;
-  right: 10px;
-  z-index: 2;
-}
-a#newThreadsNotification:hover {
-  background-color: #fffa64;
-}
-span.newReplyNotification {
-  display: block;
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  padding: 5px 10px;
-  font-size: 1.2em;
-  background-color: rgba(255, 250, 205, 0.8);
-  border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-}
-.hilight {
-  background-color: rgba(255, 250, 205, 0.8) !important;
 }

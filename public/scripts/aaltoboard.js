@@ -137,6 +137,9 @@ $(document).ready(function(){
       // Update current thread
       currentThread = data.id;
       
+      console.log(data);
+      
+      
       // Update selected thread overview
       $(".thread-preview").removeClass("selected");
       $("#thread-preview-"+data.id).addClass("selected");
@@ -145,13 +148,16 @@ $(document).ready(function(){
       $(data.thread.posts).each(function(){
         this.board = data.board;
         this.thread = data.id;
+        // Escape content data
+        this.content = $('<div/>').text(this.content).html()
       });
+      console.log(data);
       
       if(!update){
         $('#detail-level').html($('#threadTemplate').tmpl(data.thread));
       }
       
-      $('#detail-level .thread').html($('#postTemplate').tmpl(data.thread.posts));
+      $('.threadItems').html($('#postTemplate').tmpl(data.thread.posts));
       
       // Update url with HTML5 History API 
       // http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html
@@ -166,7 +172,7 @@ $(document).ready(function(){
       formatContent("#detail-level");
       
       // Show controls
-      $("section.thread article.post").hover(function() {
+      $(".thread article.post").hover(function() {
           $(this).find(".controls").toggle();
       });
       

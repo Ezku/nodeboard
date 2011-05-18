@@ -137,6 +137,9 @@ a {
   }
 }
 
+
+//// Header navigation
+
 header {
   width: 100%;
   margin-bottom: 10px;
@@ -234,24 +237,8 @@ header {
   background-color: rgba(255,255,255, .8);
   .border-radius(10px);
   .box-shadow();
-  
-  section {
-    padding: 10px 10px;
-  }
-  
-  article {
-    clear: both;
-    
-    // any div inside an article
-    div {
-      //.border-radius(0);
-      padding: 0;
-      min-height: 0;
-      background: transparent none;
-      .box-shadow(0,0,0);
-    }
-  }
 }
+
 #high-level {
   left: 0;
   right: 51%;
@@ -288,86 +275,13 @@ header {
   overflow: auto;
   background: #eee;
   padding: 10px;
-  //border-top: 2px solid #ccc;
   .border-bottom-radius(10px);
 }
 
-// Board page
-
-// TODO
-
-.boardHeader {
-  h1 {
-    padding-right: 120px;
-  }
-}
-
-.boardContent{
-  top: 280px;
-}
-
-
-// Left column
-
-#high-level{
-
-  section {
-    display: block;
-    margin: 0;
-    padding: 10px 10px;
-    border-bottom: 2px solid #eee;
-    overflow: hidden;
-    text-decoration: none;
-    
-    &:last-of-type {
-      border: none;
-    }
-  }
-  
-  a.threadLink{
-    text-decoration: none;
-    color: @defaultcolor;
-  }
-  
-  p.omitted{
-    color: #ccc;
-    margin: 5px 10px;
-  }
-}
-  
-section.thread-preview {
-  cursor: pointer;
-  position: relative;
-  &:hover {
-    background: #eee;
-  }
-  &.selected {
-    background: #ddd;
-    .box-shadow(0,0,0,1)
-  }
-}
-
-// Reply form
-
-div.form {
-  h4 {
-    &:hover {
-      background-color: #ccc;
-      .border-bottom-radius(10px);
-      padding: 10px;
-      margin: -10px;
-      cursor: pointer;
-    }
-  }
-  
-  form {
-    padding-top: 10px;
-  }
-}
 
 //// Front page
 
-.board {
+.index .board {
   
   a {
     display: block;
@@ -400,7 +314,168 @@ div.form {
   }
 }
 
-//// Single post
+
+//// Board page
+
+.board {
+  .columnHeader {
+    h1 {
+      padding-right: 120px;
+    }
+  }
+  .columnContent{
+    top: 280px;
+  }
+}
+
+// Thread preview
+
+section.thread-preview {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 10px 10px;
+  overflow: hidden;
+  text-decoration: none;
+  
+  border-bottom: 2px solid #eee;
+  &:last-of-type {
+    border: none;
+  }
+  
+  &:hover {
+    background: #eee;
+  }
+  &.selected {
+    background: #ddd;
+    .box-shadow(0,0,0,1)
+  }
+  
+  a.threadLink{
+    text-decoration: none;
+    color: @defaultcolor;
+  }
+
+  p.omitted{
+    color: #ccc;
+    margin: 5px 10px;
+  }
+}
+
+// New Thread button
+
+#newThreadButton{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: block;
+  padding: 5px 10px;
+  background-color: rgba(255,255,255, .8);
+  .border-radius(20px);
+  .box-shadow();
+  text-decoration: none;
+  color: @navlinkcolor;
+
+  &:hover {
+    background-color: #999;
+  }
+}
+// New Thread -form
+
+#newThread{
+  background: #eee;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+}
+
+// Load more threads -button
+
+#loadMore{
+  //width: 100%;
+  padding: 5px 10px;
+  background-color: #ddd;
+  .border-radius(20px);
+  .box-shadow();
+  margin: 10px;
+  text-decoration: none;
+  color: @navlinkcolor;
+  display: block;
+  text-align: center;
+  &:hover {
+    background-color: #999;
+  }
+}
+
+// New message notifications
+
+a#newThreadsNotification {
+  display: block;
+  text-align: center;
+  min-height: 0px;
+  margin: 10px 0;
+  padding: 5px 10px;
+  background-color: rgb(255,250,205);
+  .border-radius(20px);
+  .box-shadow();
+  color: @navlinkcolor;
+  text-decoration: none;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  z-index: 2;
+  
+  &:hover {
+    background-color: rgb(255,250,100);
+  }
+}
+
+span.newReplyNotification {
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  background-color: rgba(255,250,205, .8);
+  .border-radius(20px);
+  .box-shadow();
+}
+
+.hilight{
+  background-color: rgba(255,250,205, .8) !important;
+}
+
+
+//// Thread page
+
+.thread {
+  .threadItems {
+    padding: 10px;
+  }
+}
+
+// Reply to thread -form
+
+#reply {
+  h4 {
+    &:hover {
+      background-color: #ccc;
+      .border-bottom-radius(10px);
+      padding: 10px;
+      margin: -10px;
+      cursor: pointer;
+    }
+  }
+  form {
+    margin-top: 20px;
+  }
+}
+
+
+//// Single post template
+
 .post {
   overflow: hidden;
   padding: 5px;
@@ -455,48 +530,9 @@ div.form {
   }
 }
 
-// New Thread button
-#newThreadButton{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: block;
-  padding: 5px 10px;
-  background-color: rgba(255,255,255, .8);
-  .border-radius(20px);
-  .box-shadow();
-  text-decoration: none;
-  color: @navlinkcolor;
-
-  &:hover {
-    background-color: #999;
-  }
-}
-// New Thread form
-#newThread{
-  background: #eee;
-  border-bottom: 2px solid #ccc;
-}
-
-// Load more-button
-#loadMore{
-  //width: 100%;
-  padding: 5px 10px;
-  background-color: #ddd;
-  .border-radius(20px);
-  .box-shadow();
-  margin: 10px;
-  text-decoration: none;
-  color: @navlinkcolor;
-  display: block;
-  text-align: center;
-  &:hover {
-    background-color: #999;
-  }
-}
+// Post form
 
 form {
-  margin-top: 10px;
   dt {
     width: 25%;
     clear: both;
@@ -520,52 +556,6 @@ form {
   textarea {
     height: 120px;
   }
-}
-
-
-footer {
-  clear: both;
-  overflow: hidden;
-  margin-top: 30px;
-  
-}
-
-a#newThreadsNotification {
-  display: block;
-  text-align: center;
-  min-height: 0px;
-  margin: 10px 0;
-  padding: 5px 10px;
-  background-color: rgb(255,250,205);
-  .border-radius(20px);
-  .box-shadow();
-  color: @navlinkcolor;
-  text-decoration: none;
-  position: absolute;
-  top: 0;
-  left: 10px;
-  right: 10px;
-  z-index: 2;
-  
-  &:hover {
-    background-color: rgb(255,250,100);
-  }
-}
-
-span.newReplyNotification {
-  display: block;
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  padding: 5px 10px;
-  font-size: 1.2em;
-  background-color: rgba(255,250,205, .8);
-  .border-radius(20px);
-  .box-shadow();
-}
-
-.hilight{
-  background-color: rgba(255,250,205, .8) !important;
 }
 
 // HTML5 Boilerplate
