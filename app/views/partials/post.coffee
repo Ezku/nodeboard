@@ -1,7 +1,7 @@
 idPrefix = "" 
 if @preview
   idPrefix = "preview-"
-article class: 'post', id: 'post-' + idPrefix + @post.id, ->
+article class: 'post', id: 'post-' + idPrefix + @post.board + "-" + @post.id, ->
   
   if !@preview
     div class: 'controls', ->

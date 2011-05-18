@@ -1,7 +1,7 @@
 (function() {
   section({
     "class": 'thread-preview',
-    id: "thread-preview-" + this.thread.id
+    id: "thread-preview-" + this.thread.board + "-" + this.thread.id
   }, function() {
     if (this.thread.firstPost) {
       this.thread.firstPost.board = this.thread.board;

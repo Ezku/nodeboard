@@ -1,6 +1,6 @@
 # Partial: One thread in board view
 
-section class: 'thread-preview', id: "thread-preview-#{@thread.id}", ->
+section class: 'thread-preview', id: "thread-preview-#{@thread.board}-#{@thread.id}", ->
 
   if @thread.firstPost
     @thread.firstPost.board = @thread.board

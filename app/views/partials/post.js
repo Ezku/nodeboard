@@ -6,7 +6,7 @@
   }
   article({
     "class": 'post',
-    id: 'post-' + idPrefix + this.post.id
+    id: 'post-' + idPrefix + this.post.board + "-" + this.post.id
   }, function() {
     if (!this.preview) {
       div({
