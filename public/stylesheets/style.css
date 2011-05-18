@@ -26,6 +26,7 @@ body {
   font: 14px Helvetica, Arial, sans-serif;
   overflow: hidden;
   height: 100%;
+  background-color: #ddd !important;
   background-color: #ffffff;
   background-image: -webkit-gradient(linear, top left, bottom left, from(#dddddd), to(#ffffff));
   background-image: -webkit-linear-gradient(top, #dddddd, #ffffff);

@@ -3,12 +3,13 @@
  */
 
 var debug = true;
+if(!window.console){
+  window.console = {};
+  window.console.log = function(){};
+}
 if (!debug){
   window.console.log = function(){};
 }
-
-    
-    
 
 $(document).ready(function(){
   
@@ -161,8 +162,8 @@ $(document).ready(function(){
       
       // Update url with HTML5 History API 
       // http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html
-      if(window.location.pathname !== path){
-        history.pushState(null, null, path);
+      if(window.location.pathname !== path && window.history && window.history.pushState){
+        window.history.pushState(null, null, path);
       }
       
       // Update UI stuff
