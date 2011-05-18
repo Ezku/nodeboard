@@ -24,7 +24,7 @@ section class: 'thread-preview', id: "thread-preview-#{@thread.id}", ->
   if @thread.lastPost
     @thread.lastPost.board = @thread.board
     @thread.lastPost.thread = @thread.id
-    text @partial "partials/post", object: @thread.lastPost
+    text @partial "partials/post", object: @thread.lastPost, preview: true
   if @jQtemplate
     text '{{if lastPost }}{{tmpl(lastPost) "#postTemplate"}}{{/if}}'
     

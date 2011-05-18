@@ -36,7 +36,8 @@
       this.thread.lastPost.board = this.thread.board;
       this.thread.lastPost.thread = this.thread.id;
       text(this.partial("partials/post", {
-        object: this.thread.lastPost
+        object: this.thread.lastPost,
+        preview: true
       }));
     }
     if (this.jQtemplate) {
