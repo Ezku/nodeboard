@@ -1,6 +1,5 @@
 module.exports = (mongoose, dependencies) ->
   ImageSchema = require('./ImageSchema.js')(mongoose).definition
-  hashes = dependencies.lib 'hashes'
   
   PostSchema =
     definition:

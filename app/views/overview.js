@@ -1,14 +1,15 @@
 (function() {
   div({
-    id: 'boardHeader'
+    "class": 'boardHeader'
   }, function() {
-    return h1("Aaltoboard overview");
+    return h1("What's new in all boards");
   });
   div({
-    id: 'boardContent'
+    "class": 'boardContent'
   }, function() {
     return div({
-      id: 'threads'
+      "class": 'threads',
+      id: 'overview'
     }, function() {
       var thread, _i, _len, _ref, _results;
       if (this.threads.length) {
@@ -17,6 +18,7 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           thread = _ref[_i];
           _results.push(text(this.partial("partials/thread", {
+            overview: true,
             object: thread
           })));
         }
