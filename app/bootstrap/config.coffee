@@ -28,7 +28,7 @@ module.exports = (root) ->
       imageHashTimeout: 10
     
     content:
-      threadsPerPage: 2
+      threadsPerPage: 10
       maximumReplyCount: 100
       maximumThreadAmount: 100
       orphanedTrackerCheckProbability: 10
