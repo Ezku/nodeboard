@@ -1,10 +1,10 @@
-div class: 'thread', ->
+div class: 'thread', id: 'thread-' + @thread.id, ->
 
   div class: 'columnHeader', ->
     h1 @title
 
   div class: 'columnContent', ->
-    section class: 'threadItems', id: 'thread-' + @thread.id, ->
+    section class: 'threadItems', ->
       if @thread.posts?.length
         for post in @thread.posts
           post.board = @thread.board

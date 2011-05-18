@@ -1,6 +1,7 @@
 (function() {
   div({
-    "class": 'thread'
+    "class": 'thread',
+    id: 'thread-' + this.thread.id
   }, function() {
     div({
       "class": 'columnHeader'
@@ -11,8 +12,7 @@
       "class": 'columnContent'
     }, function() {
       return section({
-        "class": 'threadItems',
-        id: 'thread-' + this.thread.id
+        "class": 'threadItems'
       }, function() {
         var post, _i, _len, _ref, _ref2, _results;
         if ((_ref = this.thread.posts) != null ? _ref.length : void 0) {

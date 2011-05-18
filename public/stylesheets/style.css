@@ -88,6 +88,9 @@ a {
 a:visited, a:link {
   color: #00b7ff;
 }
+abbr {
+  border: none !important;
+}
 header {
   width: 100%;
   margin-bottom: 10px;

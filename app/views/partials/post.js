@@ -25,8 +25,9 @@
       span(h(this.post.author), {
         "class": 'author'
       });
-      return time(this.post.date.toString(), {
-        datetime: this.post.date
+      return abbr(this.post.date.toString(), {
+        "class": 'timeago',
+        title: this.post.date
       });
     });
     if (this.post.image) {

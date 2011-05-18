@@ -31,10 +31,6 @@ $(document).ready(function(){
   }
   hideReplyForm();
   
-  function updateThreadHeight(){
-    $("#detail-level .thread").css("bottom",$("#reply").outerHeight());
-  }
-  
   $("#reply h4").live("click",function(){
     $("#reply form").slideToggle(updateColumnContentHeight);
     return false;
@@ -92,7 +88,7 @@ $(document).ready(function(){
       $("a.threadLink").hide();
       
       // Update timeago plugin and lightbox
-      $(".threads time").timeago();
+      $(".threads abbr.timeago").timeago();
       setFancybox();
       
       // Update selected thread
@@ -167,7 +163,7 @@ $(document).ready(function(){
       }
       
       // Update UI stuff
-      $("#detail-level time").timeago();
+      $("#detail-level abbr.timeago").timeago();
       hideReplyForm();
       setFancybox();
       formatContent("#detail-level");
@@ -208,7 +204,7 @@ $(document).ready(function(){
   // Reply to post
   $(".controls .reply").live("click",function() {
     // Show reply form
-    $("#reply form").slideDown(updateThreadHeight);
+    $("#reply form").slideDown(updateColumnContentHeight);
     // Ad >>id to reply message
     var id = $(this).attr("id").split("-")[1];
     var currentmsg = $("#reply textarea#content").val();
@@ -357,7 +353,7 @@ $(document).ready(function(){
   }   
   
   // Timeago plugin
-  $("time").timeago();  
+  $("abbr.timeago").timeago();  
   
   // Fancybox
   function setFancybox(){

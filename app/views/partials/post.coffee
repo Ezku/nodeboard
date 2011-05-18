@@ -7,7 +7,7 @@ article class: 'post', id: 'post-' + @post.id, ->
   div class: 'meta', ->
     span "#" + @post.id, class: 'post-id'
     span (h @post.author), class: 'author'
-    time @post.date.toString(), datetime: @post.date
+    abbr @post.date.toString(), class: 'timeago', title: @post.date
   
   if @post.image
     if @jQtemplate

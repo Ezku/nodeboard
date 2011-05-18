@@ -63,30 +63,32 @@
               _results = [];
               for (group in _ref) {
                 boards = _ref[group];
-                _results.push(ul({
-                  "class": "board-group"
-                }, function() {
-                  var label, properties;
-                  li({
-                    "class": 'separator'
+                _results.push(li(function() {
+                  return ul({
+                    "class": "board-group"
                   }, function() {
-                    return '[';
-                  });
-                  for (label in boards) {
-                    properties = boards[label];
-                    li(function() {
-                      return a({
-                        href: "/" + label + "/",
-                        title: properties.name
-                      }, function() {
-                        return label;
-                      });
+                    var label, properties;
+                    li({
+                      "class": 'separator'
+                    }, function() {
+                      return '[';
                     });
-                  }
-                  return li({
-                    "class": 'separator'
-                  }, function() {
-                    return ']';
+                    for (label in boards) {
+                      properties = boards[label];
+                      li(function() {
+                        return a({
+                          href: "/" + label + "/",
+                          title: properties.name
+                        }, function() {
+                          return label;
+                        });
+                      });
+                    }
+                    return li({
+                      "class": 'separator'
+                    }, function() {
+                      return ']';
+                    });
                   });
                 }));
               }

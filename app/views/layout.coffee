@@ -22,12 +22,13 @@ html ->
               a href: "/", -> "Aaltoboard"
             
             for group, boards of @config.boards
-              ul class: "board-group", ->
-                li class: 'separator', -> '['
-                for label, properties of boards
-                  li ->
-                    a href: "/#{label}/", title: properties.name, -> label
-                li class: 'separator', -> ']'
+              li ->
+                ul class: "board-group", ->
+                  li class: 'separator', -> '['
+                  for label, properties of boards
+                    li ->
+                      a href: "/#{label}/", title: properties.name, -> label
+                  li class: 'separator', -> ']'
           div style: "clear: both;"
       
       div id: "column-wrapper", -> @body
