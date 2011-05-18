@@ -1,8 +1,12 @@
-article class: 'post', id: 'post-' + @post.id, ->
+idPrefix = "" 
+if @preview
+  idPrefix = "preview-"
+article class: 'post', id: 'post-' + idPrefix + @post.id, ->
   
-  div class: 'controls', ->
-    a "Reply", class: "reply", id: 'reply-'+@post.id
-    a "Delete", class: "delete", id: 'delete-'+@post.id, href: "/" + @post.board + "/" + @post.id + "/"
+  if !@preview
+    div class: 'controls', ->
+      a "Reply", class: "reply", id: 'reply-'+@post.id
+      a "Delete", class: "delete", id: 'delete-'+@post.id, href: "/" + @post.board + "/" + @post.id + "/"
   
   div class: 'meta', ->
     span "#" + @post.id, class: 'post-id'

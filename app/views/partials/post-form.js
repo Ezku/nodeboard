@@ -15,7 +15,7 @@
       return dl(function() {
         dt(function() {
           return label({
-            "for": 'content'
+            "for": this.form.id + 'Content'
           }, function() {
             text('Content');
             return span(" *", {
@@ -26,12 +26,12 @@
         dd(function() {
           return textarea({
             name: 'content',
-            id: 'content'
+            id: this.form.id + 'Content'
           });
         });
         dt(function() {
           return label({
-            "for": 'image'
+            "for": this.form.id + 'Image'
           }, function() {
             text('Image');
             if (this.form.id === "newThread") {
@@ -45,13 +45,13 @@
           return input({
             name: 'image',
             type: 'file',
-            id: 'image',
+            id: this.form.id + 'Image',
             accept: 'image/gif,image/jpeg,image/png'
           });
         });
         dt(function() {
           return label({
-            "for": "password"
+            "for": this.form.id + "Password"
           }, function() {
             return "Password";
           });
@@ -59,7 +59,7 @@
         dd(function() {
           return input({
             name: 'password',
-            id: 'password',
+            id: this.form.id + 'Password',
             type: 'password'
           });
         });

@@ -1,21 +1,28 @@
 (function() {
+  var idPrefix;
+  idPrefix = "";
+  if (this.preview) {
+    idPrefix = "preview-";
+  }
   article({
     "class": 'post',
-    id: 'post-' + this.post.id
+    id: 'post-' + idPrefix + this.post.id
   }, function() {
-    div({
-      "class": 'controls'
-    }, function() {
-      a("Reply", {
-        "class": "reply",
-        id: 'reply-' + this.post.id
+    if (!this.preview) {
+      div({
+        "class": 'controls'
+      }, function() {
+        a("Reply", {
+          "class": "reply",
+          id: 'reply-' + this.post.id
+        });
+        return a("Delete", {
+          "class": "delete",
+          id: 'delete-' + this.post.id,
+          href: "/" + this.post.board + "/" + this.post.id + "/"
+        });
       });
-      return a("Delete", {
-        "class": "delete",
-        id: 'delete-' + this.post.id,
-        href: "/" + this.post.board + "/" + this.post.id + "/"
-      });
-    });
+    }
     div({
       "class": 'meta'
     }, function() {

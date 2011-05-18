@@ -7,7 +7,8 @@
       this.thread.firstPost.board = this.thread.board;
       this.thread.firstPost.thread = this.thread.id;
       text(this.partial("partials/post", {
-        object: this.thread.firstPost
+        object: this.thread.firstPost,
+        preview: true
       }));
     }
     if (this.jQtemplate) {

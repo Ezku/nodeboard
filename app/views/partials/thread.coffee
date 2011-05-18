@@ -5,7 +5,7 @@ section class: 'thread-preview', id: "thread-preview-#{@thread.id}", ->
   if @thread.firstPost
     @thread.firstPost.board = @thread.board
     @thread.firstPost.thread = @thread.id;
-    text @partial "partials/post", object: @thread.firstPost
+    text @partial "partials/post", object: @thread.firstPost, preview: true
   if @jQtemplate
     text '{{tmpl(firstPost) "#postTemplate"}}'
 
