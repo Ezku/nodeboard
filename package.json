@@ -8,7 +8,9 @@
     "url": "git://github.com/Ezku/nodeboard.git"
   },
   "author": "Ezku <eevert.saukkokoski@gmail.com>",
-  "main": "app.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "backbone": ">= 0.3.3",
     "browserify": ">= 0.3.6",
