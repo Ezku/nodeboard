@@ -13,7 +13,7 @@ module.exports = (root) ->
       temp: root + '/tmp/'
     
     mongo:
-      connection: process.env.MONGOLAB_URL
+      connection: process.env.MONGOLAB_URI
     
     images:
       thumbnail:
