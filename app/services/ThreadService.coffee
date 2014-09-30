@@ -29,28 +29,28 @@ module.exports = (dependencies) ->
     
     create: (data) ->
       Sequence.next(data.thread.board).then (seq) =>
-        @_processImage(data.image, data.thread.board, seq.counter).then (image) =>
-          post = @_post data.post, seq.counter, image
-          thread = @_thread data.thread, post
-          
-          promise (success, error) =>
-            thread.save (err) =>
-              return error err if err
-              success thread
+        ImageProcessor(data.image, data.thread.board, seq.counter)
+          .process()
+          .then (image) =>
+            post = @_post data.post, seq.counter, image
+            thread = @_thread data.thread, post
+            
+            promise (success, error) =>
+              thread.save (err) =>
+                return error err if err
+                success thread
     
     update: (data) ->
       Sequence.next(data.thread.board).then (seq) =>
-        @_processImage(data.image, data.thread.board, seq.counter).then (image) =>
-          post = @_post data.post, seq.counter, image
-          Thread.addReply(data.thread.board, data.thread.id, post).then(
-            (thread) ->
-              thread.lastPost = post
-              thread
-          )
-    
-    _processImage: (image, board, id) ->
-      processor = new ImageProcessor image, board, id
-      processor.process()
+        ImageProcessor(data.image, data.thread.board, seq.counter)
+          .process()
+          .then (image) =>
+            post = @_post data.post, seq.counter, image
+            Thread.addReply(data.thread.board, data.thread.id, post).then(
+              (thread) ->
+                thread.lastPost = post
+                thread
+            )
     
     _post: (data, id, image) ->
       data.id = id
