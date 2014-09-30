@@ -62,7 +62,7 @@ module.exports = (dependencies) ->
       try
         fs.statSync(path)
       catch e
-        fs.mkdirSync(path, 0777)
+        fs.mkdirSync(path, 0o777)
       path
     
     getFullsizeName: (format) -> "#{@id}.#{format.toLowerCase()}"
