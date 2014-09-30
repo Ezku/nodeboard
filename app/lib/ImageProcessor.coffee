@@ -26,7 +26,7 @@ createResizedThumbnail = ({source, width, height, maxWidth, maxHeight}) -> new P
     success options.dstPath
 
 uploadToS3 = (filepath, board, id) ->
-  aws.upload filepath, "#{board}/#{id}--#{path.basename filepath}"
+  aws.upload filepath, "#{board}/#{id}/#{path.basename filepath}"
 
 module.exports = (dependencies) ->
   {mongoose, config} = dependencies
