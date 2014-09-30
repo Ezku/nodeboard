@@ -1,0 +1,11 @@
+{
+  "name": "nodeboard",
+  "description": "An imageboard you can deploy to Heroku with the push of a button",
+  "repository": "https://github.com/Ezku/nodeboard",
+  "logo": "http://img.shields.io/badge/press_button,_get_-nodeboard-blue.svg",
+  "keywords": [
+  	"node", 
+  	"express",
+  	"mongo"
+  ]
+}
