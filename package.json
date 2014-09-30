@@ -12,6 +12,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.0.18",
     "backbone": "^0.3.3",
     "browserify": "^0.3.6",
     "coffee-script": "^1.8.0",
