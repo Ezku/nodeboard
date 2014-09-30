@@ -1,4 +1,4 @@
-AbstractService = require './AbstractService.js'
+AbstractService = require './AbstractService'
 
 module.exports = (dependencies) ->
   {mongoose, config} = dependencies

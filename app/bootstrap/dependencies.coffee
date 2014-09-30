@@ -22,7 +22,7 @@ module.exports = (root) ->
     libs = {}
     (name) ->
       if not libs[name]?
-        libs[name] = require(root + '/app/lib/' + name + '.js')(dependencies)
+        libs[name] = require(root + '/app/lib/' + name)(dependencies)
       libs[name]
 
   dependencies

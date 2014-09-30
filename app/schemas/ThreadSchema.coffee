@@ -1,7 +1,7 @@
 module.exports = (mongoose, dependencies) ->
   {config} = dependencies
   {promise} = dependencies.lib 'promises'
-  PostSchema = require('./PostSchema.js')(mongoose, dependencies).definition
+  PostSchema = require('./PostSchema')(mongoose, dependencies).definition
   
   ThreadSchema =
     definition:
