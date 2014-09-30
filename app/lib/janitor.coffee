@@ -31,7 +31,7 @@ module.exports = (dependencies) ->
   sweepThreads = (board) ->
     Thread.sweep(board, config.content.maximumThreadAmount).then (threads) ->
       Promise.all (
-        for thread in thread
+        for thread in threads
           sweepThread thread
       )
   
