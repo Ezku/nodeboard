@@ -1,3 +1,4 @@
+path = require 'path'
 aws = require 'aws-sdk'
 Promise = require 'bluebird'
 fs = Promise.promisifyAll require 'fs'
@@ -10,10 +11,11 @@ aws.config.update {
 awsClient = ->
   Promise.promisifyAll (new aws.S3)
 
-sendToBucketAs = (key) -> (data) ->
+sendToBucket = ({key, type}) -> (data) ->
   awsClient().putObjectAsync {
     Bucket: process.env.S3_BUCKET
     Key: key
+    ContentType: type or 'application/octet-stream'
     Body: data
     ACL: 'public-read'
   }
@@ -30,8 +32,9 @@ awsFileAddress = (key) ->
   "http://#{bucket}.#{hostname}/#{key}"
 
 module.exports =
-  upload: (filename, key) ->
-    fs.readFileAsync(filename).then(sendToBucketAs(key)).then ->
+  upload: (filename, options = {}) ->
+    options.key ?= path.basename filename
+    fs.readFileAsync(filename).then(sendToBucket(options)).then ->
       awsFileAddress key
 
   delete: deleteFromBucket

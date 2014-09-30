@@ -25,8 +25,11 @@ createResizedThumbnail = ({source, width, height, maxWidth, maxHeight}) -> new P
     return error err if err
     success options.dstPath
 
-uploadToS3 = (filepath, board, id) ->
-  aws.upload filepath, "#{board}/#{id}/#{path.basename filepath}"
+uploadToS3 = (type, filepath, board, id) ->
+  aws.upload filepath, {
+    key: "#{board}/#{id}/#{path.basename filepath}"
+    type: type
+  }
 
 module.exports = (dependencies) ->
   {mongoose, config} = dependencies
@@ -48,8 +51,8 @@ module.exports = (dependencies) ->
               maxHeight: config.images.thumbnail.height
             }).then (thumbnailPath) ->
               Promise.all([
-                uploadToS3(image.path, board, id)
-                uploadToS3(thumbnailPath, board, id)
+                uploadToS3(image.type, image.path, board, id)
+                uploadToS3(image.type, thumbnailPath, board, id)
               ]).spread (fullsize, thumbnail) ->
                 new Image {
                   name: image.name
