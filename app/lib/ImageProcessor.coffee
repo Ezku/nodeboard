@@ -5,14 +5,14 @@ imagemagick = require 'imagemagick'
 identifyImage = do ->
   allowedImageTypes = ['JPEG', 'GIF', 'PNG']
 
-  (path) -> promise (success, error) =>
+  (path) -> new Promise (success, error) =>
     imagemagick.identify path, (err, features) =>
       return error err if err
       if features.format not in allowedImageTypes
         return error new Error("image type #{features.format} not allowed")
       success features
 
-createResizedThumbnail = ({source, width, height, maxWidth, maxHeight}) -> promise (success, error) ->
+createResizedThumbnail = ({source, width, height, maxWidth, maxHeight}) -> new Promise (success, error) ->
   options =
     srcPath: source
     dstPath: source + '.thumb'
