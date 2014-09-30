@@ -33,19 +33,13 @@ module.exports = (dependencies) ->
     accepted[name] = input[name] for name in params when input[name]?
     req.body = accepted
   
-  # Parses images uploaded in the request and stores them in the request object
+  # Skip files that are not images
   handleImageUpload = (req, res, next) ->
-    form = new formidable.IncomingForm()
-    form.uploadDir = config.paths.temp
-    form.parse req, (err, fields, files) ->
-      return next err if err
-      # The regular body vanishes, reassign it
-      req.body = fields
-      # Assign valid image files to request
-      req.files = {}
-      for name, file of files when file.type?.match('^image')
-        req.files[name] = file
-      next()
+    incomingFiles = req.files
+    req.files = {}
+    for name, file of incomingFiles when file.type?.match('^image')
+      req.files[name] = file
+    next()
   
   # Builds a data accumulator function with three behaviours
   # f(): returns accumulated data as an object
