@@ -8,7 +8,7 @@ aws.config.update {
 }
 
 awsClient = ->
-  Promise.promisifyAll (new aws.S3).client
+  Promise.promisifyAll (new aws.S3)
 
 sendToBucketAs = (key) -> (data) ->
   awsClient().putObjectAsync {
