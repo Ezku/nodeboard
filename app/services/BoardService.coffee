@@ -1,14 +1,14 @@
+Promise = require 'bluebird'
 AbstractService = require './AbstractService'
 
 module.exports = (dependencies) ->
   {mongoose, config} = dependencies
-  {promise} = dependencies.lib 'promises'
   
   Thread = mongoose.model 'Thread'
 
   class BoardService extends AbstractService
     
-    index: -> promise (success, error) ->
+    index: -> new Promise (success, error) ->
       Thread
       .find(markedForDeletion: false)
       .exclude('posts', 'firstPost.password', 'lastPost.password')
@@ -18,7 +18,7 @@ module.exports = (dependencies) ->
         return error err if err
         success threads
     
-    read: (query) -> promise (success, error) ->
+    read: (query) -> new Promise (success, error) ->
       limit = query.limit ? ((query.pages ? 1) * config.content.threadsPerPage)
       Thread
       .find(board: query.board, markedForDeletion: false)

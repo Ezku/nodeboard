@@ -1,5 +1,6 @@
+Promise = require 'bluebird'
 crypto = require 'crypto'
-fs = require 'fs'
+fs = Promise.promisifyAll require 'fs'
 
 module.exports = (dependencies) ->
   {promise} = dependencies.lib 'promises'
@@ -10,9 +11,7 @@ module.exports = (dependencies) ->
   sha1 = hash 'sha1'
   md5 = hash 'md5'
   
-  md5_file = (filename) -> promise (success, error) ->
-    fs.readFile filename, (err, data) ->
-      return error err if err
-      success md5 data
+  md5_file = (filename) ->
+    fs.readFileAsync(filename).then(md5)
   
   { sha1, md5_file }

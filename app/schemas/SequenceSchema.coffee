@@ -1,5 +1,6 @@
+Promise = require 'bluebird'
+
 module.exports = (mongoose, dependencies) ->
-  {promise} = dependencies.lib 'promises'
 
   SequenceSchema =
     definition:
@@ -10,7 +11,7 @@ module.exports = (mongoose, dependencies) ->
         type: Number
         default: 1
     static:
-      next: (board) -> promise (success, error) ->
+      next: (board) -> new Promise (success, error) ->
         Sequence = mongoose.model('Sequence')
         Sequence.collection.findAndModify { board: board },
           [],

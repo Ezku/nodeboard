@@ -1,6 +1,7 @@
+Promise = require 'bluebird'
+
 module.exports = (mongoose, dependencies) ->
   {config} = dependencies
-  {promise} = dependencies.lib 'promises'
   PostSchema = require('./PostSchema')(mongoose, dependencies).definition
   
   ThreadSchema =
@@ -33,17 +34,19 @@ module.exports = (mongoose, dependencies) ->
         required: false
       posts: [new mongoose.Schema PostSchema]
     static:
-      sweep: (board, threadLimit) -> promise (success, error) ->
-        Thread = mongoose.model 'Thread'
-        Thread
-        .where(board: board, markedForDeletion: false)
-        .sort('updated', -1)
-        .skip(threadLimit)
-        .run (err, threads) ->
-          return error err if err
-          if !threads.length
-            success []
-          else
+      sweep: (board, threadLimit) ->
+        new Promise((success, error) ->
+          Thread = mongoose.model 'Thread'
+          Thread
+          .where(board: board, markedForDeletion: false)
+          .sort('updated', -1)
+          .skip(threadLimit)
+          .run (err, threads) ->
+            return error err if err
+            success threads
+        ).then (threads) ->
+          return threads if !threads.length
+          new Promise (success, error) ->
             Thread.update {
                 id: {$in: (Number(thread.id.toString()) for thread in threads)}
               }, {
@@ -53,7 +56,7 @@ module.exports = (mongoose, dependencies) ->
                 return error err if err
                 success threads
           
-      addReply: (board, id, post) -> promise (success, error) ->
+      addReply: (board, id, post) -> new Promise (success, error) ->
         Thread = mongoose.model 'Thread'
         Thread.collection.findAndModify {
             board: String(board),
