@@ -1,4 +1,4 @@
-aws = require 'aws'
+aws = require 'aws-sdk'
 Promise = require 'bluebird'
 fs = Promise.promisifyAll require 'fs'
 
@@ -8,7 +8,7 @@ aws.config.update {
 }
 
 awsClient = ->
-  Promise.promisifyAll (new AWS.S3).client
+  Promise.promisifyAll (new aws.S3).client
 
 sendToBucketAs = (key) -> (data) ->
   awsClient().putObjectAsync {
