@@ -11,11 +11,11 @@ aws.config.update {
 awsClient = ->
   Promise.promisifyAll (new aws.S3)
 
-sendToBucket = ({key, type}) -> (data) ->
+sendToBucket = (key, type) -> (data) ->
   awsClient().putObjectAsync {
     Bucket: process.env.S3_BUCKET
     Key: key
-    ContentType: type or 'application/octet-stream'
+    ContentType: type
     Body: data
     ACL: 'public-read'
   }
@@ -32,9 +32,9 @@ awsFileAddress = (key) ->
   "http://#{bucket}.#{hostname}/#{key}"
 
 module.exports =
-  upload: (filename, options = {}) ->
-    options.key ?= path.basename filename
-    fs.readFileAsync(filename).then(sendToBucket(options)).then ->
+  upload: (type, filename, key = null) ->
+    key ?= path.basename filename
+    fs.readFileAsync(filename).then(sendToBucket(key, type)).then ->
       awsFileAddress key
 
   delete: deleteFromBucket
