@@ -35,25 +35,18 @@ module.exports = (dependencies) ->
           
           promise (success, error) =>
             thread.save (err) =>
-              if err
-                @_revert data.thread.board, post
-                return error err
+              return error err if err
               success thread
-    
     
     update: (data) ->
       Sequence.next(data.thread.board).then (seq) =>
         @_processImage(data.image, data.thread.board, seq.counter).then (image) =>
           post = @_post data.post, seq.counter, image
-          promise (success, error) =>
-            Thread.addReply(data.thread.board, data.thread.id, post).then(
-              (thread) ->
-                thread.lastPost = post
-                success thread
-              (err) =>
-                @_revert data.thread.board, post
-                error err
-            )
+          Thread.addReply(data.thread.board, data.thread.id, post).then(
+            (thread) ->
+              thread.lastPost = post
+              thread
+          )
     
     _processImage: (image, board, id) ->
       processor = new ImageProcessor image, board, id
@@ -76,8 +69,3 @@ module.exports = (dependencies) ->
       thread = new Thread data
       thread.posts.push post
       thread
-    
-    _revert: (board, post) ->
-      fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.thumbnail
-      fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.fullsize
-
