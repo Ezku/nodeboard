@@ -4,8 +4,28 @@
   "repository": "https://github.com/Ezku/nodeboard",
   "logo": "http://img.shields.io/badge/press_button,_get_-nodeboard-blue.svg",
   "keywords": [
-  	"node", 
-  	"express",
-  	"mongo"
+    "node", 
+    "express",
+    "mongo"
+  ],
+  "env": {
+    "S3_BUCKET": {
+      "description": "An Amazon S3 bucket name for storing uploaded image files"
+    },
+    "S3_HOSTNAME": {
+      "description": "Amazon S3 hostname with region, eg. s3-website-eu-west-1.amazonaws.com"
+    },
+    "AWS_ACCESS_KEY": {
+      "description": "Amazon AWS access key for a user that can write to the configured S3 bucket"
+    },
+    "AWS_SECRET_KEY": {
+      "description": "Amazon AWS secret key matching the access key"
+    },
+    "MONGOLAB_URI": {
+      "description": "A MongoDB connection URI. Provided automatically by Heroku."
+    }
+  },
+  "addons": [
+    "mongolab"
   ]
 }
