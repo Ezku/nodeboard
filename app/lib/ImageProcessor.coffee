@@ -38,7 +38,7 @@ module.exports = (dependencies) ->
         -> Promise.resolve()
       else
         ->
-          identifyImage(image.path).then((features) ->
+          identifyImage(image.path).then (features) ->
             createResizedThumbnail({
               source: image.path
               width: features.width
@@ -50,9 +50,10 @@ module.exports = (dependencies) ->
                 uploadToS3(image.path, board, id)
                 uploadToS3(thumbnailPath, board, id)
               ]).spread (fullsize, thumbnail) ->
-                new Image
+                new Image {
                   name: image.name
                   width: features.width
                   height: features.height
                   fullsize: fullsize
                   thumbnail: thumbnail
+                }
