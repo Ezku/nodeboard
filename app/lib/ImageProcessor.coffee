@@ -1,6 +1,7 @@
 aws = require './aws'
 Promise = require 'bluebird'
 imagemagick = require 'imagemagick'
+path = require 'path'
 
 identifyImage = do ->
   allowedImageTypes = ['JPEG', 'GIF', 'PNG']
@@ -25,7 +26,7 @@ createResizedThumbnail = ({source, width, height, maxWidth, maxHeight}) -> new P
     success options.dstPath
 
 uploadToS3 = (filepath, board, id) ->
-  aws.upload filepath, "#{board}--#{id}--#{filepath}"
+  aws.upload filepath, "#{board}/#{id}--#{path.basename filepath}"
 
 module.exports = (dependencies) ->
   {mongoose, config} = dependencies
