@@ -8,7 +8,7 @@ identifyImage = do ->
 
   (path) -> new Promise (success, error) =>
     imagemagick.identify path, (err, features) =>
-      return error err if err
+      return error new Error "failed to identify image type" if err
       if features.format not in allowedImageTypes
         return error new Error("image type #{features.format} not allowed")
       success features
