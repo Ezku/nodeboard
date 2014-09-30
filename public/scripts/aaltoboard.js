@@ -358,6 +358,7 @@ $(document).ready(function(){
   // Fancybox
   function setFancybox(){
     $(".post-image a").fancybox({
+      'type': 'image',
       'overlayColor' : '#000',
       'overlayOpacity' : 0.8,
       'titlePosition': "inside"
