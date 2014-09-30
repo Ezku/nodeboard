@@ -13,7 +13,7 @@ module.exports = (root) ->
       temp: root + '/tmp/'
     
     mongo:
-      connection: process.env.DUOSTACK_DB_MONGODB or 'mongodb://localhost/aaltoboard'
+      connection: process.env.MONGOLAB_URL
     
     images:
       thumbnail:
