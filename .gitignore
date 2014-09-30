@@ -9,4 +9,6 @@ mnt/*
 # Duostack fails on this as well
 # public/stylesheets/style.css
 
+/node_modules
+
 .DS_Store
