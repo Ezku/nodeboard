@@ -99,13 +99,6 @@ module.exports = (dependencies) ->
       overview: res.overview()
       detail: res.detail()
   
-  # Accepts a set of parameters, creating a filter that will assign those to either the provided collector or the request
-  static = (collector, params) -> tap (req, res) ->
-    if typeof params is 'object'
-      res[collector] name, value for name, value of params
-    else
-      res.locals collector
-  
   # Front page
   app.get '/',
     panels,
