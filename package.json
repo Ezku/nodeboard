@@ -16,7 +16,7 @@
     "browserify": "^0.3.6",
     "coffee-script": "^1.8.0",
     "coffeekup": "^0.2.2",
-    "express": "^2.3.4",
+    "express": "^2.5.11",
     "formidable": "^1.0.1",
     "imagemagick": "^0.1.2",
     "jsmin": "^1.0.0",
