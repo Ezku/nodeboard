@@ -25,3 +25,7 @@ Getting started:
 - Create an AWS user with access to the bucket
 - Enable static website hosting for the bucket
 - Optionally enable CORS for the bucket if you're developing locally
+
+## Legacy
+
+This used to be an Aalto School of Science web service design schoolwork project. Greetings to [vugi](https://github.com/vugi) & [mr-maw](https://github.com/mr-maw).
