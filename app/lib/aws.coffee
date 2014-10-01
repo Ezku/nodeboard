@@ -31,10 +31,14 @@ awsFileAddress = (key) ->
   hostname = process.env.S3_HOSTNAME
   "http://#{bucket}.#{hostname}/#{key}"
 
+keyFromAwsFileAddress = (url) ->
+  url.replace (awsFileAddress ""), ""
+
 module.exports =
   upload: (type, filename, key = null) ->
     key ?= path.basename filename
     fs.readFileAsync(filename).then(sendToBucket(key, type)).then ->
       awsFileAddress key
 
-  delete: deleteFromBucket
+  delete: (url) ->
+    deleteFromBucket keyFromAwsFileAddress url
