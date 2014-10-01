@@ -99,7 +99,7 @@ module.exports = (dependencies) ->
     panels,
     tap (req, res) ->
       res.locals
-        title: 'Aaltoboard'
+        title: config.sitename
         id: "front-page"
         class: ""
       
