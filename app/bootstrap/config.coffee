@@ -33,49 +33,7 @@ module.exports = (root) ->
       maximumThreadAmount: 100
       orphanedTrackerCheckProbability: 10
     
-    boards:
-      tkk:
-        ak:
-          name: "Arkkitehtikilta"
-        as:
-          name: "Aivan Sama"
-        bio:
-          name: "Bioinformaatiotekniikka"
-        fk:
-          name: "Fyysikkokilta"
-        ik:
-          name: "Insinöörikilta"
-        inf:
-          name: "Informaatioverkostot"
-        kik:
-          name: "Koneinsinöörikilta"
-        kk:
-          name: "Kemistikilta"
-        pjk:
-          name: "Puunjalostajakilta"
-        tf:
-          name: "Teknologföreningen"
-        tik:
-          name: "Tietokilta"
-        vk:
-          name: "Vuorimieskilta"
-      aalto:
-        tkk:
-          name: "TKK"
-        hse:
-          name: "HSE"
-        taik:
-          name: "TAIK"
-      common:
-        b:
-          name: "Satunnainen"
-        op:
-          name: "Opintosektori"
-        byro:
-          name: "Byrokratia"
-        meta:
-          name: "Metalauta"
-        int:
-          name: "International"
+    sitename: process.env.NODEBOARD_SITE_NAME
+    boards: JSON.parse process.env.NODEBOARD_BOARDS
         
   config

@@ -19,7 +19,7 @@ html ->
         nav ->
           ul ->
             li class: "home", ->
-              a href: "/", -> "Aaltoboard"
+              a href: "/", -> @config.sitename
             
             for group, boards of @config.boards
               li ->
