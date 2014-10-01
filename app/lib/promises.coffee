@@ -1,8 +1,7 @@
 Promise = require 'bluebird'
+q = require 'q'
 
 module.exports = (dependencies) ->
-  {q, qutil} = dependencies
-  
   # Promise to fulfil a function.
   # The function is called with (resolve, reject) and a promise returned.
   # If the function returns its own promise, use that directly instead.
