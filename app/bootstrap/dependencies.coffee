@@ -9,8 +9,6 @@ module.exports = (root) ->
     backbone: require 'backbone'
     browserify: require 'browserify'
     jsmin: require 'jsmin'
-    q: require 'q'
-    qutil: require 'q-util'
     '_': require 'underscore'
     mersenne: require 'mersenne'
   
