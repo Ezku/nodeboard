@@ -5,10 +5,7 @@ div class: 'index', ->
 
   div class: 'columnContent', ->
     for category, boards of @config.boards
-      h2 -> switch category
-        when "tkk" then "TKK Guilds"
-        when "aalto" then "The Aalto Trifecta"
-        when "common" then "General discussion"
+      h2 category
   
       for label, properties of boards
         article class: "board #{category}", ->

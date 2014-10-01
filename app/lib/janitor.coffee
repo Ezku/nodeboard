@@ -1,35 +1,41 @@
+Promise = require 'bluebird'
+
 module.exports = (dependencies) ->
   {mongoose, config, q, mersenne} = dependencies
   {promise, all, succeed} = dependencies.lib 'promises'
   images = dependencies.lib 'images'
   
   Thread = mongoose.model 'Thread'
-  Tracker = mongoose.model 'Tracker'
+  Tracker = Promise.promisifyAll mongoose.model 'Tracker'
   
-  sweepTrackers = (thread) -> promise (success, error) ->
-    Tracker.remove board: thread.board, thread: thread.id, (err) ->
-      return error err if err
-      success()
+  sweepTrackers = (thread) ->
+    Tracker.removeAsync {
+      board: thread.board
+      thread: thread.id
+    }
   
   sweepPosts = (thread) ->
-    promises = for post in thread.posts
-      images.deleteByPost(thread.board, post)
-    all promises
+    Promise.all (
+      for post in thread.posts
+        images.deleteByPost(thread.board, post)
+    )
   
   sweepThread = (thread) ->
-    all([sweepPosts(thread), sweepTrackers(thread)]).then ->
+    Promise.join(
+      sweepPosts(thread)
+      sweepTrackers(thread)
+    ).then ->
       thread.remove()
-      promise (success) ->
-        success thread
+      thread
   
   sweepThreads = (board) ->
     Thread.sweep(board, config.content.maximumThreadAmount).then (threads) ->
-      promises = for thread in threads
-        do (thread) ->
-          sweepThread(thread)
-      all promises
+      Promise.all (
+        for thread in threads
+          sweepThread thread
+      )
   
-  findTrackedThreads = (board) -> promise (success, error) ->    
+  findTrackedThreads = (board) -> new Promise (success, error) ->    
     Tracker
     .collection
     .distinct('thread', {
@@ -39,7 +45,7 @@ module.exports = (dependencies) ->
       success threads
     )
   
-  threadExists = (board, id) -> promise (success, error) ->
+  threadExists = (board, id) -> new Promise (success, error) ->
     Thread
     .findOne({board, id})
     .run (err, thread) ->

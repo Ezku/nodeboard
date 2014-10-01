@@ -277,12 +277,9 @@ $(document).ready(function(){
 
     console.log("Connecting to board: " + board);
 
-    var channel = new SocketIOChannel({
-      host: document.domain,
-      channelId: board
-    });
-    
-    channel.on('newthread', function(obj){  
+    var socket = io('/' + board)
+
+    socket.on('newthread', function(obj){  
       console.log("New thread: "+obj.thread);
       var $notification = $("#newThreadsNumber");
       if ($notification.length > 0){
@@ -302,7 +299,7 @@ $(document).ready(function(){
       }
     });
     
-    channel.on('reply', function(obj){      
+    socket.on('reply', function(obj){      
       var threadId = obj.thread;
       console.log("New reply to thread "+threadId);
       
@@ -338,19 +335,7 @@ $(document).ready(function(){
         }
       }
     });
-
-    channel.on('connect', function(obj){
-      console.log('Connected socket');
-    });
-
-    channel.on('disconnect', function(obj){
-      console.log('Disconnect socket');
-    })
-
-    channel.on('connectionRetry', function(obj){
-      console.log('Socket connectionRetry');
-    })
-  }   
+  }
   
   // Timeago plugin
   $("abbr.timeago").timeago();  
@@ -358,6 +343,7 @@ $(document).ready(function(){
   // Fancybox
   function setFancybox(){
     $(".post-image a").fancybox({
+      'type': 'image',
       'overlayColor' : '#000',
       'overlayOpacity' : 0.8,
       'titlePosition': "inside"

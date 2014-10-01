@@ -5,13 +5,15 @@ data/db/mongo.lock
 tmp/*
 mnt/*
 
-# Ignore Javascript files generated from Coffeescript
-# Duostack fails on this :(
-# app/*.js
-# app/**/*.js
-
 # Ignore CSS files compiled from LESS
 # Duostack fails on this as well
 # public/stylesheets/style.css
 
+/node_modules
+
 .DS_Store
+
+npm-debug.log
+
+# Heroku environment variables
+/.env

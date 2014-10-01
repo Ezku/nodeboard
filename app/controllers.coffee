@@ -1,5 +1,6 @@
 module.exports = (dependencies) ->
-  {app, config, services, formidable, io, channels} = dependencies
+  {app, config, services} = dependencies
+
   {filter} = dependencies.lib 'promises'
   boards = dependencies.lib 'boards'
 
@@ -33,19 +34,13 @@ module.exports = (dependencies) ->
     accepted[name] = input[name] for name in params when input[name]?
     req.body = accepted
   
-  # Parses images uploaded in the request and stores them in the request object
+  # Skip files that are not images
   handleImageUpload = (req, res, next) ->
-    form = new formidable.IncomingForm()
-    form.uploadDir = config.paths.temp
-    form.parse req, (err, fields, files) ->
-      return next err if err
-      # The regular body vanishes, reassign it
-      req.body = fields
-      # Assign valid image files to request
-      req.files = {}
-      for name, file of files when file.type?.match('^image')
-        req.files[name] = file
-      next()
+    incomingFiles = req.files
+    req.files = {}
+    for name, file of incomingFiles when file.type?.match('^image')
+      req.files[name] = file
+    next()
   
   # Builds a data accumulator function with three behaviours
   # f(): returns accumulated data as an object
@@ -99,19 +94,12 @@ module.exports = (dependencies) ->
       overview: res.overview()
       detail: res.detail()
   
-  # Accepts a set of parameters, creating a filter that will assign those to either the provided collector or the request
-  static = (collector, params) -> tap (req, res) ->
-    if typeof params is 'object'
-      res[collector] name, value for name, value of params
-    else
-      res.locals collector
-  
   # Front page
   app.get '/',
     panels,
     tap (req, res) ->
       res.locals
-        title: 'Aaltoboard'
+        title: config.sitename
         id: "front-page"
         class: ""
       
@@ -194,7 +182,8 @@ module.exports = (dependencies) ->
     receivePost('create'),
     tap (req, res) ->
       thread = res.thread
-      channel.broadcastToChannel 'newthread', thread.board, {thread: thread.id}
+      console.log "sending thread notification to", thread.board
+      boards.emit(thread.board, 'newthread', {thread: thread.id})
     tap janitor('upkeep')
   ]
   
@@ -258,7 +247,8 @@ module.exports = (dependencies) ->
     receivePost('update'),
     tap (req, res) ->
       thread = res.thread
-      channel.broadcastToChannel 'reply', thread.board, {thread: thread.id}
+      console.log "sending reply notification to room", thread.board
+      boards.emit(thread.board, 'reply', {thread: thread.id})
   ]
   
   app.post '/api/:board/:id/',
@@ -274,7 +264,3 @@ module.exports = (dependencies) ->
     receiveReply,
     (req, res) ->
       res.redirect "/#{req.params.board}/#{req.params.id}/"
-
-  # Socket.io channels  
-  socket = io.listen app
-  channel = channels.listen socket, {}

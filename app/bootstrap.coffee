@@ -1,9 +1,10 @@
 module.exports = (root) ->
-  dependencies = require('./bootstrap/dependencies.js')(root)
-  dependencies.config = require('./bootstrap/config.js')(root)
-  require('./bootstrap/express.js')(dependencies)
+  dependencies = require('./bootstrap/dependencies')(root)
+  dependencies.config = require('./bootstrap/config')(root)
 
-  require('./models.js')(dependencies)
-  require('./controllers.js')(dependencies)
+  require('./bootstrap/express')(dependencies)
+  dependencies.io = require('socket.io')(dependencies.app)
 
+  require('./models')(dependencies)
+  require('./controllers')(dependencies)
   dependencies.app

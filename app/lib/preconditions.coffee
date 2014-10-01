@@ -1,6 +1,8 @@
+Promise = require 'bluebird'
+
 module.exports = (dependencies) ->
   {services} = dependencies
-  {promise, filter} = dependencies.lib 'promises'
+  {filter} = dependencies.lib 'promises'
   service = services.get
   boards = dependencies.lib 'boards'
   NotFoundError = dependencies.lib 'errors/NotFoundError'
@@ -15,10 +17,12 @@ module.exports = (dependencies) ->
   
   # Asserts for existence of a thread by an id given in the request
   # NOTE: handleImageUpload does not work if this precedes it
-  shouldHaveThread = filter (req) -> promise (success, error) ->
-    service('Thread').read(req.params).then(
-      success,
-      -> error new NotFoundError "Thread #{Number(req.params.id)} does not exist"
-    )
+  shouldHaveThread = filter (req) ->
+    service('Thread')
+      .read(req.params)
+      .then(
+        (v) -> v
+        -> new NotFoundError "Thread #{Number(req.params.id)} does not exist"
+      )
   
   { shouldHaveBoard, shouldHaveThread }

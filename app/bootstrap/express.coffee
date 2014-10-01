@@ -23,7 +23,5 @@ module.exports = (dependencies) ->
   app.configure 'production', ->
     app.error dependencies.lib('errors')()
   
-  helpers = dependencies.lib 'helpers'
-  app.helpers helpers.static
-  app.dynamicHelpers helpers.dynamic
+  app.helpers config: dependencies.config
   

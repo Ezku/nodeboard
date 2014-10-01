@@ -1,5 +1,5 @@
 fs = require 'fs'
-AbstractService = require './AbstractService.js'
+AbstractService = require './AbstractService'
 
 module.exports = (dependencies) ->
 
@@ -29,35 +29,28 @@ module.exports = (dependencies) ->
     
     create: (data) ->
       Sequence.next(data.thread.board).then (seq) =>
-        @_processImage(data.image, data.thread.board, seq.counter).then (image) =>
-          post = @_post data.post, seq.counter, image
-          thread = @_thread data.thread, post
-          
-          promise (success, error) =>
-            thread.save (err) =>
-              if err
-                @_revert data.thread.board, post
-                return error err
-              success thread
-    
+        ImageProcessor(data.image, data.thread.board, seq.counter)
+          .process()
+          .then (image) =>
+            post = @_post data.post, seq.counter, image
+            thread = @_thread data.thread, post
+            
+            promise (success, error) =>
+              thread.save (err) =>
+                return error err if err
+                success thread
     
     update: (data) ->
       Sequence.next(data.thread.board).then (seq) =>
-        @_processImage(data.image, data.thread.board, seq.counter).then (image) =>
-          post = @_post data.post, seq.counter, image
-          promise (success, error) =>
+        ImageProcessor(data.image, data.thread.board, seq.counter)
+          .process()
+          .then (image) =>
+            post = @_post data.post, seq.counter, image
             Thread.addReply(data.thread.board, data.thread.id, post).then(
               (thread) ->
                 thread.lastPost = post
-                success thread
-              (err) =>
-                @_revert data.thread.board, post
-                error err
+                thread
             )
-    
-    _processImage: (image, board, id) ->
-      processor = new ImageProcessor image, board, id
-      processor.process()
     
     _post: (data, id, image) ->
       data.id = id
@@ -76,8 +69,3 @@ module.exports = (dependencies) ->
       thread = new Thread data
       thread.posts.push post
       thread
-    
-    _revert: (board, post) ->
-      fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.thumbnail
-      fs.unlinkSync config.paths.mount + "/#{board}/" + post.image?.fullsize
-

@@ -8,8 +8,7 @@ html ->
     script src: '/scripts/jquery-1.5.2.min.js'
     script src: '/scripts/jquery.tmpl.min.js'
     script src: '/scripts/jquery.timeago.js'
-    script src: '/socket.io/socket.io.js'
-    script src: '/scripts/socket.io-channels-client.js'
+    script src: '/bower_components/socket.io-client/socket.io.js'
     script src: '/scripts/aaltoboard.js'
     script src: '/scripts/fancybox/jquery.fancybox-1.3.4.pack.js'
     link rel: "stylesheet", href: '/scripts/fancybox/jquery.fancybox-1.3.4.css'
@@ -19,7 +18,7 @@ html ->
         nav ->
           ul ->
             li class: "home", ->
-              a href: "/", -> "Aaltoboard"
+              a href: "/", -> @config.sitename
             
             for group, boards of @config.boards
               li ->
