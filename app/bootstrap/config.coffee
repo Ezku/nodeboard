@@ -9,8 +9,6 @@ module.exports = (root) ->
       shared: root + '/app/shared/'
       public: root + '/public/'
       vendor: root + '/vendor/'
-      mount: root + '/mnt/'
-      temp: root + '/tmp/'
     
     mongo:
       connection: process.env.MONGOLAB_URI
