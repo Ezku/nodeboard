@@ -9,8 +9,15 @@ Go ahead, press it. You know you want to.
 
 Requirements:
 
-- mongod
+- mongo
 - imagemagick
+- heroku toolbelt
+
+Getting started:
+
+    npm install
+    heroku config --shell -a existing-nodeboard-app > .env
+    foreman start
 
 ## Setup instructions
 
