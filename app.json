@@ -13,7 +13,8 @@
       "description": "An Amazon S3 bucket name for storing uploaded image files"
     },
     "S3_HOSTNAME": {
-      "description": "Amazon S3 hostname with region, eg. s3-website-eu-west-1.amazonaws.com"
+      "description": "Amazon S3 hostname with region, eg. s3-website-eu-west-1.amazonaws.com",
+      "value": "s3-website-eu-west-1.amazonaws.com"
     },
     "AWS_ACCESS_KEY": {
       "description": "Amazon AWS access key for a user that can write to the configured S3 bucket"
