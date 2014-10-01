@@ -21,16 +21,13 @@
     "AWS_SECRET_KEY": {
       "description": "Amazon AWS secret key matching the access key"
     },
-    "MONGOLAB_URI": {
-      "description": "A MongoDB connection URI. Provided automatically by Heroku."
-    },
     "NODEBOARD_SITE_NAME": {
       "description": "The name for your nodeboard instance",
-      "default": "nodeboard"
+      "value": "nodeboard"
     },
     "NODEBOARD_BOARDS": {
       "description": "A JSON-encoded description of your board structure. Format: Map<section,Map<board,{name:String}>>. Name must be alphanumeric - escape any foreign characters.",
-      "default": "{\"common\": { \"b\": { \"name\": \"Random\" } } }"
+      "value": "{\"common\": { \"b\": { \"name\": \"Random\" } } }"
     }
   },
   "addons": [
