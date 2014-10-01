@@ -1,5 +1,6 @@
 module.exports = (dependencies) ->
-  {app, config, services, formidable, io, channels} = dependencies
+  {app, config, services} = dependencies
+
   {filter} = dependencies.lib 'promises'
   boards = dependencies.lib 'boards'
 
@@ -181,7 +182,8 @@ module.exports = (dependencies) ->
     receivePost('create'),
     tap (req, res) ->
       thread = res.thread
-      channel.broadcastToChannel 'newthread', thread.board, {thread: thread.id}
+      console.log "sending thread notification to", thread.board
+      boards.emit(thread.board, 'newthread', {thread: thread.id})
     tap janitor('upkeep')
   ]
   
@@ -245,7 +247,8 @@ module.exports = (dependencies) ->
     receivePost('update'),
     tap (req, res) ->
       thread = res.thread
-      channel.broadcastToChannel 'reply', thread.board, {thread: thread.id}
+      console.log "sending reply notification to room", thread.board
+      boards.emit(thread.board, 'reply', {thread: thread.id})
   ]
   
   app.post '/api/:board/:id/',
@@ -261,7 +264,3 @@ module.exports = (dependencies) ->
     receiveReply,
     (req, res) ->
       res.redirect "/#{req.params.board}/#{req.params.id}/"
-
-  # Socket.io channels  
-  socket = io.listen app
-  channel = channels.listen socket, {}

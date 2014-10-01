@@ -1,5 +1,10 @@
 module.exports = (dependencies) ->
-  {config} = dependencies
+  {config, io} = dependencies
+
+  sockets = {}
+  for group, boards of config.boards
+    for boardpath, board of boards
+      sockets[boardpath] = io.of "/#{boardpath}"
   
   # Checks for existence of board by its short name
   exists = (board) ->
@@ -12,5 +17,8 @@ module.exports = (dependencies) ->
     for group, boards of config.boards
       return boards[board].name if boards[board]?
     return false
+
+  emit = (board, event, data) ->
+    sockets[board].emit event, data
   
-  { exists, getName }
+  { exists, getName, emit }
