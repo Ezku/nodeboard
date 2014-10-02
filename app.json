@@ -29,6 +29,10 @@
     "NODEBOARD_BOARDS": {
       "description": "A JSON-encoded description of your board structure. Format: Map<section,Map<board,{name:String}>>. Name must be alphanumeric - escape any foreign characters.",
       "value": "{\"common\": { \"b\": { \"name\": \"Random\" } } }"
+    },
+    "NODE_TLS_REJECT_UNAUTHORIZED": {
+      "description": "Set this to 0 if you don't care about your data",
+      "value": "0"
     }
   },
   "addons": [
