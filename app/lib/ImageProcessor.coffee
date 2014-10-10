@@ -40,21 +40,23 @@ module.exports = (dependencies) ->
       else
         ->
           identifyImage(image.path).then (features) ->
-            createResizedThumbnail({
-              source: image.path
-              width: features.width
-              height: features.height
-              maxWidth: config.images.thumbnail.width
-              maxHeight: config.images.thumbnail.height
-            }).then (thumbnailPath) ->
-              Promise.all([
-                uploadToS3(image.type, image.path, board, id)
+            thumbnail = createResizedThumbnail({
+                source: image.path
+                width: features.width
+                height: features.height
+                maxWidth: config.images.thumbnail.width
+                maxHeight: config.images.thumbnail.height
+              }).then (thumbnailPath) ->
                 uploadToS3(image.type, thumbnailPath, board, id)
-              ]).spread (fullsize, thumbnail) ->
-                new Image {
-                  name: image.name
-                  width: features.width
-                  height: features.height
-                  fullsize: fullsize
-                  thumbnail: thumbnail
-                }
+
+            Promise.all([
+              uploadToS3(image.type, image.path, board, id)
+              thumbnail.catch(-> false)
+            ]).spread (fullsize, thumbnail) ->
+              new Image {
+                name: image.name
+                width: features.width
+                height: features.height
+                fullsize: fullsize
+                thumbnail: thumbnail
+              }
