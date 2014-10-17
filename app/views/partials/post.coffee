@@ -23,4 +23,4 @@ article class: 'post', id: 'post-' + idPrefix + @post.board + "-" + @post.id, ->
       text '{{/if}}{{/if}}'
   
   div class: 'post-content', ->
-    p h @post.content
+    p (h @post.content).replace /^&gt;(?!&gt;)(.*)$/mg, '<span class="greentext">&gt;$1</span>'

@@ -439,6 +439,9 @@ span.newReplyNotification {
   color: #000000;
   background-color: #999;
 }
+.post .greentext {
+  color: #789922;
+}
 form dt {
   width: 25%;
   clear: both;

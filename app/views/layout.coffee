@@ -36,7 +36,18 @@ html ->
       text @partial "thread", jQtemplate: true, title: '/${board}/${id}/', object: {id:'${id}'}
     
     script type: 'text/x-jquery-tmpl', id: 'postTemplate', ->
-      text @partial "partials/post", jQtemplate: true, object: {id:'${id}',author:'${author}',date:'${date}', board: '${board}', thread: '${thread}', content:'${content}', image:{fullsize:'${image.fullsize}',thumbnail:'${image.thumbnail}'}}
+      text @partial "partials/post", jQtemplate: true, object: {
+        id: '${id}'
+        author: '${author}'
+        date: '${date}'
+        board: '${board}'
+        thread: '${thread}'
+        content: '${content}'
+        image: {
+          fullsize:'${image.fullsize}'
+          thumbnail:'${image.thumbnail}'
+        }
+      }
 
-    script type: 'text/x-jquery-tmpl', id: 'boardThreadTemplate', ->
+    script { type: 'text/x-jquery-tmpl', id: 'boardThreadTemplate' }, ->
       text @partial "partials/thread", jQtemplate: true, object: {id:'${id}', board: '${board}', replyCount:'${replyCount-1}'}
