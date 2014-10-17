@@ -9,6 +9,7 @@
     "mongo"
   ],
   "env": {
+    "BUILDPACK_URL": "https://github.com/ddollar/heroku-buildpack-multi.git",
     "S3_BUCKET": {
       "description": "An Amazon S3 bucket name for storing uploaded image files"
     },
