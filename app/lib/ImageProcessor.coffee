@@ -8,7 +8,7 @@ identifyImage = do ->
     gm(path)
       .options(imageMagick: true)
       .identify (err, features) =>
-        return error new Error "failed to identify image type" if err
+        return error new Error "failed to identify image type: #{err}" if err
         success {
           path: features.path
           format: features.format
@@ -72,7 +72,10 @@ module.exports = (dependencies) ->
 
               Promise.all([
                 uploadToS3(image.type, image.path, board, id)
-                thumbnail.catch(-> false)
+                thumbnail.catch(->
+                  console.error "Failed to create thumbnail for image", features
+                  false
+                )
               ]).spread (fullsize, thumbnail) ->
                 new Image {
                   name: image.name
