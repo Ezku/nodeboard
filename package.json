@@ -12,7 +12,7 @@
     "start": "node server.js"
   },
   "engines": {
-    "node": "0.8.x"
+    "node": "0.10.x"
   },
   "dependencies": {
     "aws-sdk": "~2.0.18",
